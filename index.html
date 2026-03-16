@@ -33,7 +33,7 @@
         /* Contenedor del sticker circular */
         .sticker-wrapper {
             box-sizing: border-box;
-            border-radius: 50% !important; /* Fuerza la forma circular */
+            border-radius: 50% !important;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -326,19 +326,20 @@
             paperType: 'A4',
             showCutLine: true,
             currentBatchProducts: [],
+            // Bodega vacía por defecto
             inventory: {
-                leche: { name: 'Leche Entera', unit: 'Cajas (900ml)', stock: 100, avgCost: 3200, minStock: 10 },
-                azucar: { name: 'Azúcar', unit: 'kg', stock: 25, avgCost: 4000, minStock: 5 }, 
-                polvo: { name: 'Leche en Polvo', unit: 'kg', stock: 10, avgCost: 25000, minStock: 2 },
-                fresas: { name: 'Fresas', unit: 'Empaques (300g)', stock: 10, avgCost: 5000, minStock: 3 },
-                kumis: { name: 'Kumis', unit: 'Unidades', stock: 15, avgCost: 2500, minStock: 5 },
-                limon: { name: 'Limón', unit: 'Unidades', stock: 30, avgCost: 500, minStock: 10 },
-                envase_5oz: { name: 'Envases 5oz', unit: 'Unidades', stock: 500, avgCost: 520, minStock: 50 },
-                envase_10oz: { name: 'Envases 10oz', unit: 'Unidades', stock: 500, avgCost: 560, minStock: 50 },
-                envase_16oz: { name: 'Envases 16oz', unit: 'Unidades', stock: 200, avgCost: 480, minStock: 50 },
-                envase_32oz: { name: 'Envases 32oz', unit: 'Unidades', stock: 100, avgCost: 680, minStock: 30 },
-                envase_1lt: { name: 'Envases 1 Lt', unit: 'Unidades', stock: 50, avgCost: 1200, minStock: 20 },
-                envase_2lt: { name: 'Envases 2 Lt', unit: 'Unidades', stock: 50, avgCost: 1800, minStock: 20 }
+                leche: { name: 'Leche Entera', unit: 'Cajas (900ml)', stock: 0, avgCost: 0, minStock: 10 },
+                azucar: { name: 'Azúcar', unit: 'kg', stock: 0, avgCost: 0, minStock: 5 }, 
+                polvo: { name: 'Leche en Polvo', unit: 'kg', stock: 0, avgCost: 0, minStock: 2 },
+                fresas: { name: 'Fresas', unit: 'Empaques (300g)', stock: 0, avgCost: 0, minStock: 3 },
+                kumis: { name: 'Kumis', unit: 'Unidades', stock: 0, avgCost: 0, minStock: 5 },
+                limon: { name: 'Limón', unit: 'Unidades', stock: 0, avgCost: 0, minStock: 10 },
+                envase_5oz: { name: 'Envases 5oz', unit: 'Unidades', stock: 0, avgCost: 0, minStock: 50 },
+                envase_10oz: { name: 'Envases 10oz', unit: 'Unidades', stock: 0, avgCost: 0, minStock: 50 },
+                envase_16oz: { name: 'Envases 16oz', unit: 'Unidades', stock: 0, avgCost: 0, minStock: 50 },
+                envase_32oz: { name: 'Envases 32oz', unit: 'Unidades', stock: 0, avgCost: 0, minStock: 30 },
+                envase_1lt: { name: 'Envases 1 Lt', unit: 'Unidades', stock: 0, avgCost: 0, minStock: 20 },
+                envase_2lt: { name: 'Envases 2 Lt', unit: 'Unidades', stock: 0, avgCost: 0, minStock: 20 }
             },
             fridge: {},
             salesLogs: [],
@@ -349,21 +350,37 @@
         const stickerSizes = { '5oz': 45, '10oz': 55, '16oz': 65, '32oz': 85, '1lt': 95, '2lt': 110 };
         const defaultSalePrices = { '5oz': 8000, '10oz': 15000, '16oz': 25000, '32oz': 45000, '1lt': 11000, '2lt': 20000 };
 
+        // --- PERSISTENCIA LOCAL (GUARDADO AUTOMÁTICO) ---
+        function saveToLocalStorage() {
+            localStorage.setItem('blanco_artesanal_data', JSON.stringify(state));
+        }
+
+        function loadFromLocalStorage() {
+            const savedData = localStorage.getItem('blanco_artesanal_data');
+            if (savedData) {
+                try {
+                    const parsed = JSON.parse(savedData);
+                    state = { ...state, ...parsed };
+                } catch (e) {
+                    console.error("Error cargando datos locales:", e);
+                }
+            }
+        }
+
         // --- NAVEGACIÓN ---
         function switchTab(tab) {
             state.activeTab = tab;
             document.querySelectorAll('main').forEach(m => m.classList.add('hidden'));
             const mainContent = document.getElementById(`main-content-${tab}`);
             if (mainContent) mainContent.classList.remove('hidden');
-            
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-nav-tab'));
             const navBtn = document.getElementById(`btn-nav-${tab}`);
             if (navBtn) navBtn.classList.add('active-nav-tab');
-            
             if(tab === 'etiquetas') renderLabels();
             if(tab === 'calculadora') updateVencimientos();
             if(tab === 'registro') renderFinance();
             lucide.createIcons();
+            saveToLocalStorage();
         }
 
         function switchSubTab(sub) {
@@ -379,40 +396,34 @@
             const activeSubBtn = document.getElementById(`subnav-${sub}`);
             if (activeSubBtn) activeSubBtn.classList.add('active-sub-tab');
             renderFinance();
+            saveToLocalStorage();
         }
 
         // --- ETIQUETAS ---
         function renderLabels() {
             const container = document.getElementById('print-area');
             if (!container) return;
-
             const d = stickerSizes[state.stickerSize];
             const pType = document.getElementById('paper-type').value;
             const target = parseInt(document.getElementById('target-qty').value) || 0;
             const margin = 3;
             const padding = 10;
-            
             let w = 210, h = 297;
             if(pType === 'Letter') { w = 215.9; h = 279.4; }
             if(pType === 'A3') { w = 297; h = 420; }
-            
             const cols = Math.floor((w - padding) / (d + margin)) || 1;
             let finalQty = target;
             if(finalQty > 0 && finalQty % cols !== 0) finalQty += (cols - (finalQty % cols));
-
             if(pType === 'Custom') {
                 const rows = Math.ceil((finalQty || 1) / cols);
                 h = (rows * (d + margin)) + padding;
             }
-
             document.getElementById('res-fila').innerText = cols;
             document.getElementById('res-total').innerText = finalQty || 'Auto';
-
             container.innerHTML = '';
             let left = finalQty || (cols * Math.floor((h - padding) / (d + margin)));
             const stickersPerPage = cols * Math.floor((h - padding) / (d + margin));
             const numPages = pType === 'Custom' ? 1 : Math.ceil(left / stickersPerPage);
-
             for(let p = 0; p < numPages; p++) {
                 const page = document.createElement('div');
                 page.className = "bg-white shadow-2xl relative page-sheet flex flex-wrap content-start overflow-hidden";
@@ -420,7 +431,6 @@
                 page.style.height = h + "mm";
                 page.style.padding = "5mm";
                 page.style.gap = margin + "mm";
-                
                 const count = pType === 'Custom' ? left : Math.min(left, stickersPerPage);
                 for(let i=0; i<count; i++) { page.innerHTML += getStickerHTML(d); }
                 container.appendChild(page);
@@ -432,8 +442,7 @@
             const scale = d / 55;
             const logo = 'https://raw.githubusercontent.com/juanmiguel0927/PedidosBlancoArtesanal/ca1c2c4df24364a5c325f8426a4e483e0b2874bd/Logo.jpg';
             const borderStyle = state.showCutLine ? 'border: 0.15mm solid #ff00ff; border-radius: 50%;' : 'border: 0.15mm solid transparent; border-radius: 50%;';
-            return `
-                <div class="sticker-wrapper" style="width:${d}mm; height:${d}mm; ${borderStyle}">
+            return `<div class="sticker-wrapper" style="width:${d}mm; height:${d}mm; ${borderStyle}">
                     <div style="width: 100%; height: 100%; background: white; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; border: ${0.4 * scale}mm solid #7cb342; padding: ${1 * scale}mm; box-sizing: border-box;">
                         <div style="width: 100%; height: 75%; display: flex; align-items: center; justify-content: center; padding-top: ${2 * scale}mm; overflow: hidden;">
                             <img src="${logo}" style="width: 90%; height: 100%; object-fit: contain;">
@@ -451,12 +460,8 @@
             const originalText = btn.innerHTML;
             btn.disabled = true;
             btn.innerHTML = '<span class="animate-spin mr-2">...</span> GENERANDO';
-            
-            // Forzar el scroll al inicio absoluto para que html2canvas capture desde 0,0
             window.scrollTo(0, 0);
-            
             document.body.classList.add('pdf-exporting');
-            
             const firstSheet = document.querySelector('.page-sheet');
             if (!firstSheet) {
                 document.body.classList.remove('pdf-exporting');
@@ -464,30 +469,18 @@
                 btn.innerHTML = originalText;
                 return;
             }
-
             const w = parseFloat(firstSheet.style.width);
             const h = parseFloat(firstSheet.style.height);
-
             const opt = {
                 margin: 0,
                 filename: 'Blanco_Artesanal_Etiquetas.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2, 
-                    useCORS: true, 
-                    backgroundColor: '#ffffff',
-                    scrollY: 0, // Inicia captura en el tope del elemento
-                    windowScrollY: 0 // Inicia captura en el tope de la ventana
-                },
+                html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', scrollY: 0, windowScrollY: 0 },
                 jsPDF: { unit: 'mm', format: [w, h], orientation: 'portrait', compress: true }
             };
-
             try {
-                // Pequeña espera para asegurar que el navegador asimile el scroll y el modo pdf-exporting
                 await new Promise(r => setTimeout(r, 200));
                 await html2pdf().set(opt).from(document.getElementById('print-area')).save();
-            } catch (err) {
-                console.error("Error PDF:", err);
             } finally {
                 document.body.classList.remove('pdf-exporting');
                 btn.disabled = false;
@@ -500,6 +493,7 @@
             state.showCutLine = !state.showCutLine;
             document.getElementById('check-cutline').checked = state.showCutLine;
             renderLabels();
+            saveToLocalStorage();
         }
 
         // --- CALCULADORA ---
@@ -508,20 +502,13 @@
             const container = document.getElementById('vencimientos-results');
             if (!container) return;
             container.innerHTML = '';
-            
-            const list = [
-                { t: 'Griego Natural', d: 12, c: 'blue' },
-                { t: 'Griego con Fruta', d: 15, c: 'green' },
-                { t: 'Yogur Líquido', d: 21, c: 'purple' }
-            ];
-
+            const list = [{ t: 'Griego Natural', d: 12, c: 'blue' }, { t: 'Griego con Fruta', d: 15, c: 'green' }, { t: 'Yogur Líquido', d: 21, c: 'purple' }];
             list.forEach(item => {
                 const date = new Date(dateStr + "T00:00:00");
                 date.setDate(date.getDate() + item.d);
                 const meses = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
                 const label = `${date.getDate().toString().padStart(2,'0')} ${meses[date.getMonth()]} ${date.getFullYear().toString().slice(-2)}`;
-                container.innerHTML += `
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-t-${item.c}-500">
+                container.innerHTML += `<div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-t-${item.c}-500">
                         <h3 class="font-black text-gray-800 uppercase text-xs mb-4">${item.t}</h3>
                         <div class="text-2xl font-black text-${item.c}-700 mb-2">${label}</div>
                         <div class="text-[10px] font-bold text-gray-400 bg-gray-50 p-2 rounded uppercase tracking-tighter">SELLO: VENCE ${label}</div>
@@ -546,14 +533,12 @@
                 const isDanger = item.stock <= 0;
                 const isWarning = item.stock <= item.minStock && !isDanger;
                 const c = isDanger ? 'red' : (isWarning ? 'yellow' : 'gray');
-                grid.innerHTML += `
-                    <div class="bg-${c === 'gray' ? 'white' : c + '-50'} p-4 rounded-xl shadow-sm border border-${c}-200 relative">
+                grid.innerHTML += `<div class="bg-${c === 'gray' ? 'white' : c + '-50'} p-4 rounded-xl shadow-sm border border-${c}-200 relative">
                         <h3 class="font-bold text-gray-500 uppercase text-[10px] mb-1">${item.name}</h3>
                         <p class="text-xl font-black text-${c === 'gray' ? 'blue-900' : c + '-700'}">${item.stock.toFixed(1)} <span class="text-[10px] font-bold opacity-60">${item.unit.split(' ')[0]}</span></p>
                         <div class="mt-2 pt-2 border-t border-gray-100 text-[10px] font-bold text-green-600">$${item.avgCost.toFixed(0)} c/u</div>
                     </div>`;
             });
-
             const sel = document.getElementById('select-buy-item');
             if (sel) {
                 sel.innerHTML = '<option value="">Seleccionar Ítem...</option>';
@@ -566,16 +551,15 @@
             const qty = parseFloat(document.getElementById('input-buy-qty').value);
             const unitCost = parseFloat(document.getElementById('input-buy-unitcost').value);
             if(!key || isNaN(qty) || isNaN(unitCost)) return;
-
             const item = state.inventory[key];
             const totalCost = qty * unitCost;
             const newStock = item.stock + qty;
             item.avgCost = ((item.stock * item.avgCost) + totalCost) / newStock;
             item.stock = newStock;
-            
             renderFinance();
             document.getElementById('input-buy-qty').value = '';
             document.getElementById('input-buy-unitcost').value = '';
+            saveToLocalStorage();
         }
 
         function renderLotes() {
@@ -591,11 +575,9 @@
                 { id: 'limon', label: 'Limón (Unid.)' },
                 { id: 'others', label: 'Otros Gastos ($)' }
             ];
-
             inputs.forEach(inp => {
                 if(inp.hasUnits) {
-                    container.innerHTML += `
-                        <div class="border-b-2 bg-gray-50 rounded-t-sm p-2">
+                    container.innerHTML += `<div class="border-b-2 bg-gray-50 rounded-t-sm p-2">
                             <label class="text-[10px] font-bold text-gray-500 uppercase">${inp.label}</label>
                             <div class="flex items-center">
                                 <input type="number" id="bi-${inp.id}" oninput="updateBatchCosts()" class="w-full bg-transparent outline-none font-bold text-lg">
@@ -605,14 +587,12 @@
                             </div>
                         </div>`;
                 } else {
-                    container.innerHTML += `
-                        <div class="p-2 border-b-2 bg-gray-50">
+                    container.innerHTML += `<div class="p-2 border-b-2 bg-gray-50">
                             <label class="text-[10px] font-bold text-gray-500 uppercase block">${inp.label}</label>
                             <input type="number" id="bi-${inp.id}" step="${inp.step || '1'}" oninput="updateBatchCosts()" class="w-full bg-transparent outline-none font-bold text-lg">
                         </div>`;
                 }
             });
-
             const sel = document.getElementById('input-prod-size');
             if (sel) {
                 sel.innerHTML = '';
@@ -626,7 +606,6 @@
         function updateBatchCosts() {
             const getVal = (id) => parseFloat(document.getElementById(`bi-${id}`).value) || 0;
             const toKg = (val, unit) => unit === 'kg' ? val : (unit === 'cucharada' ? (val * 15) / 1000 : val / 1000);
-
             const costInsumos = (getVal('leche') * state.inventory.leche.avgCost) +
                                 (toKg(getVal('azucar'), document.getElementById('bu-azucar').value) * state.inventory.azucar.avgCost) +
                                 (toKg(getVal('polvo'), document.getElementById('bu-polvo').value) * state.inventory.polvo.avgCost) +
@@ -634,9 +613,7 @@
                                 (getVal('kumis') * state.inventory.kumis.avgCost) +
                                 (getVal('limon') * state.inventory.limon.avgCost) +
                                 getVal('others');
-            
             document.getElementById('label-costo-base').innerText = `$${Math.floor(costInsumos).toLocaleString()}`;
-            
             let costPkg = 0;
             state.currentBatchProducts.forEach(p => costPkg += p.pkgCost);
             document.getElementById('label-inversion-total').innerText = `$${Math.floor(costInsumos + costPkg).toLocaleString()}`;
@@ -648,7 +625,6 @@
             const qty = parseInt(document.getElementById('input-prod-qty').value);
             const price = parseFloat(document.getElementById('input-prod-price').value);
             if(!qty || isNaN(qty) || isNaN(price)) return;
-
             const unitCostEnv = state.inventory[`envase_${size}`].avgCost;
             state.currentBatchProducts.push({ id: Date.now(), type, size, qty, price, pkgCost: unitCostEnv * qty });
             document.getElementById('input-prod-qty').value = '';
@@ -661,8 +637,7 @@
             if (!tb) return;
             tb.innerHTML = '';
             state.currentBatchProducts.forEach(p => {
-                tb.innerHTML += `
-                    <tr>
+                tb.innerHTML += `<tr>
                         <td class="p-3"><b>${p.type}</b> <span class="text-[10px] bg-orange-100 px-2 rounded-full">${p.size}</span></td>
                         <td class="p-3 font-bold">${p.qty}</td>
                         <td class="p-3 text-blue-600">$${Math.floor(p.pkgCost).toLocaleString()}</td>
@@ -681,10 +656,8 @@
 
         function confirmProduction() {
             if(state.currentBatchProducts.length === 0) return alert("Añade productos al lote.");
-            
             const getVal = (id) => parseFloat(document.getElementById(`bi-${id}`).value) || 0;
             const toKg = (val, unit) => unit === 'kg' ? val : (unit === 'cucharada' ? (val * 15) / 1000 : val / 1000);
-            
             const baseCost = (getVal('leche') * state.inventory.leche.avgCost) +
                              (toKg(getVal('azucar'), document.getElementById('bu-azucar').value) * state.inventory.azucar.avgCost) +
                              (toKg(getVal('polvo'), document.getElementById('bu-polvo').value) * state.inventory.polvo.avgCost) +
@@ -692,10 +665,8 @@
                              (getVal('kumis') * state.inventory.kumis.avgCost) +
                              (getVal('limon') * state.inventory.limon.avgCost) +
                              getVal('others');
-
             const totalUnits = state.currentBatchProducts.reduce((s, p) => s + p.qty, 0);
             const liquidCostPerUnit = baseCost / totalUnits;
-
             state.currentBatchProducts.forEach(p => {
                 const key = `${p.type}_${p.size}`;
                 const realUnitCost = liquidCostPerUnit + (p.pkgCost / p.qty);
@@ -708,15 +679,12 @@
                 }
                 state.inventory[`envase_${p.size}`].stock -= p.qty;
             });
-
-            // Descontar Stock
             state.inventory.leche.stock -= getVal('leche');
             state.inventory.azucar.stock -= toKg(getVal('azucar'), document.getElementById('bu-azucar').value);
             state.inventory.polvo.stock -= toKg(getVal('polvo'), document.getElementById('bu-polvo').value);
             state.inventory.fresas.stock -= getVal('fresas');
             state.inventory.kumis.stock -= getVal('kumis');
             state.inventory.limon.stock -= getVal('limon');
-
             const batchDate = document.getElementById('batch-date-input').value;
             state.productionLogs.unshift({ 
                 id: Date.now(), 
@@ -725,26 +693,22 @@
                 baseCost, 
                 products: [...state.currentBatchProducts] 
             });
-            
             state.currentBatchProducts = [];
             switchSubTab('nevera');
+            saveToLocalStorage();
         }
 
         function renderNevera() {
             const grid = document.getElementById('fridge-items-grid');
             const sel = document.getElementById('sale-product-key');
             if (!grid || !sel) return;
-
             grid.innerHTML = '';
             sel.innerHTML = '<option value="">Seleccionar Producto...</option>';
-
             if(Object.keys(state.fridge).length === 0) {
                 grid.innerHTML = '<div class="col-span-2 text-center py-10 opacity-40 font-bold">Nevera vacía.</div>';
             }
-
             Object.entries(state.fridge).forEach(([key, item]) => {
-                grid.innerHTML += `
-                    <div class="border border-blue-200 bg-white p-5 rounded-2xl shadow-sm flex flex-col justify-between hover:border-blue-400 transition-all cursor-pointer" onclick="selectFridgeItem('${key}')">
+                grid.innerHTML += `<div class="border border-blue-200 bg-white p-5 rounded-2xl shadow-sm flex flex-col justify-between hover:border-blue-400 transition-all cursor-pointer" onclick="selectFridgeItem('${key}')">
                         <div class="flex justify-between items-start mb-3">
                             <div><h3 class="font-black text-gray-800 text-sm">${item.type}</h3><span class="text-[10px] bg-orange-100 px-2 rounded-full font-black mt-1 inline-block uppercase">${item.size}</span></div>
                             <span class="text-3xl font-black text-blue-600">${item.qty}</span>
@@ -773,34 +737,20 @@
 
         function registerSale() {
             const key = document.getElementById('sale-product-key').value;
-            const qtyInput = document.getElementById('input-sale-qty').value;
-            const qty = parseInt(qtyInput);
+            const qty = parseInt(document.getElementById('input-sale-qty').value);
             const type = document.getElementById('select-sale-type').value;
             const price = parseFloat(document.getElementById('input-sale-price').value);
-
             if(!key || isNaN(qty)) return;
             const item = state.fridge[key];
             if(qty > item.qty) return alert("No hay suficiente stock.");
-
             const costTotal = qty * item.unitCost;
             const rev = type === 'venta' ? qty * price : 0;
-            
             state.fridge[key].qty -= qty;
             if(state.fridge[key].qty <= 0) delete state.fridge[key];
-
-            state.salesLogs.unshift({ 
-                id: Date.now(), 
-                date: state.packDate, 
-                type, 
-                itemName: `${item.type} ${item.size}`, 
-                qty, 
-                revenue: rev, 
-                cost: costTotal, 
-                profit: rev - costTotal 
-            });
-            
+            state.salesLogs.unshift({ id: Date.now(), date: state.packDate, type, itemName: `${item.type} ${item.size}`, qty, revenue: rev, cost: costTotal, profit: rev - costTotal });
             document.getElementById('input-sale-qty').value = '';
             renderFinance();
+            saveToLocalStorage();
         }
 
         function renderHistory() {
@@ -809,41 +759,33 @@
                 const contentLotes = document.getElementById('hview-lotes-content');
                 if (contentFinanzas) contentFinanzas.classList.remove('hidden');
                 if (contentLotes) contentLotes.classList.add('hidden');
-                
                 const revTotal = state.salesLogs.filter(s => s.type === 'venta').reduce((a,b) => a + b.revenue, 0);
                 const costTotal = state.salesLogs.reduce((a,b) => a + b.cost, 0);
                 const mermas = state.salesLogs.filter(s => s.type === 'merma').reduce((a,b) => a + b.cost, 0);
                 const exTotal = state.expenses.reduce((a,b) => a + b.amount, 0);
                 const net = revTotal - costTotal - exTotal;
                 const margin = revTotal > 0 ? ((net / revTotal) * 100).toFixed(1) : 0;
-
                 const dash = document.getElementById('kpi-dashboard');
                 if (dash) {
-                    dash.innerHTML = `
-                        <div class="bg-white p-4 rounded-2xl border shadow-sm flex flex-col justify-center"><p class="text-[9px] font-bold text-gray-400 uppercase">Ventas</p><p class="text-xl font-black text-blue-600">$${revTotal.toLocaleString()}</p></div>
+                    dash.innerHTML = `<div class="bg-white p-4 rounded-2xl border shadow-sm flex flex-col justify-center"><p class="text-[9px] font-bold text-gray-400 uppercase">Ventas</p><p class="text-xl font-black text-blue-600">$${revTotal.toLocaleString()}</p></div>
                         <div class="bg-white p-4 rounded-2xl border shadow-sm flex flex-col justify-center"><p class="text-[9px] font-bold text-gray-400 uppercase">Costo Prod.</p><p class="text-xl font-black">$${costTotal.toLocaleString()}</p></div>
                         <div class="bg-red-50 p-4 rounded-2xl border border-red-100 flex flex-col justify-center"><p class="text-[9px] font-bold text-red-400 uppercase">Mermas</p><p class="text-xl font-black text-red-600">$${mermas.toLocaleString()}</p></div>
                         <div class="bg-orange-50 p-4 rounded-2xl border border-orange-100 flex flex-col justify-center"><p class="text-[9px] font-bold text-orange-500 uppercase">Gastos Fijos</p><p class="text-xl font-black text-orange-600">$${exTotal.toLocaleString()}</p></div>
                         <div class="bg-green-900 p-4 rounded-2xl border border-black col-span-2 md:col-span-1 flex flex-col justify-center"><p class="text-[9px] font-bold text-green-300 uppercase">Utilidad Neta</p><p class="text-xl font-black text-white">$${net.toLocaleString()}</p><p class="text-[9px] text-green-400 font-bold">${margin}% Margen</p></div>`;
                 }
-
-                // Star Product Logic
                 const metrics = {};
                 state.salesLogs.filter(s => s.type === 'venta').forEach(s => {
                     if(!metrics[s.itemName]) metrics[s.itemName] = { q:0, p:0 };
-                    metrics[s.itemName].q += s.qty;
-                    metrics[s.itemName].p += s.profit;
+                    metrics[s.itemName].q += s.qty; metrics[s.itemName].p += s.profit;
                 });
                 let star = { n: 'N/A', v: 0 }, rich = { n: 'N/A', v: 0 };
                 Object.entries(metrics).forEach(([n, d]) => {
                     if(d.q > star.v) star = { n, v: d.q };
                     if(d.p > rich.v) rich = { n, v: d.p };
                 });
-
                 const metricsPanel = document.getElementById('star-product-metrics');
                 if (metricsPanel) {
-                    metricsPanel.innerHTML = `
-                        <div class="bg-blue-100 p-4 rounded-full text-blue-600 shadow-inner shrink-0"><i data-lucide="lightbulb" class="w-8 h-8"></i></div>
+                    metricsPanel.innerHTML = `<div class="bg-blue-100 p-4 rounded-full text-blue-600 shadow-inner shrink-0"><i data-lucide="lightbulb" class="w-8 h-8"></i></div>
                         <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
                             <div class="bg-white p-4 rounded-xl border border-gray-100">
                                 <p class="text-[10px] font-bold text-gray-400 uppercase">Producto Estrella (Ventas)</p>
@@ -857,25 +799,21 @@
                             </div>
                         </div>`;
                 }
-
                 const exList = document.getElementById('list-fixed-expenses');
                 if (exList) {
                     exList.innerHTML = state.expenses.length === 0 ? '<p class="text-center py-4 text-xs opacity-40">Sin gastos.</p>' : '';
                     state.expenses.forEach(e => {
-                        exList.innerHTML += `
-                            <div class="flex justify-between items-center p-3 border rounded-xl bg-gray-50/30">
+                        exList.innerHTML += `<div class="flex justify-between items-center p-3 border rounded-xl bg-gray-50/30">
                                 <div><p class="text-xs font-bold">${e.description}</p><p class="text-[9px] text-gray-400">${e.date}</p></div>
                                 <div class="flex items-center gap-3"><span class="text-sm font-black text-orange-600">-$${e.amount.toLocaleString()}</span><button onclick="removeExpense(${e.id})" class="text-red-300 hover:text-red-500"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div>
                             </div>`;
                     });
                 }
-
                 const sList = document.getElementById('list-sales-merma');
                 if (sList) {
                     sList.innerHTML = state.salesLogs.length === 0 ? '<p class="text-center py-4 text-xs opacity-40">Sin registros.</p>' : '';
                     state.salesLogs.forEach(s => {
-                        sList.innerHTML += `
-                            <div class="border rounded-xl p-3 flex justify-between items-center ${s.type === 'merma' ? 'bg-red-50 border-red-100' : 'bg-white border-gray-100'}">
+                        sList.innerHTML += `<div class="border rounded-xl p-3 flex justify-between items-center ${s.type === 'merma' ? 'bg-red-50 border-red-100' : 'bg-white border-gray-100'}">
                                 <div><p class="font-black text-gray-800 text-xs">${s.qty}x ${s.itemName}</p><p class="text-[9px] text-gray-500 uppercase">${s.date} - ${s.type}</p></div>
                                 <div class="text-right">
                                     ${s.type === 'venta' ? `<p class="text-sm font-black text-green-600">+$${Math.floor(s.revenue).toLocaleString()}</p><p class="text-[9px] font-bold text-gray-400">+$${Math.floor(s.profit).toLocaleString()} n.</p>` : `<p class="text-sm font-black text-red-600">-$${Math.floor(s.cost).toLocaleString()}</p>`}
@@ -883,19 +821,16 @@
                             </div>`;
                     });
                 }
-
             } else {
                 const contentFinanzas = document.getElementById('hview-finanzas-content');
                 const contentLotes = document.getElementById('hview-lotes-content');
                 if (contentFinanzas) contentFinanzas.classList.add('hidden');
                 if (contentLotes) contentLotes.classList.remove('hidden');
-                
                 const list = document.getElementById('list-batch-traceability');
                 if (list) {
                     list.innerHTML = state.productionLogs.length === 0 ? '<div class="text-center py-10 opacity-40 font-bold">No hay lotes registrados.</div>' : '';
                     state.productionLogs.forEach(log => {
-                        list.innerHTML += `
-                            <div class="bg-white border rounded-xl p-5 flex flex-col md:flex-row justify-between items-center gap-6">
+                        list.innerHTML += `<div class="bg-white border rounded-xl p-5 flex flex-col md:flex-row justify-between items-center gap-6">
                                 <div class="flex-1 w-full text-center md:text-left">
                                     <p class="font-black text-gray-800 text-lg">LOTE: ${log.lote} <span class="text-xs font-normal text-gray-400">(${log.date})</span></p>
                                     <div class="text-xs text-gray-500 mt-2 bg-gray-50 p-3 rounded-xl flex flex-wrap gap-2 justify-center md:justify-start">
@@ -922,50 +857,35 @@
             if (btnFin) btnFin.className = view === 'finanzas' ? 'px-5 py-3 rounded-xl font-bold text-sm active-sub-tab' : 'px-5 py-3 rounded-xl font-bold text-sm bg-gray-100 text-gray-500';
             if (btnLot) btnLot.className = view === 'lotes' ? 'px-5 py-3 rounded-xl font-bold text-sm active-sub-tab' : 'px-5 py-3 rounded-xl font-bold text-sm bg-gray-100 text-gray-500';
             renderHistory();
+            saveToLocalStorage();
         }
 
         function addFixedExpense() {
             const d = document.getElementById('input-expense-desc').value;
-            const aInput = document.getElementById('input-expense-amt').value;
-            const a = parseFloat(aInput);
+            const a = parseFloat(document.getElementById('input-expense-amt').value);
             if(!d || isNaN(a)) return;
             state.expenses.unshift({ id: Date.now(), description: d, amount: a, date: state.packDate });
             document.getElementById('input-expense-desc').value = '';
             document.getElementById('input-expense-amt').value = '';
             renderFinance();
+            saveToLocalStorage();
         }
 
-        function removeExpense(id) { state.expenses = state.expenses.filter(x => x.id !== id); renderFinance(); }
+        function removeExpense(id) { state.expenses = state.expenses.filter(x => x.id !== id); renderFinance(); saveToLocalStorage(); }
 
         function undoProduction(id) {
-            const batch = state.productionLogs.find(l => l.id === id);
-            if (!batch) return;
-            
-            if(!confirm("¿Seguro que quieres deshacer este lote? Se devolverán los insumos pero el stock en nevera debe estar disponible.")) return;
-            
+            if(!confirm("¿Seguro que quieres deshacer este lote?")) return;
             state.productionLogs = state.productionLogs.filter(l => l.id !== id);
             renderFinance();
+            saveToLocalStorage();
         }
 
-        function openResetModal() { 
-            const modal = document.getElementById('modal-confirm-reset');
-            if (modal) modal.classList.remove('hidden'); 
-            lucide.createIcons(); 
-        }
-        
-        function closeResetModal() { 
-            const modal = document.getElementById('modal-confirm-reset');
-            if (modal) modal.classList.add('hidden'); 
-        }
-
+        function openResetModal() { document.getElementById('modal-confirm-reset').classList.remove('hidden'); lucide.createIcons(); }
+        function closeResetModal() { document.getElementById('modal-confirm-reset').classList.add('hidden'); }
         function resetEverything() {
             Object.keys(state.inventory).forEach(k => { state.inventory[k].stock = 0; state.inventory[k].avgCost = 0; });
-            state.fridge = {};
-            state.salesLogs = [];
-            state.productionLogs = [];
-            state.expenses = [];
-            closeResetModal();
-            renderFinance();
+            state.fridge = {}; state.salesLogs = []; state.productionLogs = []; state.expenses = [];
+            closeResetModal(); renderFinance(); saveToLocalStorage();
         }
 
         function suggestBatchPrice() {
@@ -974,8 +894,24 @@
             if (priceField) priceField.value = defaultSalePrices[size] || 0;
         }
 
+        function setStickerSize(s) {
+            state.stickerSize = s;
+            document.querySelectorAll('#sticker-grid button').forEach(b => {
+                b.classList.remove('bg-green-600', 'text-white', 'shadow-md', 'scale-105');
+                b.classList.add('bg-white');
+            });
+            const btn = document.getElementById(`btn-size-${s}`);
+            if (btn) {
+                btn.classList.add('bg-green-600', 'text-white', 'shadow-md', 'scale-105');
+                btn.classList.remove('bg-white');
+            }
+            renderLabels();
+            saveToLocalStorage();
+        }
+
         // --- INICIO ---
         window.onload = () => {
+            loadFromLocalStorage();
             const today = new Date().toISOString().split('T')[0];
             const calcInput = document.getElementById('calc-date-input');
             const batchInput = document.getElementById('batch-date-input');
@@ -990,23 +926,8 @@
                     grid.innerHTML += `<button id="btn-size-${s}" onclick="setStickerSize('${s}')" class="p-3 text-[10px] font-bold border rounded-xl transition-all ${s==='10oz'?'bg-green-600 text-white shadow-md scale-105':'bg-white'}">${s}</button>`;
                 });
             }
-
             switchTab('registro');
         };
-
-        function setStickerSize(s) {
-            state.stickerSize = s;
-            document.querySelectorAll('#sticker-grid button').forEach(b => {
-                b.classList.remove('bg-green-600', 'text-white', 'shadow-md', 'scale-105');
-                b.classList.add('bg-white');
-            });
-            const btn = document.getElementById(`btn-size-${s}`);
-            if (btn) {
-                btn.classList.add('bg-green-600', 'text-white', 'shadow-md', 'scale-105');
-                btn.classList.remove('bg-white');
-            }
-            renderLabels();
-        }
     </script>
 </body>
 </html>
