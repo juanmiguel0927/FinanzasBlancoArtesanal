@@ -30,6 +30,18 @@
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
         }
 
+        /* Contenedor del sticker circular */
+        .sticker-wrapper {
+            box-sizing: border-box;
+            border-radius: 50% !important; /* Fuerza la forma circular */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            break-inside: avoid;
+            overflow: hidden;
+        }
+
         /* Estilos Críticos para PDF */
         body.pdf-exporting {
             overflow: visible !important;
@@ -341,9 +353,13 @@
         function switchTab(tab) {
             state.activeTab = tab;
             document.querySelectorAll('main').forEach(m => m.classList.add('hidden'));
-            document.getElementById(`main-content-${tab}`).classList.remove('hidden');
+            const mainContent = document.getElementById(`main-content-${tab}`);
+            if (mainContent) mainContent.classList.remove('hidden');
+            
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-nav-tab'));
-            document.getElementById(`btn-nav-${tab}`).classList.add('active-nav-tab');
+            const navBtn = document.getElementById(`btn-nav-${tab}`);
+            if (navBtn) navBtn.classList.add('active-nav-tab');
+            
             if(tab === 'etiquetas') renderLabels();
             if(tab === 'calculadora') updateVencimientos();
             if(tab === 'registro') renderFinance();
@@ -353,11 +369,15 @@
         function switchSubTab(sub) {
             state.activeFinanceTab = sub;
             ['lotes', 'nevera', 'bodega', 'historial'].forEach(t => {
-                document.getElementById(`subtab-content-${t}`).classList.add('hidden');
-                document.getElementById(`subnav-${t}`).classList.remove('active-sub-tab');
+                const subContent = document.getElementById(`subtab-content-${t}`);
+                if (subContent) subContent.classList.add('hidden');
+                const subBtn = document.getElementById(`subnav-${t}`);
+                if (subBtn) subBtn.classList.remove('active-sub-tab');
             });
-            document.getElementById(`subtab-content-${sub}`).classList.remove('hidden');
-            document.getElementById(`subnav-${sub}`).classList.add('active-sub-tab');
+            const activeSubContent = document.getElementById(`subtab-content-${sub}`);
+            if (activeSubContent) activeSubContent.classList.remove('hidden');
+            const activeSubBtn = document.getElementById(`subnav-${sub}`);
+            if (activeSubBtn) activeSubBtn.classList.add('active-sub-tab');
             renderFinance();
         }
 
@@ -411,7 +431,7 @@
         function getStickerHTML(d) {
             const scale = d / 55;
             const logo = 'https://raw.githubusercontent.com/juanmiguel0927/PedidosBlancoArtesanal/ca1c2c4df24364a5c325f8426a4e483e0b2874bd/Logo.jpg';
-            const borderStyle = state.showCutLine ? 'border: 0.15mm solid #ff00ff;' : 'border: 0.15mm solid transparent;';
+            const borderStyle = state.showCutLine ? 'border: 0.15mm solid #ff00ff; border-radius: 50%;' : 'border: 0.15mm solid transparent; border-radius: 50%;';
             return `
                 <div class="sticker-wrapper" style="width:${d}mm; height:${d}mm; ${borderStyle}">
                     <div style="width: 100%; height: 100%; background: white; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; border: ${0.4 * scale}mm solid #7cb342; padding: ${1 * scale}mm; box-sizing: border-box;">
@@ -428,11 +448,23 @@
 
         async function generatePDF() {
             const btn = document.getElementById('btn-pdf-gen');
+            const originalText = btn.innerHTML;
             btn.disabled = true;
             btn.innerHTML = '<span class="animate-spin mr-2">...</span> GENERANDO';
+            
+            // Forzar el scroll al inicio absoluto para que html2canvas capture desde 0,0
+            window.scrollTo(0, 0);
+            
             document.body.classList.add('pdf-exporting');
             
             const firstSheet = document.querySelector('.page-sheet');
+            if (!firstSheet) {
+                document.body.classList.remove('pdf-exporting');
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+                return;
+            }
+
             const w = parseFloat(firstSheet.style.width);
             const h = parseFloat(firstSheet.style.height);
 
@@ -440,16 +472,26 @@
                 margin: 0,
                 filename: 'Blanco_Artesanal_Etiquetas.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+                html2canvas: { 
+                    scale: 2, 
+                    useCORS: true, 
+                    backgroundColor: '#ffffff',
+                    scrollY: 0, // Inicia captura en el tope del elemento
+                    windowScrollY: 0 // Inicia captura en el tope de la ventana
+                },
                 jsPDF: { unit: 'mm', format: [w, h], orientation: 'portrait', compress: true }
             };
 
             try {
+                // Pequeña espera para asegurar que el navegador asimile el scroll y el modo pdf-exporting
+                await new Promise(r => setTimeout(r, 200));
                 await html2pdf().set(opt).from(document.getElementById('print-area')).save();
+            } catch (err) {
+                console.error("Error PDF:", err);
             } finally {
                 document.body.classList.remove('pdf-exporting');
                 btn.disabled = false;
-                btn.innerHTML = '<i data-lucide="download"></i> GUARDAR PDF EXACTO';
+                btn.innerHTML = originalText;
                 lucide.createIcons();
             }
         }
@@ -523,7 +565,7 @@
             const key = document.getElementById('select-buy-item').value;
             const qty = parseFloat(document.getElementById('input-buy-qty').value);
             const unitCost = parseFloat(document.getElementById('input-buy-unitcost').value);
-            if(!key || !qty || !unitCost) return;
+            if(!key || isNaN(qty) || isNaN(unitCost)) return;
 
             const item = state.inventory[key];
             const totalCost = qty * unitCost;
@@ -605,7 +647,7 @@
             const size = document.getElementById('input-prod-size').value;
             const qty = parseInt(document.getElementById('input-prod-qty').value);
             const price = parseFloat(document.getElementById('input-prod-price').value);
-            if(!qty || !price) return;
+            if(!qty || isNaN(qty) || isNaN(price)) return;
 
             const unitCostEnv = state.inventory[`envase_${size}`].avgCost;
             state.currentBatchProducts.push({ id: Date.now(), type, size, qty, price, pkgCost: unitCostEnv * qty });
@@ -675,10 +717,11 @@
             state.inventory.kumis.stock -= getVal('kumis');
             state.inventory.limon.stock -= getVal('limon');
 
+            const batchDate = document.getElementById('batch-date-input').value;
             state.productionLogs.unshift({ 
                 id: Date.now(), 
-                lote: document.getElementById('batch-date-input').value.split('-').reverse().join('').slice(0,4),
-                date: document.getElementById('batch-date-input').value,
+                lote: batchDate.split('-').reverse().join('').slice(0,4),
+                date: batchDate,
                 baseCost, 
                 products: [...state.currentBatchProducts] 
             });
@@ -724,16 +767,18 @@
 
         function updateSalePricePlaceholder() {
             const key = document.getElementById('sale-product-key').value;
-            if(key) document.getElementById('input-sale-price').value = state.fridge[key].defaultPrice;
+            const priceField = document.getElementById('input-sale-price');
+            if(key && priceField) priceField.value = state.fridge[key].defaultPrice;
         }
 
         function registerSale() {
             const key = document.getElementById('sale-product-key').value;
-            const qty = parseInt(document.getElementById('input-sale-qty').value);
+            const qtyInput = document.getElementById('input-sale-qty').value;
+            const qty = parseInt(qtyInput);
             const type = document.getElementById('select-sale-type').value;
             const price = parseFloat(document.getElementById('input-sale-price').value);
 
-            if(!key || !qty) return;
+            if(!key || isNaN(qty)) return;
             const item = state.fridge[key];
             if(qty > item.qty) return alert("No hay suficiente stock.");
 
@@ -775,14 +820,14 @@
                 const dash = document.getElementById('kpi-dashboard');
                 if (dash) {
                     dash.innerHTML = `
-                        <div class="bg-white p-4 rounded-2xl border shadow-sm"><p class="text-[9px] font-bold text-gray-400 uppercase">Ventas</p><p class="text-xl font-black text-blue-600">$${revTotal.toLocaleString()}</p></div>
-                        <div class="bg-white p-4 rounded-2xl border shadow-sm"><p class="text-[9px] font-bold text-gray-400 uppercase">Costo Prod.</p><p class="text-xl font-black">$${costTotal.toLocaleString()}</p></div>
-                        <div class="bg-red-50 p-4 rounded-2xl border border-red-100"><p class="text-[9px] font-bold text-red-400 uppercase">Mermas</p><p class="text-xl font-black text-red-600">$${mermas.toLocaleString()}</p></div>
-                        <div class="bg-orange-50 p-4 rounded-2xl border border-orange-100"><p class="text-[9px] font-bold text-orange-500 uppercase">Gastos Fijos</p><p class="text-xl font-black text-orange-600">$${exTotal.toLocaleString()}</p></div>
-                        <div class="bg-green-900 p-4 rounded-2xl border border-black col-span-2 md:col-span-1"><p class="text-[9px] font-bold text-green-300 uppercase">Utilidad Neta</p><p class="text-xl font-black text-white">$${net.toLocaleString()}</p><p class="text-[9px] text-green-400 font-bold">${margin}% Margen</p></div>`;
+                        <div class="bg-white p-4 rounded-2xl border shadow-sm flex flex-col justify-center"><p class="text-[9px] font-bold text-gray-400 uppercase">Ventas</p><p class="text-xl font-black text-blue-600">$${revTotal.toLocaleString()}</p></div>
+                        <div class="bg-white p-4 rounded-2xl border shadow-sm flex flex-col justify-center"><p class="text-[9px] font-bold text-gray-400 uppercase">Costo Prod.</p><p class="text-xl font-black">$${costTotal.toLocaleString()}</p></div>
+                        <div class="bg-red-50 p-4 rounded-2xl border border-red-100 flex flex-col justify-center"><p class="text-[9px] font-bold text-red-400 uppercase">Mermas</p><p class="text-xl font-black text-red-600">$${mermas.toLocaleString()}</p></div>
+                        <div class="bg-orange-50 p-4 rounded-2xl border border-orange-100 flex flex-col justify-center"><p class="text-[9px] font-bold text-orange-500 uppercase">Gastos Fijos</p><p class="text-xl font-black text-orange-600">$${exTotal.toLocaleString()}</p></div>
+                        <div class="bg-green-900 p-4 rounded-2xl border border-black col-span-2 md:col-span-1 flex flex-col justify-center"><p class="text-[9px] font-bold text-green-300 uppercase">Utilidad Neta</p><p class="text-xl font-black text-white">$${net.toLocaleString()}</p><p class="text-[9px] text-green-400 font-bold">${margin}% Margen</p></div>`;
                 }
 
-                // Star Product
+                // Star Product Logic
                 const metrics = {};
                 state.salesLogs.filter(s => s.type === 'venta').forEach(s => {
                     if(!metrics[s.itemName]) metrics[s.itemName] = { q:0, p:0 };
@@ -820,7 +865,7 @@
                         exList.innerHTML += `
                             <div class="flex justify-between items-center p-3 border rounded-xl bg-gray-50/30">
                                 <div><p class="text-xs font-bold">${e.description}</p><p class="text-[9px] text-gray-400">${e.date}</p></div>
-                                <div class="flex items-center gap-3"><span class="text-sm font-black text-orange-600">-$${e.amount.toLocaleString()}</span><button onclick="removeExpense(${e.id})" class="text-red-300"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div>
+                                <div class="flex items-center gap-3"><span class="text-sm font-black text-orange-600">-$${e.amount.toLocaleString()}</span><button onclick="removeExpense(${e.id})" class="text-red-300 hover:text-red-500"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div>
                             </div>`;
                     });
                 }
@@ -847,19 +892,19 @@
                 
                 const list = document.getElementById('list-batch-traceability');
                 if (list) {
-                    list.innerHTML = state.productionLogs.length === 0 ? '<p class="text-center py-10 opacity-40">Sin lotes.</p>' : '';
+                    list.innerHTML = state.productionLogs.length === 0 ? '<div class="text-center py-10 opacity-40 font-bold">No hay lotes registrados.</div>' : '';
                     state.productionLogs.forEach(log => {
                         list.innerHTML += `
                             <div class="bg-white border rounded-xl p-5 flex flex-col md:flex-row justify-between items-center gap-6">
-                                <div class="flex-1 w-full">
+                                <div class="flex-1 w-full text-center md:text-left">
                                     <p class="font-black text-gray-800 text-lg">LOTE: ${log.lote} <span class="text-xs font-normal text-gray-400">(${log.date})</span></p>
-                                    <div class="text-xs text-gray-500 mt-2 bg-gray-50 p-2 rounded-lg flex flex-wrap gap-2">
-                                        ${log.products.map(p => `<span class="bg-white border px-2 py-1 rounded shadow-sm">${p.qty}x ${p.size} ${p.type}</span>`).join('')}
+                                    <div class="text-xs text-gray-500 mt-2 bg-gray-50 p-3 rounded-xl flex flex-wrap gap-2 justify-center md:justify-start">
+                                        ${log.products.map(p => `<span class="bg-white border px-2 py-1 rounded shadow-sm font-bold">${p.qty}x ${p.size} ${p.type}</span>`).join('')}
                                     </div>
                                 </div>
-                                <div class="flex items-center gap-4 w-full md:w-auto">
-                                    <div class="flex-1 bg-white p-3 border rounded-xl text-center">
-                                        <p class="text-[9px] font-bold text-gray-400 uppercase">Costo Base</p><p class="font-black text-gray-700">$${Math.floor(log.baseCost).toLocaleString()}</p>
+                                <div class="flex items-center gap-4 w-full md:w-auto justify-center">
+                                    <div class="bg-white p-3 border rounded-xl text-center shadow-sm min-w-[100px]">
+                                        <p class="text-[9px] font-bold text-gray-400 uppercase mb-1">Costo Base</p><p class="font-black text-gray-700">$${Math.floor(log.baseCost).toLocaleString()}</p>
                                     </div>
                                     <button onclick="undoProduction(${log.id})" class="bg-red-50 text-red-500 p-4 rounded-xl border border-red-100 hover:bg-red-500 hover:text-white transition-all"><i data-lucide="trash-2"></i></button>
                                 </div>
@@ -872,15 +917,18 @@
 
         function setHistoryView(view) {
             state.historyView = view;
-            document.getElementById('hview-finanzas').className = view === 'finanzas' ? 'px-5 py-3 rounded-xl font-bold text-sm active-sub-tab' : 'px-5 py-3 rounded-xl font-bold text-sm bg-gray-100 text-gray-500';
-            document.getElementById('hview-lotes').className = view === 'lotes' ? 'px-5 py-3 rounded-xl font-bold text-sm active-sub-tab' : 'px-5 py-3 rounded-xl font-bold text-sm bg-gray-100 text-gray-500';
+            const btnFin = document.getElementById('hview-finanzas');
+            const btnLot = document.getElementById('hview-lotes');
+            if (btnFin) btnFin.className = view === 'finanzas' ? 'px-5 py-3 rounded-xl font-bold text-sm active-sub-tab' : 'px-5 py-3 rounded-xl font-bold text-sm bg-gray-100 text-gray-500';
+            if (btnLot) btnLot.className = view === 'lotes' ? 'px-5 py-3 rounded-xl font-bold text-sm active-sub-tab' : 'px-5 py-3 rounded-xl font-bold text-sm bg-gray-100 text-gray-500';
             renderHistory();
         }
 
         function addFixedExpense() {
             const d = document.getElementById('input-expense-desc').value;
-            const a = parseFloat(document.getElementById('input-expense-amt').value);
-            if(!d || !a) return;
+            const aInput = document.getElementById('input-expense-amt').value;
+            const a = parseFloat(aInput);
+            if(!d || isNaN(a)) return;
             state.expenses.unshift({ id: Date.now(), description: d, amount: a, date: state.packDate });
             document.getElementById('input-expense-desc').value = '';
             document.getElementById('input-expense-amt').value = '';
@@ -890,7 +938,11 @@
         function removeExpense(id) { state.expenses = state.expenses.filter(x => x.id !== id); renderFinance(); }
 
         function undoProduction(id) {
+            const batch = state.productionLogs.find(l => l.id === id);
+            if (!batch) return;
+            
             if(!confirm("¿Seguro que quieres deshacer este lote? Se devolverán los insumos pero el stock en nevera debe estar disponible.")) return;
+            
             state.productionLogs = state.productionLogs.filter(l => l.id !== id);
             renderFinance();
         }
@@ -933,6 +985,7 @@
 
             const grid = document.getElementById('sticker-grid');
             if (grid) {
+                grid.innerHTML = '';
                 Object.keys(stickerSizes).forEach(s => {
                     grid.innerHTML += `<button id="btn-size-${s}" onclick="setStickerSize('${s}')" class="p-3 text-[10px] font-bold border rounded-xl transition-all ${s==='10oz'?'bg-green-600 text-white shadow-md scale-105':'bg-white'}">${s}</button>`;
                 });
