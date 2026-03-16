@@ -33,7 +33,7 @@
         /* Contenedor del sticker circular */
         .sticker-wrapper {
             box-sizing: border-box;
-            border-radius: 50% !important;
+            border-radius: 50% !important; /* Fuerza la forma circular */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -51,7 +51,8 @@
         body.pdf-exporting nav, 
         body.pdf-exporting aside, 
         body.pdf-exporting #main-content-registry,
-        body.pdf-exporting #main-content-calculadora {
+        body.pdf-exporting #main-content-calculadora,
+        body.pdf-exporting footer {
             display: none !important;
         }
         body.pdf-exporting #print-area {
@@ -303,6 +304,18 @@
         </div>
     </main>
 
+    <!-- Créditos -->
+    <footer class="mt-auto py-6 bg-white border-t no-print text-center">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Sistema de Gestión Profesional</p>
+            <p class="text-sm font-bold text-green-800">Blanco Artesanal &copy; <span id="display-year"></span></p>
+            <p class="text-xs text-gray-500 mt-2 font-medium">Diseñado y Desarrollado por <span class="font-bold text-gray-800">Juan Miguel Rios Redondo</span></p>
+            <div class="flex items-center justify-center gap-2 mt-2 text-[10px] text-gray-400 font-bold uppercase">
+                <i data-lucide="map-pin" class="w-3 h-3"></i> Barranquilla, Colombia
+            </div>
+        </div>
+    </footer>
+
     <!-- Modal Reinicio -->
     <div id="modal-confirm-reset" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm p-4">
         <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center border border-red-100">
@@ -475,7 +488,13 @@
                 margin: 0,
                 filename: 'Blanco_Artesanal_Etiquetas.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', scrollY: 0, windowScrollY: 0 },
+                html2canvas: { 
+                    scale: 2, 
+                    useCORS: true, 
+                    backgroundColor: '#ffffff',
+                    scrollY: 0, 
+                    windowScrollY: 0 
+                },
                 jsPDF: { unit: 'mm', format: [w, h], orientation: 'portrait', compress: true }
             };
             try {
@@ -737,7 +756,8 @@
 
         function registerSale() {
             const key = document.getElementById('sale-product-key').value;
-            const qty = parseInt(document.getElementById('input-sale-qty').value);
+            const qtyInput = document.getElementById('input-sale-qty').value;
+            const qty = parseInt(qtyInput);
             const type = document.getElementById('select-sale-type').value;
             const price = parseFloat(document.getElementById('input-sale-price').value);
             if(!key || isNaN(qty)) return;
@@ -824,7 +844,7 @@
             } else {
                 const contentFinanzas = document.getElementById('hview-finanzas-content');
                 const contentLotes = document.getElementById('hview-lotes-content');
-                if (contentFinanzas) contentFinanzas.classList.add('hidden');
+                if (contentFinanzas) contentFinanzas.classList.remove('hidden');
                 if (contentLotes) contentLotes.classList.remove('hidden');
                 const list = document.getElementById('list-batch-traceability');
                 if (list) {
@@ -912,6 +932,10 @@
         // --- INICIO ---
         window.onload = () => {
             loadFromLocalStorage();
+            
+            // Actualizar año dinámico
+            document.getElementById('display-year').textContent = new Date().getFullYear();
+
             const today = new Date().toISOString().split('T')[0];
             const calcInput = document.getElementById('calc-date-input');
             const batchInput = document.getElementById('batch-date-input');
