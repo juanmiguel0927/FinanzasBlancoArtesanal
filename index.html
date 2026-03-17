@@ -267,7 +267,7 @@
 
         <!-- BODEGA INSUMOS -->
         <div id="subtab-content-bodega" class="hidden space-y-8">
-            <!-- Grid de Insumos -->
+            <!-- Grid de Insumos con Botón de Ajuste Individual -->
             <div id="inventory-summary-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4"></div>
             
             <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100">
@@ -306,7 +306,7 @@
                 </div>
             </div>
 
-            <!-- NUEVO: Respaldo de Datos -->
+            <!-- Respaldo de Datos (Importar/Exportar) -->
             <div class="bg-blue-50 border border-blue-100 p-6 md:p-8 rounded-2xl shadow-sm">
                 <div class="flex items-center gap-3 mb-4">
                     <div class="bg-blue-200 p-2 rounded-full text-blue-700"><i data-lucide="save"></i></div>
@@ -435,6 +435,7 @@
             paperType: 'A4',
             showCutLine: true,
             currentBatchProducts: [],
+            // Bodega vacía por defecto
             inventory: {
                 leche: { name: 'Leche Entera', unit: 'Cajas (900ml)', stock: 0, avgCost: 0, minStock: 10 },
                 azucar: { name: 'Azúcar', unit: 'kg', stock: 0, avgCost: 0, minStock: 5 }, 
@@ -458,7 +459,7 @@
         const stickerSizes = { '5oz': 45, '10oz': 55, '16oz': 65, '32oz': 85, '1lt': 95, '2lt': 110 };
         const defaultSalePrices = { '5oz': 8000, '10oz': 15000, '16oz': 25000, '32oz': 45000, '1lt': 11000, '2lt': 20000 };
 
-        // --- PERSISTENCIA LOCAL Y RESPALDO ---
+        // --- PERSISTENCIA LOCAL Y FUSIÓN INTELIGENTE (SMART MERGE) ---
         function saveToLocalStorage() {
             localStorage.setItem('blanco_artesanal_v2', JSON.stringify(state));
         }
@@ -468,7 +469,23 @@
             if (savedData) {
                 try {
                     const parsed = JSON.parse(savedData);
-                    state = { ...state, ...parsed };
+                    
+                    // Fusión inteligente para no perder nuevas propiedades al actualizar el código
+                    for (const key in parsed) {
+                        if (key === 'inventory' || key === 'fridge') {
+                            for (const subKey in parsed[key]) {
+                                if (state[key][subKey]) {
+                                    // Si existe en el código base, actualizamos con los valores guardados
+                                    state[key][subKey] = { ...state[key][subKey], ...parsed[key][subKey] };
+                                } else {
+                                    // Si no existe (ej. un producto viejo), lo mantenemos
+                                    state[key][subKey] = parsed[key][subKey];
+                                }
+                            }
+                        } else {
+                            state[key] = parsed[key];
+                        }
+                    }
                 } catch (e) {
                     console.error("Error cargando datos locales:", e);
                 }
@@ -477,7 +494,9 @@
 
         // Exportar a JSON
         function exportData() {
-            const dataStr = localStorage.getItem('blanco_artesanal_v2') || JSON.stringify(state);
+            // Guardamos el estado actual antes de exportar
+            saveToLocalStorage(); 
+            const dataStr = localStorage.getItem('blanco_artesanal_v2');
             const dataBlob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(dataBlob);
             const a = document.createElement('a');
@@ -490,7 +509,7 @@
             URL.revokeObjectURL(url);
         }
 
-        // Importar desde JSON
+        // Importar desde JSON con Fusión Inteligente
         function importData(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -499,8 +518,23 @@
                 try {
                     const importedState = JSON.parse(e.target.result);
                     if (importedState && importedState.inventory) {
-                        if(confirm("¿Estás seguro de importar este archivo? Tu información actual será reemplazada por completo.")) {
-                            state = { ...state, ...importedState };
+                        if(confirm("¿Estás seguro de importar este archivo? Tu información actual será reemplazada por los datos del archivo.")) {
+                            
+                            // Aplicar fusión inteligente a los datos importados
+                            for (const key in importedState) {
+                                if (key === 'inventory' || key === 'fridge') {
+                                    for (const subKey in importedState[key]) {
+                                        if (state[key][subKey]) {
+                                            state[key][subKey] = { ...state[key][subKey], ...importedState[key][subKey] };
+                                        } else {
+                                            state[key][subKey] = importedState[key][subKey];
+                                        }
+                                    }
+                                } else {
+                                    state[key] = importedState[key];
+                                }
+                            }
+                            
                             saveToLocalStorage();
                             renderFinance(); 
                             alert("¡Datos de Blanco Artesanal importados exitosamente!");
@@ -590,7 +624,7 @@
         function getStickerHTML(d) {
             const scale = d / 55;
             const logo = 'https://raw.githubusercontent.com/juanmiguel0927/PedidosBlancoArtesanal/ca1c2c4df24364a5c325f8426a4e483e0b2874bd/Logo.jpg';
-            const borderStyle = state.showCutLine ? 'border: 0.15mm solid #ff00ff;' : 'border: 0.15mm solid transparent;';
+            const borderStyle = state.showCutLine ? 'border: 0.15mm solid #ff00ff; border-radius: 50%;' : 'border: 0.15mm solid transparent; border-radius: 50%;';
             return `<div class="sticker-wrapper" style="width:${d}mm; height:${d}mm; ${borderStyle}">
                     <div style="width: 100%; height: 100%; background: white; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; border: ${0.4 * scale}mm solid #7cb342; padding: ${1 * scale}mm; box-sizing: border-box;">
                         <div style="width: 100%; height: 75%; display: flex; align-items: center; justify-content: center; padding-top: ${2 * scale}mm; overflow: hidden;">
@@ -624,7 +658,13 @@
                 margin: 0,
                 filename: 'Blanco_Artesanal_Etiquetas.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', scrollY: 0, windowScrollY: 0 },
+                html2canvas: { 
+                    scale: 2, 
+                    useCORS: true, 
+                    backgroundColor: '#ffffff',
+                    scrollY: 0, 
+                    windowScrollY: 0 
+                },
                 jsPDF: { unit: 'mm', format: [w, h], orientation: 'portrait', compress: true }
             };
             try {
@@ -1299,4 +1339,4 @@
         };
     </script>
 </body>
-</html>
+    </html>
