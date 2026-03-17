@@ -177,7 +177,10 @@
             <div class="lg:col-span-5 space-y-5 sm:space-y-6">
                 <div class="bg-white p-5 sm:p-6 rounded-2xl shadow-sm border border-orange-100">
                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 mb-5 sm:mb-6">
-                        <h2 class="text-base sm:text-lg font-black text-orange-900 flex items-center gap-2"><i data-lucide="beaker"></i> 1. Insumos en Olla</h2>
+                        <div class="flex items-center gap-3">
+                            <h2 class="text-base sm:text-lg font-black text-orange-900 flex items-center gap-2"><i data-lucide="beaker"></i> 1. Insumos en Olla</h2>
+                            <button onclick="openPlannerModal()" class="text-[10px] sm:text-xs bg-orange-100 hover:bg-orange-200 text-orange-800 px-3 py-1.5 rounded-lg font-bold flex items-center gap-1 transition-colors shadow-sm"><i data-lucide="calculator" class="w-3 h-3 sm:w-4 sm:h-4"></i> Planificador</button>
+                        </div>
                         <input type="date" id="batch-date-input" class="p-3 sm:p-2 border rounded-xl sm:rounded-lg text-sm font-bold text-gray-500 input-mobile h-12 sm:h-auto">
                     </div>
                     
@@ -192,28 +195,23 @@
                             </div>
                         </div>
 
-                        <!-- Fresas y Mermelada -->
+                        <!-- Fresas -->
                         <div class="border border-gray-200 bg-white rounded-xl p-3 focus-within:border-orange-500 transition-colors">
                             <div class="flex justify-between items-center mb-2">
-                                <label class="text-[10px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-1"><i data-lucide="cherry" class="w-3 h-3 text-red-500"></i> Fresas (Emp 300g)</label>
+                                <label class="text-[10px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-1"><i data-lucide="cherry" class="w-3 h-3 text-red-500"></i> Fresas / Fruta (Empaque)</label>
                             </div>
                             <div class="flex gap-2">
-                                <input type="number" id="bi-fresas" step="any" oninput="updateBatchProjections()" class="w-1/2 h-12 bg-gray-50 rounded-lg px-3 outline-none font-black text-lg text-gray-800 input-mobile" placeholder="Cant. Emp.">
-                                <select id="bi-fresas-modo" onchange="updateBatchProjections()" class="w-1/2 h-12 bg-red-50 text-red-800 border-red-200 border rounded-lg px-2 text-xs font-bold outline-none cursor-pointer input-mobile">
-                                    <option value="mermelada">Como Mermelada</option>
-                                    <option value="natural">Natural (0 Azúcar)</option>
-                                </select>
+                                <input type="number" id="bi-fresas" step="any" oninput="updateBatchProjections()" class="w-full h-12 bg-gray-50 rounded-lg px-3 outline-none font-black text-lg text-gray-800 input-mobile" placeholder="Cant. Empaques Usados">
                             </div>
                             <div class="mt-2 text-[10px] font-bold bg-gray-50 p-2 rounded-lg text-gray-500 flex justify-between">
                                 <span id="prev-fresas-bodega">Bodega: 0</span>
                                 <span id="prev-fresas-restante" class="text-blue-600">Quedarán: 0</span>
                             </div>
-                            <p id="alert-fresa-azucar" class="text-[9px] font-bold text-orange-500 mt-1 hidden"><i data-lucide="info" class="w-3 h-3 inline"></i> Requiere <span id="fresa-azucar-req">0</span>g de Azúcar (Se descontará autom.)</p>
                         </div>
 
                         <!-- Azúcar Libre -->
                         <div class="border border-gray-200 bg-white rounded-xl p-3 focus-within:border-orange-500 transition-colors">
-                            <label class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 block">Azúcar Adicional (Para Base)</label>
+                            <label class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 block">Azúcar Adicional (Total en Olla)</label>
                             <div class="flex gap-2">
                                 <input type="number" id="bi-azucar" step="any" oninput="updateBatchProjections()" class="w-2/3 h-12 bg-gray-50 rounded-lg px-3 outline-none font-black text-lg text-gray-800 input-mobile" placeholder="0">
                                 <select id="bu-azucar" onchange="updateBatchProjections()" class="w-1/3 h-12 bg-gray-50 border-gray-200 border rounded-lg px-2 text-xs font-bold outline-none cursor-pointer input-mobile">
@@ -315,11 +313,23 @@
                     <h2 class="text-base sm:text-lg font-black text-gray-800 mb-4 flex items-center gap-2"><i data-lucide="box"></i> 2. Armar Productos</h2>
                     <div class="bg-gray-50 p-4 sm:p-5 rounded-2xl mb-4 border border-gray-200 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <select id="input-prod-type" class="p-3 border rounded-xl font-bold text-sm input-mobile h-12">
-                            <option>Griego Natural</option>
-                            <option selected>Griego con Fruta</option>
-                            <option>Yogur Líquido</option>
+                            <option value="Griego Natural Sin Azúcar">Griego Natural (Sin Azúcar)</option>
+                            <option value="Griego Natural Con Azúcar">Griego Natural (Con Azúcar)</option>
+                            <option value="Griego Fresa Sin Azúcar">Griego Fresa (Sin Azúcar)</option>
+                            <option value="Griego Fresa Con Azúcar" selected>Griego Fresa (Con Azúcar)</option>
+                            <option value="Líquido Natural Sin Azúcar">Líquido Natural (Sin Azúcar)</option>
+                            <option value="Líquido Natural Con Azúcar">Líquido Natural (Con Azúcar)</option>
+                            <option value="Líquido Fresa Sin Azúcar">Líquido Fresa (Sin Azúcar)</option>
+                            <option value="Líquido Fresa Con Azúcar">Líquido Fresa (Con Azúcar)</option>
                         </select>
-                        <select id="input-prod-size" onchange="suggestBatchPrice()" class="p-3 border rounded-xl font-bold text-sm input-mobile h-12"></select>
+                        <select id="input-prod-size" onchange="suggestBatchPrice()" class="p-3 border rounded-xl font-bold text-sm input-mobile h-12">
+                            <option value="5oz">5oz</option>
+                            <option value="10oz">10oz</option>
+                            <option value="16oz">16oz</option>
+                            <option value="32oz">32oz</option>
+                            <option value="1lt">1 Lt</option>
+                            <option value="2lt">2 Lt</option>
+                        </select>
                         <div class="relative">
                             <input type="number" id="input-prod-qty" placeholder="Unidades" class="w-full p-3 border rounded-xl font-bold input-mobile h-12">
                             <p class="text-[9px] font-bold text-gray-400 absolute -bottom-4 left-1">Disp: <span id="prev-envase">0</span></p>
@@ -511,7 +521,79 @@
         </div>
     </footer>
 
-    <!-- Modal Ajuste Individual -->
+    <!-- Modal Planificador -->
+    <div id="modal-planner" class="hidden fixed inset-0 bg-slate-900/80 flex items-center justify-center z-50 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full border border-gray-200 flex flex-col max-h-[95vh] overflow-hidden">
+            <!-- Header -->
+            <div class="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                <h3 class="text-lg font-black text-gray-800 flex items-center gap-2"><i data-lucide="calculator" class="text-blue-600"></i> Planificador Inteligente</h3>
+                <button onclick="closePlannerModal()" class="p-2 bg-white border border-gray-200 rounded-full text-gray-500 hover:bg-gray-100 shrink-0"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            
+            <!-- Body -->
+            <div class="p-6 overflow-y-auto flex-1 space-y-6">
+                <!-- Base -->
+                <div class="bg-blue-50 border border-blue-100 p-5 rounded-2xl">
+                    <label class="text-xs font-black text-blue-800 uppercase tracking-widest block mb-2">Cajas de Leche Base (900ml)</label>
+                    <input type="number" id="plan-leche" oninput="calculatePlanner()" step="0.1" class="w-full h-14 px-4 rounded-xl font-black text-2xl outline-none focus:ring-2 focus:ring-blue-500 text-blue-900 shadow-sm bg-white border border-blue-200" placeholder="Ej: 20">
+                </div>
+
+                <!-- Productos a Armar -->
+                <div>
+                    <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-3">Cantidades a empacar (Unidades)</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        <div class="border border-gray-200 rounded-xl p-3 bg-gray-50 focus-within:border-orange-500 focus-within:bg-white transition-all">
+                            <span class="text-[10px] font-bold text-gray-500 uppercase block mb-1">Griego 5oz</span>
+                            <input type="number" id="plan-5oz" oninput="calculatePlanner()" class="w-full bg-transparent font-black text-lg outline-none" placeholder="0">
+                        </div>
+                        <div class="border border-gray-200 rounded-xl p-3 bg-gray-50 focus-within:border-orange-500 focus-within:bg-white transition-all">
+                            <span class="text-[10px] font-bold text-gray-500 uppercase block mb-1">Griego 10oz</span>
+                            <input type="number" id="plan-10oz" oninput="calculatePlanner()" class="w-full bg-transparent font-black text-lg outline-none" placeholder="0">
+                        </div>
+                        <div class="border border-gray-200 rounded-xl p-3 bg-gray-50 focus-within:border-orange-500 focus-within:bg-white transition-all">
+                            <span class="text-[10px] font-bold text-gray-500 uppercase block mb-1">Griego 16oz</span>
+                            <input type="number" id="plan-16oz" oninput="calculatePlanner()" class="w-full bg-transparent font-black text-lg outline-none" placeholder="0">
+                        </div>
+                        <div class="border border-gray-200 rounded-xl p-3 bg-gray-50 focus-within:border-orange-500 focus-within:bg-white transition-all">
+                            <span class="text-[10px] font-bold text-gray-500 uppercase block mb-1">Griego 32oz</span>
+                            <input type="number" id="plan-32oz" oninput="calculatePlanner()" class="w-full bg-transparent font-black text-lg outline-none" placeholder="0">
+                        </div>
+                        <div class="border border-blue-200 rounded-xl p-3 bg-blue-50 focus-within:border-blue-500 focus-within:bg-white transition-all sm:col-span-2">
+                            <span class="text-[10px] font-bold text-blue-500 uppercase block mb-1">Líquido 1Lt</span>
+                            <input type="number" id="plan-1lt" oninput="calculatePlanner()" class="w-full bg-transparent font-black text-lg outline-none text-blue-900" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer / Summary -->
+            <div id="planner-summary" class="bg-gray-900 text-white p-6 transition-colors duration-300">
+                <div class="flex justify-between items-end mb-4">
+                    <div>
+                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Leche Restante</p>
+                        <p class="text-3xl font-black"><span id="plan-rem-leche">0.00</span> <span class="text-sm font-normal opacity-70">cajas</span></p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Equivale a</p>
+                        <p class="text-xl font-black text-blue-400"><span id="plan-rem-griego">0</span> <span class="text-xs font-normal text-blue-200">g de Griego</span></p>
+                    </div>
+                </div>
+                
+                <div class="bg-black/30 p-3 rounded-lg mb-5 border border-white/10">
+                    <p id="plan-suggestions" class="text-xs font-bold text-gray-300 flex items-center gap-2">
+                        <i data-lucide="lightbulb" class="w-4 h-4 text-yellow-400 shrink-0"></i> 
+                        <span id="plan-sugg-text">Ingresa valores para ver sugerencias de empaque.</span>
+                    </p>
+                </div>
+
+                <button id="btn-apply-plan" onclick="applyPlanner()" class="w-full h-14 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-black uppercase tracking-wider shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i data-lucide="check-circle"></i> Aplicar al Lote Principal
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Ajuste Individual Bodega -->
     <div id="modal-adjust-item" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm p-4">
         <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl max-w-sm w-full border border-blue-100 transform transition-all max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-start mb-5 sm:mb-6">
@@ -545,6 +627,43 @@
         </div>
     </div>
 
+    <!-- Modal Ajustar Nevera (Desarmar) -->
+    <div id="modal-fridge-adjust" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm p-4">
+        <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl max-w-sm w-full border border-blue-100 transform transition-all">
+            <div class="flex justify-between items-start mb-5">
+                <div class="pr-4">
+                    <h3 class="text-base sm:text-lg font-black text-gray-800 leading-tight">Desarmar Producto</h3>
+                    <p id="fridge-adjust-name" class="text-xs sm:text-sm font-bold text-blue-600 mt-1"></p>
+                </div>
+                <button onclick="closeFridgeAdjustModal()" class="p-2 bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200 shrink-0"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            
+            <input type="hidden" id="fridge-adjust-key">
+            <input type="hidden" id="fridge-adjust-max">
+            
+            <div class="space-y-4">
+                <div class="bg-orange-50 text-orange-800 p-3 rounded-xl text-xs font-bold flex gap-2">
+                    <i data-lucide="info" class="w-4 h-4 shrink-0 mt-0.5"></i>
+                    <p>Al desarmar, los empaques y los insumos proporcionales (leche, fresa, azúcar) regresarán a la Olla y a la Bodega.</p>
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-black text-gray-400 uppercase mb-1 block">Cantidad a devolver (Max: <span id="fridge-adjust-max-label"></span>)</label>
+                    <input type="number" step="1" min="1" id="fridge-adjust-qty" class="w-full h-12 sm:h-14 p-3 border rounded-xl font-bold text-base sm:text-lg text-center input-mobile bg-gray-50 focus:bg-white focus:border-blue-500 outline-none transition-all">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 pt-2">
+                    <button onclick="returnAllFromFridge()" class="h-12 bg-red-50 text-red-600 rounded-xl font-bold text-[10px] sm:text-xs uppercase tracking-wider flex items-center justify-center gap-1 hover:bg-red-100 transition-colors">
+                        <i data-lucide="rotate-ccw" class="w-3 h-3 sm:w-4 sm:h-4"></i> Devolver Todo
+                    </button>
+                    <button onclick="confirmFridgeReturn()" class="h-12 bg-blue-600 text-white rounded-xl font-bold text-[10px] sm:text-xs uppercase tracking-wider shadow-md hover:bg-blue-700 active:scale-95 transition-all">
+                        Confirmar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Restaurar de Fábrica -->
     <div id="modal-hard-reset" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm p-4">
         <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center border border-red-100 transform transition-all max-h-[90vh] overflow-y-auto">
@@ -570,6 +689,7 @@
             paperType: 'A4',
             showCutLine: true,
             currentBatchProducts: [],
+            olla: {},
             inventory: {
                 leche: { name: 'Leche Entera', unit: 'Cajas (900ml)', stock: 0, avgCost: 0, minStock: 10 },
                 azucar: { name: 'Azúcar Libre', unit: 'kg', stock: 0, avgCost: 0, minStock: 5 }, 
@@ -595,6 +715,151 @@
         const stickerSizes = { '5oz': 45, '10oz': 55, '16oz': 65, '32oz': 85, '1lt': 95, '2lt': 110 };
         const defaultSalePrices = { '5oz': 8000, '10oz': 15000, '16oz': 25000, '32oz': 45000, '1lt': 11000, '2lt': 20000 };
         const sizeCapacities = { '5oz': 150, '10oz': 300, '16oz': 500, '32oz': 1000, '1lt': 1000, '2lt': 2000, 'Granel': 1 };
+
+        // --- FUNCIONES DEL PLANIFICADOR DE PRODUCCIÓN ---
+        window.openPlannerModal = () => {
+            document.getElementById('modal-planner').classList.remove('hidden');
+            lucide.createIcons();
+            
+            const currentMilk = parseFloat(document.getElementById('bi-leche').value) || 0;
+            document.getElementById('plan-leche').value = currentMilk > 0 ? currentMilk : '';
+            document.getElementById('plan-5oz').value = '';
+            document.getElementById('plan-10oz').value = '';
+            document.getElementById('plan-16oz').value = '';
+            document.getElementById('plan-32oz').value = '';
+            document.getElementById('plan-1lt').value = '';
+            
+            calculatePlanner();
+        };
+
+        window.closePlannerModal = () => {
+            document.getElementById('modal-planner').classList.add('hidden');
+        };
+
+        window.calculatePlanner = () => {
+            const getV = id => parseFloat(document.getElementById(id).value) || 0;
+            const boxes = getV('plan-leche');
+            const q5 = getV('plan-5oz');
+            const q10 = getV('plan-10oz');
+            const q16 = getV('plan-16oz');
+            const q32 = getV('plan-32oz');
+            const q1lt = getV('plan-1lt');
+
+            // Capacidades en Gramos (Griego) y ML (Líquido)
+            const totalGreekGrams = (q5 * 150) + (q10 * 300) + (q16 * 500) + (q32 * 1000);
+            const totalLiquidML = q1lt * 1000;
+
+            // Consumos de leche (1 caja = 250g Griego o 900ml Líquido)
+            const boxesForGreek = totalGreekGrams / 250;
+            const boxesForLiquid = totalLiquidML / 900;
+            const consumedBoxes = boxesForGreek + boxesForLiquid;
+
+            const remBoxes = boxes - consumedBoxes;
+            const remGreekGrams = remBoxes * 250;
+
+            // Actualizar Interfaz
+            document.getElementById('plan-rem-leche').innerText = remBoxes.toFixed(2);
+            document.getElementById('plan-rem-griego').innerText = remGreekGrams.toFixed(0);
+
+            const summaryPanel = document.getElementById('planner-summary');
+            const btnApply = document.getElementById('btn-apply-plan');
+            const suggText = document.getElementById('plan-sugg-text');
+
+            if (remBoxes < -0.01) {
+                // Alerta de Sobregiro
+                summaryPanel.classList.replace('bg-gray-900', 'bg-red-900');
+                btnApply.disabled = true;
+                
+                suggText.innerHTML = '<span class="text-red-200">Sobregiro detectado. Has planificado más producto del que rinde la leche.</span>';
+                suggText.parentElement.classList.replace('text-gray-300', 'text-red-200');
+            } else {
+                // Estado Normal
+                summaryPanel.classList.replace('bg-red-900', 'bg-gray-900');
+                btnApply.disabled = false;
+                suggText.parentElement.classList.replace('text-red-200', 'text-gray-300');
+
+                let sugg = [];
+                if (remGreekGrams >= 500) sugg.push(`${Math.floor(remGreekGrams/500)}x de 16oz (Griego)`);
+                if (remBoxes >= (1000/900)) sugg.push(`${Math.floor(remBoxes / (1000/900))}x de 1Lt (Líquido)`);
+
+                if (sugg.length > 0) {
+                    suggText.innerText = 'Sugerencia extra: Aún puedes armar ' + sugg.join(' o ') + '.';
+                } else if (remBoxes > 0) {
+                    suggText.innerText = 'La leche restante es mínima para otra unidad completa.';
+                } else if (boxes === 0) {
+                    suggText.innerText = 'Ingresa valores para ver sugerencias de empaque.';
+                } else {
+                    suggText.innerText = 'Leche optimizada al máximo. ¡Excelente!';
+                }
+            }
+        };
+
+        window.applyPlanner = () => {
+            const getV = id => parseFloat(document.getElementById(id).value) || 0;
+            const boxes = getV('plan-leche');
+            const q5 = getV('plan-5oz');
+            const q10 = getV('plan-10oz');
+            const q16 = getV('plan-16oz');
+            const q32 = getV('plan-32oz');
+            const q1lt = getV('plan-1lt');
+
+            if (boxes <= 0) return alert("Ingresa primero la cantidad de leche base.");
+
+            const totalGreekGrams = (q5*150) + (q10*300) + (q16*500) + (q32*1000);
+            const totalLiquidML = q1lt * 1000;
+
+            // Cálculos para Auto-llenado (Mermelada y Azúcar)
+            const mermeladaGrams = (totalGreekGrams * 0.20) + (totalLiquidML * 0.12);
+            const fresasPacks = mermeladaGrams / 300; // Asumiendo que 1 empaque (300g) rinde 300g de mermelada
+
+            const totalMass = totalGreekGrams + totalLiquidML;
+            const targetSugar = totalMass * 0.08;
+            const sugarFromMarmalade = mermeladaGrams * 0.50; // Asumiendo 50% de la mermelada es azúcar
+            const addedSugar = Math.max(0, targetSugar - sugarFromMarmalade);
+
+            const kumisNeeded = Math.ceil(boxes / 4); // 1 Kumis por cada 4 cajas (aprox equivalente a 250g)
+
+            // 1. Llenar Formulario Base
+            document.getElementById('bi-leche').value = boxes.toFixed(1);
+            
+            if (fresasPacks > 0) {
+                document.getElementById('bi-fresas').value = fresasPacks.toFixed(2);
+            }
+            
+            if (addedSugar > 0) {
+                document.getElementById('bi-azucar').value = addedSugar.toFixed(0);
+                document.getElementById('bu-azucar').value = 'g';
+            }
+
+            document.getElementById('bi-kumis').value = kumisNeeded;
+
+            // 2. Llenar Array de Productos del Lote
+            state.currentBatchProducts = [];
+            const addToBatch = (type, size, qty, baseTypeName) => {
+                if (qty > 0) {
+                    const envCost = state.inventory[`envase_${size}`]?.avgCost || 0;
+                    state.currentBatchProducts.push({
+                        id: Date.now() + Math.random(),
+                        type: baseTypeName,
+                        size: size,
+                        qty: qty,
+                        price: defaultSalePrices[size] || 0,
+                        pkgCost: envCost * qty
+                    });
+                }
+            };
+
+            addToBatch('Griego Fresa Con Azúcar', '5oz', q5, 'Griego Fresa Con Azúcar');
+            addToBatch('Griego Fresa Con Azúcar', '10oz', q10, 'Griego Fresa Con Azúcar');
+            addToBatch('Griego Fresa Con Azúcar', '16oz', q16, 'Griego Fresa Con Azúcar');
+            addToBatch('Griego Fresa Con Azúcar', '32oz', q32, 'Griego Fresa Con Azúcar');
+            addToBatch('Líquido Fresa Con Azúcar', '1lt', q1lt, 'Líquido Fresa Con Azúcar');
+
+            // 3. Cerrar y Actualizar Interfaz
+            closePlannerModal();
+            updateBatchTable();
+            updateBatchProjections();
+        };
 
         // --- PERSISTENCIA LOCAL Y FUSIÓN ---
         function saveToLocalStorage() {
@@ -699,6 +964,7 @@
                 granel_griego: { name: 'Base Griego (Sobrante)', unit: 'g', stock: 0, avgCost: 0, minStock: 0, hideBodega: true },
                 granel_liquido: { name: 'Base Líquida (Sobrante)', unit: 'ml', stock: 0, avgCost: 0, minStock: 0, hideBodega: true }
             };
+            state.olla = {};
             state.fridge = {};
             state.salesLogs = [];
             state.expenses = [];
@@ -1028,9 +1294,8 @@
                 prevLecheRes.className = resLeche < 0 ? 'text-red-500 font-bold' : 'text-blue-600 font-bold';
             }
 
-            // Fresas y Cálculo Automático de Azúcar (Mermelada)
+            // Fresas independizado
             const fresasPack = getVal('bi-fresas');
-            const fresasModo = document.getElementById('bi-fresas-modo')?.value || 'mermelada';
             const fresasStock = state.inventory.fresas.stock;
             if(document.getElementById('prev-fresas-bodega')) document.getElementById('prev-fresas-bodega').innerText = `Bodega: ${fresasStock.toFixed(1)}`;
             if(document.getElementById('prev-fresas-restante')) {
@@ -1039,21 +1304,8 @@
                 document.getElementById('prev-fresas-restante').className = resFresas < 0 ? 'text-red-500' : 'text-blue-600';
             }
 
-            let autoSugarGrams = 0;
-            const alertFresa = document.getElementById('alert-fresa-azucar');
-            if (fresasModo === 'mermelada' && fresasPack > 0) {
-                autoSugarGrams = fresasPack * 250;
-                if(alertFresa) {
-                    alertFresa.classList.remove('hidden');
-                    document.getElementById('fresa-azucar-req').innerText = autoSugarGrams;
-                }
-            } else {
-                if(alertFresa) alertFresa.classList.add('hidden');
-            }
-
             // Azúcar Libre
-            const azucarBaseGrams = toKg(getVal('bi-azucar'), document.getElementById('bu-azucar')?.value) * 1000;
-            const totalSugarKg = (azucarBaseGrams + autoSugarGrams) / 1000;
+            const totalSugarKg = toKg(getVal('bi-azucar'), document.getElementById('bu-azucar')?.value);
             const sugarStock = state.inventory.azucar.stock;
             if(document.getElementById('prev-azucar-bodega')) document.getElementById('prev-azucar-bodega').innerText = `Bodega: ${sugarStock.toFixed(2)}kg`;
             if(document.getElementById('prev-azucar-totaluso')) {
@@ -1078,13 +1330,17 @@
             updateMiniPreview('limon', getVal('bi-limon'), null);
 
             // ACTUALIZACIÓN DE COSTO BASE
-            const costInsumos = (milkBoxes * state.inventory.leche.avgCost) +
-                                (totalSugarKg * state.inventory.azucar.avgCost) +
-                                (toKg(getVal('bi-polvo'), document.getElementById('bu-polvo')?.value) * state.inventory.polvo.avgCost) +
-                                (fresasPack * state.inventory.fresas.avgCost) +
-                                (getVal('bi-kumis') * state.inventory.kumis.avgCost) +
-                                (getVal('bi-limon') * state.inventory.limon.avgCost) +
-                                getVal('bi-others');
+            const costLeche = milkBoxes * state.inventory.leche.avgCost;
+            const costPolvo = toKg(getVal('bi-polvo'), document.getElementById('bu-polvo')?.value) * state.inventory.polvo.avgCost;
+            const costKumis = getVal('bi-kumis') * state.inventory.kumis.avgCost;
+            const costLimon = getVal('bi-limon') * state.inventory.limon.avgCost;
+            const costOthers = getVal('bi-others');
+            
+            const baseCostTotal = costLeche + costPolvo + costKumis + costLimon + costOthers;
+            const fresaCostTotal = fresasPack * state.inventory.fresas.avgCost;
+            const sugarCostTotal = totalSugarKg * state.inventory.azucar.avgCost;
+            
+            const costInsumos = baseCostTotal + fresaCostTotal + sugarCostTotal;
                                 
             if(document.getElementById('label-costo-base')) document.getElementById('label-costo-base').innerText = `$${Math.floor(costInsumos).toLocaleString()}`;
             
@@ -1150,6 +1406,20 @@
                 }
             }
 
+            // Guardar estado de la olla para que no se borre al recargar
+            state.olla = {
+                leche: document.getElementById('bi-leche')?.value || '',
+                fresas: document.getElementById('bi-fresas')?.value || '',
+                azucar: document.getElementById('bi-azucar')?.value || '',
+                azucarUnidad: document.getElementById('bu-azucar')?.value || 'g',
+                polvo: document.getElementById('bi-polvo')?.value || '',
+                polvoUnidad: document.getElementById('bu-polvo')?.value || 'g',
+                kumis: document.getElementById('bi-kumis')?.value || '',
+                limon: document.getElementById('bi-limon')?.value || '',
+                others: document.getElementById('bi-others')?.value || ''
+            };
+            saveToLocalStorage();
+
             // Actualizar stock en tiempo real del empacado seleccionado
             const selSize = document.getElementById('input-prod-size')?.value;
             if(selSize && document.getElementById('prev-envase')) {
@@ -1206,59 +1476,66 @@
             const toKg = (val, unit) => unit === 'kg' ? val : (unit === 'cucharada' ? (val * 15) / 1000 : val / 1000);
             
             const milkBoxes = getVal('bi-leche');
+            if (milkBoxes <= 0) return alert("Debes ingresar la cantidad de leche en la olla.");
+
             const fresasPack = getVal('bi-fresas');
-            const fresasModo = document.getElementById('bi-fresas-modo')?.value || 'mermelada';
-            
-            let autoSugarGrams = 0;
-            if (fresasModo === 'mermelada' && fresasPack > 0) autoSugarGrams = fresasPack * 250;
-            
-            const azucarBaseGrams = toKg(getVal('bi-azucar'), document.getElementById('bu-azucar')?.value) * 1000;
-            const totalSugarKg = (azucarBaseGrams + autoSugarGrams) / 1000;
-            
+            const totalSugarKg = toKg(getVal('bi-azucar'), document.getElementById('bu-azucar')?.value);
             const polvoKg = toKg(getVal('bi-polvo'), document.getElementById('bu-polvo')?.value);
+            const kumisQty = getVal('bi-kumis');
+            const limonQty = getVal('bi-limon');
+            const othersCost = getVal('bi-others');
 
-            const baseCost = (milkBoxes * state.inventory.leche.avgCost) +
-                             (totalSugarKg * state.inventory.azucar.avgCost) +
-                             (polvoKg * state.inventory.polvo.avgCost) +
-                             (fresasPack * state.inventory.fresas.avgCost) +
-                             (getVal('bi-kumis') * state.inventory.kumis.avgCost) +
-                             (getVal('bi-limon') * state.inventory.limon.avgCost) +
-                             getVal('bi-others');
+            const baseCostTotal = (milkBoxes * state.inventory.leche.avgCost) +
+                              (polvoKg * state.inventory.polvo.avgCost) +
+                              (kumisQty * state.inventory.kumis.avgCost) +
+                              (limonQty * state.inventory.limon.avgCost) +
+                              othersCost;
 
-            let consumedME = 0;
+            const fresaCostTotal = fresasPack * state.inventory.fresas.avgCost;
+            const sugarCostTotal = totalSugarKg * state.inventory.azucar.avgCost;
+
+            let consumedBaseME = 0;
+            let consumedFresaME = 0;
+            let consumedSugarME = 0;
+
             state.currentBatchProducts.forEach(p => {
                 const isGreek = p.type.toLowerCase().includes('griego');
+                const hasFresa = p.type.toLowerCase().includes('fresa');
+                const hasSugar = p.type.toLowerCase().includes('con azúcar');
+                
                 const cap = sizeCapacities[p.size] || 0;
                 p.me = isGreek ? ((p.qty * cap) / 250) : ((p.qty * cap) / 1000);
-                consumedME += p.me;
+                
+                consumedBaseME += p.me;
+                if (hasFresa) consumedFresaME += p.me;
+                if (hasSugar) consumedSugarME += p.me;
             });
 
-            const totalME = milkBoxes > 0 ? milkBoxes : consumedME;
-            const costPerME = totalME > 0 ? (baseCost / totalME) : 0;
-            const leftoverME = milkBoxes > 0 ? (milkBoxes - consumedME) : 0;
+            if (milkBoxes < consumedBaseME - 0.01) return alert("Error: Estás empacando más producto del que rinde la leche en la olla.");
 
-            if (leftoverME < -0.01) return alert("Error: Estás empacando más producto del que rinde la leche.");
+            // Fracciones usadas de cada tanque (Base, Fresa, Azúcar) de la Olla
+            const fractionBase = consumedBaseME / milkBoxes;
+            const fractionFresa = milkBoxes > 0 ? (consumedFresaME / milkBoxes) : 0;
+            const fractionSugar = milkBoxes > 0 ? (consumedSugarME / milkBoxes) : 0;
 
-            if (leftoverME > 0.01) {
-                // Automatically assign leftover as Greek base by default or user choice if we implemented it (Default to greek for simplicity in logic)
-                const isGreek = confirm("¿El producto sobrante es Base de Yogur Griego? \n(Aceptar = Griego, Cancelar = Líquido)");
-                const qty = isGreek ? (leftoverME * 250) : (leftoverME * 1000);
-                const typeName = isGreek ? 'Base Griego a Granel' : 'Base Líquida a Granel';
-                
-                state.currentBatchProducts.push({
-                    id: Date.now() + 1, type: typeName, size: 'Granel', qty: Math.round(qty), price: 0, pkgCost: 0, me: leftoverME, isLeftover: true, totalCost: leftoverME * costPerME
-                });
-            }
+            // Atribución de costo exacto por ME (Equivalente de Leche)
+            const baseCostPerME = milkBoxes > 0 ? (baseCostTotal / milkBoxes) : 0;
+            const fresaCostPerME = milkBoxes > 0 ? (fresaCostTotal / milkBoxes) : 0;
+            const sugarCostPerME = milkBoxes > 0 ? (sugarCostTotal / milkBoxes) : 0;
 
+            // Enviar productos a nevera
             state.currentBatchProducts.forEach(p => {
                 const key = `${p.type}_${p.size}`;
-                let realUnitCost = 0;
-                if (p.isLeftover) {
-                    realUnitCost = p.qty > 0 ? (p.totalCost / p.qty) : 0;
-                } else {
-                    realUnitCost = p.qty > 0 ? (((p.me * costPerME) + p.pkgCost) / p.qty) : 0;
-                    state.inventory[`envase_${p.size}`].stock = Math.max(0, state.inventory[`envase_${p.size}`].stock - p.qty);
-                }
+                const hasFresa = p.type.toLowerCase().includes('fresa');
+                const hasSugar = p.type.toLowerCase().includes('con azúcar');
+                
+                let myCostPerME = baseCostPerME;
+                if (hasFresa) myCostPerME += fresaCostPerME;
+                if (hasSugar) myCostPerME += sugarCostPerME;
+
+                const realUnitCost = p.qty > 0 ? (((p.me * myCostPerME) + p.pkgCost) / p.qty) : 0;
+                
+                state.inventory[`envase_${p.size}`].stock = Math.max(0, state.inventory[`envase_${p.size}`].stock - p.qty);
 
                 if(state.fridge[key]) {
                     const newQty = state.fridge[key].qty + p.qty;
@@ -1269,29 +1546,61 @@
                 }
             });
 
-            state.inventory.leche.stock = Math.max(0, state.inventory.leche.stock - milkBoxes);
-            state.inventory.azucar.stock = Math.max(0, state.inventory.azucar.stock - totalSugarKg);
-            state.inventory.polvo.stock = Math.max(0, state.inventory.polvo.stock - polvoKg);
-            state.inventory.fresas.stock = Math.max(0, state.inventory.fresas.stock - fresasPack);
-            state.inventory.kumis.stock = Math.max(0, state.inventory.kumis.stock - getVal('bi-kumis'));
-            state.inventory.limon.stock = Math.max(0, state.inventory.limon.stock - getVal('bi-limon'));
+            // Descontar SOLO la fracción usada de los insumos según su tipo de producto
+            state.inventory.leche.stock = Math.max(0, state.inventory.leche.stock - (milkBoxes * fractionBase));
+            state.inventory.polvo.stock = Math.max(0, state.inventory.polvo.stock - (polvoKg * fractionBase));
+            state.inventory.kumis.stock = Math.max(0, state.inventory.kumis.stock - (kumisQty * fractionBase));
+            state.inventory.limon.stock = Math.max(0, state.inventory.limon.stock - (limonQty * fractionBase));
             
+            // Fresa y Azúcar solo se descuentan de la olla si se empacaron productos que los contienen
+            state.inventory.fresas.stock = Math.max(0, state.inventory.fresas.stock - (fresasPack * fractionFresa));
+            state.inventory.azucar.stock = Math.max(0, state.inventory.azucar.stock - (totalSugarKg * fractionSugar));
+            
+            // Registrar en el historial
             const batchDate = document.getElementById('batch-date-input').value;
+            const costUsedBase = baseCostTotal * fractionBase;
+            const costUsedFresa = fresaCostTotal * fractionFresa;
+            const costUsedSugar = sugarCostTotal * fractionSugar;
+
             state.productionLogs.unshift({ 
                 id: Date.now(), 
                 lote: batchDate.split('-').reverse().join('').slice(0,4),
                 date: batchDate,
-                baseCost, 
+                baseCost: costUsedBase + costUsedFresa + costUsedSugar, 
                 products: [...state.currentBatchProducts],
                 rawUsage: { 
-                    leche: milkBoxes, azucarKg: totalSugarKg, polvoKg: polvoKg, fresas: fresasPack,
-                    kumis: getVal('bi-kumis'), limon: getVal('bi-limon')
+                    leche: milkBoxes * fractionBase, 
+                    azucarKg: totalSugarKg * fractionSugar, 
+                    polvoKg: polvoKg * fractionBase, 
+                    fresas: fresasPack * fractionFresa,
+                    kumis: kumisQty * fractionBase, 
+                    limon: limonQty * fractionBase
                 }
             });
             
-            // Limpiar Olla
-            document.querySelectorAll('#ingredients-inputs input').forEach(inp => inp.value = '');
+            // Actualizar visualmente la Olla dejando los restos exactos correspondientes
+            const updateInputRemainder = (id, originalValue, fractionUsed) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                const remainder = originalValue * (1 - fractionUsed);
+                if (remainder < 0.01) {
+                    el.value = '';
+                } else {
+                    el.value = Number.isInteger(originalValue) && remainder % 1 === 0 ? remainder : parseFloat(remainder.toFixed(2)); 
+                }
+            };
+
+            updateInputRemainder('bi-leche', milkBoxes, fractionBase);
+            updateInputRemainder('bi-fresas', fresasPack, fractionFresa); // Si no se armó nada con fresa, fractionFresa será 0, y la fresa queda intacta.
+            updateInputRemainder('bi-azucar', getVal('bi-azucar'), fractionSugar);
+            updateInputRemainder('bi-polvo', getVal('bi-polvo'), fractionBase);
+            updateInputRemainder('bi-kumis', kumisQty, fractionBase);
+            updateInputRemainder('bi-limon', limonQty, fractionBase);
+            updateInputRemainder('bi-others', othersCost, fractionBase);
+
             state.currentBatchProducts = [];
+            updateBatchTable();
+            updateBatchProjections();
             switchSubTab('nevera');
             saveToLocalStorage();
         }
@@ -1308,19 +1617,127 @@
             }
             Object.entries(state.fridge).forEach(([key, item]) => {
                 grid.innerHTML += `
-                    <div class="border border-blue-200 bg-white p-5 rounded-2xl shadow-sm flex flex-col justify-between hover:border-blue-400 hover:shadow-md transition-all cursor-pointer" onclick="selectFridgeItem('${key}')">
-                        <div class="flex justify-between items-start mb-3">
+                    <div class="border border-blue-200 bg-white p-5 rounded-2xl shadow-sm flex flex-col justify-between hover:border-blue-400 hover:shadow-md transition-all cursor-pointer relative" onclick="selectFridgeItem('${key}')">
+                        <button onclick="event.stopPropagation(); openFridgeAdjustModal('${key}')" class="absolute top-3 right-3 p-2 bg-gray-50 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors shadow-sm" title="Desarmar/Devolver a Olla">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        </button>
+                        <div class="flex justify-between items-start mb-3 pr-8">
                             <div><h3 class="font-black text-gray-800 text-sm leading-tight">${item.type}</h3><span class="text-[10px] bg-orange-100 text-orange-800 px-2 rounded-full font-black mt-1 inline-block uppercase tracking-wider">${item.size}</span></div>
                             <span class="text-3xl sm:text-4xl font-black text-blue-600 leading-none">${item.qty}</span>
                         </div>
                         <div class="mt-3 pt-3 border-t border-gray-100 flex justify-between items-center">
-                             <span class="text-[10px] uppercase font-bold text-gray-400">Costo Real: <b>$${item.unitCost.toFixed(0)}</b></span>
+                             <span class="text-[10px] uppercase font-bold text-gray-400">Costo Real: <b>$${Math.floor(item.unitCost)}</b></span>
                              <span class="text-[10px] uppercase font-bold text-gray-400">PVP: <b class="text-green-600 text-xs">$${item.defaultPrice}</b></span>
                         </div>
                     </div>`;
                 sel.innerHTML += `<option value="${key}">${item.type} ${item.size} (${item.qty} disp.)</option>`;
             });
         }
+
+        window.openFridgeAdjustModal = (key) => {
+            const item = state.fridge[key];
+            if(!item) return;
+            document.getElementById('fridge-adjust-key').value = key;
+            document.getElementById('fridge-adjust-name').innerText = `${item.type} (${item.size})`;
+            document.getElementById('fridge-adjust-max').value = item.qty;
+            document.getElementById('fridge-adjust-max-label').innerText = item.qty;
+            document.getElementById('fridge-adjust-qty').value = '';
+            document.getElementById('modal-fridge-adjust').classList.remove('hidden');
+            lucide.createIcons();
+        };
+
+        window.closeFridgeAdjustModal = () => {
+            document.getElementById('modal-fridge-adjust').classList.add('hidden');
+        };
+
+        window.returnAllFromFridge = () => {
+            const maxQty = document.getElementById('fridge-adjust-max').value;
+            document.getElementById('fridge-adjust-qty').value = maxQty;
+            confirmFridgeReturn();
+        };
+
+        window.confirmFridgeReturn = () => {
+            const key = document.getElementById('fridge-adjust-key').value;
+            const qtyToReturn = parseInt(document.getElementById('fridge-adjust-qty').value);
+            const maxQty = parseInt(document.getElementById('fridge-adjust-max').value);
+            
+            if (!key || isNaN(qtyToReturn) || qtyToReturn <= 0 || qtyToReturn > maxQty) {
+                return alert("Ingresa una cantidad válida a devolver.");
+            }
+
+            const item = state.fridge[key];
+            if (!item) return;
+
+            const isGreek = item.type.toLowerCase().includes('griego');
+            const hasFresa = item.type.toLowerCase().includes('fresa');
+            const hasSugar = item.type.toLowerCase().includes('con azúcar');
+
+            const cap = sizeCapacities[item.size] || 0;
+            const totalVol = qtyToReturn * cap;
+
+            const me = isGreek ? (totalVol / 250) : (totalVol / 1000);
+            let fresaPacks = 0;
+            let sugarKg = 0;
+
+            if (hasFresa) {
+                const fresaGrams = isGreek ? (totalVol * 0.20) : (totalVol * 0.12);
+                fresaPacks = fresaGrams / 300;
+            }
+
+            if (hasSugar) {
+                const fresaGrams = hasFresa ? (isGreek ? (totalVol * 0.20) : (totalVol * 0.12)) : 0;
+                const sugarFromFresa = fresaGrams * 0.50;
+                const targetSugar = totalVol * 0.08;
+                const addedSugarGrams = Math.max(0, targetSugar - sugarFromFresa);
+                sugarKg = addedSugarGrams / 1000;
+            }
+
+            // Devolver a Bodega
+            state.inventory.leche.stock += me;
+            if (hasFresa) state.inventory.fresas.stock += fresaPacks;
+            if (hasSugar) state.inventory.azucar.stock += sugarKg;
+            if (item.size !== 'Granel' && state.inventory[`envase_${item.size}`]) {
+                state.inventory[`envase_${item.size}`].stock += qtyToReturn;
+            }
+
+            // Devolver a Olla (Inputs de la UI)
+            const getV = id => parseFloat(document.getElementById(id)?.value) || 0;
+            document.getElementById('bi-leche').value = (getV('bi-leche') + me).toFixed(2);
+            
+            if (hasFresa) {
+                document.getElementById('bi-fresas').value = (getV('bi-fresas') + fresaPacks).toFixed(2);
+            }
+            
+            if (hasSugar) {
+                const u = document.getElementById('bu-azucar').value;
+                let currentAddedSugarKg = u === 'kg' ? getV('bi-azucar') : (u === 'g' ? getV('bi-azucar')/1000 : getV('bi-azucar')*15/1000);
+                let newTotalSugarKg = currentAddedSugarKg + sugarKg;
+                let newUiVal = u === 'kg' ? newTotalSugarKg : (u === 'g' ? newTotalSugarKg*1000 : newTotalSugarKg*1000/15);
+                document.getElementById('bi-azucar').value = newUiVal.toFixed(0);
+            }
+
+            // Restar de Nevera
+            item.qty -= qtyToReturn;
+            if (item.qty <= 0) delete state.fridge[key];
+
+            // Guardar estado de olla para persistencia
+            state.olla = {
+                leche: document.getElementById('bi-leche').value,
+                fresas: document.getElementById('bi-fresas').value,
+                azucar: document.getElementById('bi-azucar').value,
+                azucarUnidad: document.getElementById('bu-azucar').value,
+                polvo: document.getElementById('bi-polvo').value,
+                polvoUnidad: document.getElementById('bu-polvo').value,
+                kumis: document.getElementById('bi-kumis').value,
+                limon: document.getElementById('bi-limon').value,
+                others: document.getElementById('bi-others').value
+            };
+
+            renderFinance();
+            updateBatchProjections();
+            saveToLocalStorage();
+            closeFridgeAdjustModal();
+        };
 
         function selectFridgeItem(key) {
             const sel = document.getElementById('sale-product-key');
@@ -1413,17 +1830,17 @@
                 const exTotal = state.expenses.reduce((a,b) => a + b.amount, 0);
                 
                 const net = revTotal - costTotal - exTotal;
-                const margin = revTotal > 0 ? ((net / revTotal) * 100).toFixed(1) : 0;
+                const margin = revTotal > 0 ? ((net / revTotal) * 100).toFixed(0) : 0;
 
                 const dash = document.getElementById('kpi-dashboard');
                 if (dash) {
                     dash.innerHTML = `
-                        <div class="bg-white p-4 sm:p-5 rounded-2xl border shadow-sm flex flex-col justify-center"><p class="text-[10px] font-bold text-gray-400 uppercase">Ventas</p><p class="text-xl sm:text-2xl font-black text-blue-600 leading-none mt-1">$${revTotal.toLocaleString()}</p></div>
-                        <div class="bg-white p-4 sm:p-5 rounded-2xl border shadow-sm flex flex-col justify-center"><p class="text-[10px] font-bold text-gray-400 uppercase">Costo Prod.</p><p class="text-xl sm:text-2xl font-black leading-none mt-1">$${costTotal.toLocaleString()}</p></div>
-                        <div class="bg-red-50 p-4 sm:p-5 rounded-2xl border border-red-100 flex flex-col justify-center"><p class="text-[10px] font-bold text-red-500 uppercase">Mermas</p><p class="text-xl sm:text-2xl font-black text-red-600 leading-none mt-1">$${mermas.toLocaleString()}</p></div>
-                        <div class="bg-purple-50 p-4 sm:p-5 rounded-2xl border border-purple-100 flex flex-col justify-center"><p class="text-[10px] font-bold text-purple-500 uppercase">Muestras</p><p class="text-xl sm:text-2xl font-black text-purple-600 leading-none mt-1">$${cortesias.toLocaleString()}</p></div>
-                        <div class="bg-orange-50 p-4 sm:p-5 rounded-2xl border border-orange-100 flex flex-col justify-center sm:col-span-2 lg:col-span-1"><p class="text-[10px] font-bold text-orange-500 uppercase">Gastos Fijos</p><p class="text-xl sm:text-2xl font-black text-orange-600 leading-none mt-1">$${exTotal.toLocaleString()}</p></div>
-                        <div class="bg-green-900 p-5 sm:p-6 rounded-2xl shadow-lg border border-black col-span-2 md:col-span-3 lg:col-span-1 flex flex-col justify-center"><p class="text-[11px] font-bold text-green-300 uppercase opacity-90">Utilidad Neta</p><p class="text-3xl sm:text-3xl font-black text-white leading-none mt-1">$${net.toLocaleString()}</p><p class="text-[11px] ${margin >= 30 ? 'text-green-400' : 'text-red-400'} font-bold mt-2">${margin}% Margen</p></div>`;
+                        <div class="bg-white p-4 sm:p-5 rounded-2xl border shadow-sm flex flex-col justify-center"><p class="text-[10px] font-bold text-gray-400 uppercase">Ventas</p><p class="text-xl sm:text-2xl font-black text-blue-600 leading-none mt-1">$${Math.floor(revTotal).toLocaleString()}</p></div>
+                        <div class="bg-white p-4 sm:p-5 rounded-2xl border shadow-sm flex flex-col justify-center"><p class="text-[10px] font-bold text-gray-400 uppercase">Costo Prod.</p><p class="text-xl sm:text-2xl font-black leading-none mt-1">$${Math.floor(costTotal).toLocaleString()}</p></div>
+                        <div class="bg-red-50 p-4 sm:p-5 rounded-2xl border border-red-100 flex flex-col justify-center"><p class="text-[10px] font-bold text-red-500 uppercase">Mermas</p><p class="text-xl sm:text-2xl font-black text-red-600 leading-none mt-1">$${Math.floor(mermas).toLocaleString()}</p></div>
+                        <div class="bg-purple-50 p-4 sm:p-5 rounded-2xl border border-purple-100 flex flex-col justify-center"><p class="text-[10px] font-bold text-purple-500 uppercase">Muestras</p><p class="text-xl sm:text-2xl font-black text-purple-600 leading-none mt-1">$${Math.floor(cortesias).toLocaleString()}</p></div>
+                        <div class="bg-orange-50 p-4 sm:p-5 rounded-2xl border border-orange-100 flex flex-col justify-center sm:col-span-2 lg:col-span-1"><p class="text-[10px] font-bold text-orange-500 uppercase">Gastos Fijos</p><p class="text-xl sm:text-2xl font-black text-orange-600 leading-none mt-1">$${Math.floor(exTotal).toLocaleString()}</p></div>
+                        <div class="bg-green-900 p-5 sm:p-6 rounded-2xl shadow-lg border border-black col-span-2 md:col-span-3 lg:col-span-1 flex flex-col justify-center"><p class="text-[11px] font-bold text-green-300 uppercase opacity-90">Utilidad Neta</p><p class="text-3xl sm:text-3xl font-black text-white leading-none mt-1">$${Math.floor(net).toLocaleString()}</p><p class="text-[11px] ${margin >= 30 ? 'text-green-400' : 'text-red-400'} font-bold mt-2">${margin}% Margen</p></div>`;
                 }
 
                 const metrics = {};
@@ -1463,7 +1880,7 @@
                         exList.innerHTML += `
                             <div class="flex justify-between items-center p-4 border border-gray-50 rounded-xl bg-gray-50/50">
                                 <div><p class="text-sm font-bold text-gray-700">${e.description}</p><p class="text-[9px] text-gray-400 mt-1 uppercase">${e.date}</p></div>
-                                <div class="flex items-center gap-4"><span class="text-sm sm:text-base font-black text-orange-600">-$${e.amount.toLocaleString()}</span><button onclick="removeExpense(${e.id})" class="text-red-400 hover:text-red-600 bg-red-50 p-2 sm:p-2.5 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div>
+                                <div class="flex items-center gap-4"><span class="text-sm sm:text-base font-black text-orange-600">-$${Math.floor(e.amount).toLocaleString()}</span><button onclick="removeExpense(${e.id})" class="text-red-400 hover:text-red-600 bg-red-50 p-2 sm:p-2.5 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div>
                             </div>`;
                     });
                 }
@@ -1624,6 +2041,7 @@
                 granel_griego: { name: 'Base Griego (Sobrante)', unit: 'g', stock: 0, avgCost: 0, minStock: 0, hideBodega: true },
                 granel_liquido: { name: 'Base Líquida (Sobrante)', unit: 'ml', stock: 0, avgCost: 0, minStock: 0, hideBodega: true }
             };
+            state.olla = {};
             state.fridge = {}; 
             state.salesLogs = []; 
             state.productionLogs = []; 
@@ -1657,6 +2075,19 @@
             if (batchInput) batchInput.value = today;
             state.packDate = today;
 
+            // Restaurar valores de la olla guardados
+            if (state.olla) {
+                if(state.olla.leche) document.getElementById('bi-leche').value = state.olla.leche;
+                if(state.olla.fresas) document.getElementById('bi-fresas').value = state.olla.fresas;
+                if(state.olla.azucar) document.getElementById('bi-azucar').value = state.olla.azucar;
+                if(state.olla.azucarUnidad) document.getElementById('bu-azucar').value = state.olla.azucarUnidad;
+                if(state.olla.polvo) document.getElementById('bi-polvo').value = state.olla.polvo;
+                if(state.olla.polvoUnidad) document.getElementById('bu-polvo').value = state.olla.polvoUnidad;
+                if(state.olla.kumis) document.getElementById('bi-kumis').value = state.olla.kumis;
+                if(state.olla.limon) document.getElementById('bi-limon').value = state.olla.limon;
+                if(state.olla.others) document.getElementById('bi-others').value = state.olla.others;
+            }
+
             const grid = document.getElementById('sticker-grid');
             if (grid) {
                 grid.innerHTML = '';
@@ -1666,7 +2097,8 @@
             }
             switchTab('registro');
             updateSaleFormUI();
+            suggestBatchPrice();
         };
     </script>
 </body>
-    </html>
+</html>
