@@ -42,10 +42,14 @@
             overflow: hidden;
         }
 
-        /* Optimización Móvil (Anti-Zoom automático) */
+        /* Optimización Móvil (Anti-Zoom automático y ajustes de tap) */
         @media screen and (max-width: 768px) {
             .input-mobile, input, select, textarea {
                 font-size: 16px !important;
+            }
+            /* Evita el destello azul al tocar botones en móviles Android/iOS */
+            button, select, input {
+                -webkit-tap-highlight-color: transparent;
             }
         }
 
@@ -78,31 +82,31 @@
 
     <!-- Navegación Principal -->
     <nav class="bg-white border-b shadow-sm sticky top-0 z-30 no-print">
-        <div class="max-w-7xl mx-auto flex overflow-x-auto snap-x hide-scroll">
-            <button onclick="switchTab('etiquetas')" id="btn-nav-etiquetas" class="snap-start flex-shrink-0 flex items-center gap-2 px-6 py-4 font-bold text-sm whitespace-nowrap border-b-4 border-transparent text-gray-400 hover:bg-gray-50 transition-colors">
-                <i data-lucide="tags"></i> Etiquetas
+        <div class="max-w-7xl mx-auto flex overflow-x-auto snap-x hide-scroll scroll-smooth">
+            <button onclick="switchTab('etiquetas')" id="btn-nav-etiquetas" class="snap-start flex-shrink-0 flex items-center gap-2 px-5 sm:px-6 py-4 font-bold text-sm whitespace-nowrap border-b-4 border-transparent text-gray-400 hover:bg-gray-50 transition-colors">
+                <i data-lucide="tags" class="w-5 h-5 sm:w-4 sm:h-4"></i> Etiquetas
             </button>
-            <button onclick="switchTab('calculadora')" id="btn-nav-calculadora" class="snap-start flex-shrink-0 flex items-center gap-2 px-6 py-4 font-bold text-sm whitespace-nowrap border-b-4 border-transparent text-gray-400 hover:bg-gray-50 transition-colors">
-                <i data-lucide="calendar-days"></i> Vencimientos
+            <button onclick="switchTab('calculadora')" id="btn-nav-calculadora" class="snap-start flex-shrink-0 flex items-center gap-2 px-5 sm:px-6 py-4 font-bold text-sm whitespace-nowrap border-b-4 border-transparent text-gray-400 hover:bg-gray-50 transition-colors">
+                <i data-lucide="calendar-days" class="w-5 h-5 sm:w-4 sm:h-4"></i> Vencimientos
             </button>
-            <button onclick="switchTab('registro')" id="btn-nav-registro" class="snap-start flex-shrink-0 flex items-center gap-2 px-6 py-4 font-bold text-sm whitespace-nowrap border-b-4 active-nav-tab transition-colors">
-                <i data-lucide="database"></i> Finanzas e Inventario
+            <button onclick="switchTab('registro')" id="btn-nav-registro" class="snap-start flex-shrink-0 flex items-center gap-2 px-5 sm:px-6 py-4 font-bold text-sm whitespace-nowrap border-b-4 active-nav-tab transition-colors">
+                <i data-lucide="database" class="w-5 h-5 sm:w-4 sm:h-4"></i> Finanzas e Inventario
             </button>
         </div>
     </nav>
 
     <!-- SECCIÓN 1: ETIQUETAS -->
     <main id="main-content-etiquetas" class="hidden flex-1 flex flex-col lg:flex-row h-[calc(100vh-56px)] overflow-hidden">
-        <aside class="w-full lg:w-[420px] bg-white border-r p-6 overflow-y-auto no-print shadow-xl z-20">
-            <div class="flex items-center gap-2 mb-6 text-green-700 border-b pb-4">
+        <aside class="w-full lg:w-[420px] bg-white border-r p-4 sm:p-6 overflow-y-auto no-print shadow-xl z-20">
+            <div class="flex items-center gap-2 mb-5 sm:mb-6 text-green-700 border-b pb-3 sm:pb-4">
                 <i data-lucide="settings-2"></i>
-                <h1 class="text-xl font-black uppercase tracking-tighter">Panel Impresión</h1>
+                <h1 class="text-lg sm:text-xl font-black uppercase tracking-tighter">Panel Impresión</h1>
             </div>
             
-            <div class="space-y-6">
+            <div class="space-y-5 sm:space-y-6">
                 <section>
-                    <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">1. Tamaño de Papel</label>
-                    <select id="paper-type" onchange="renderLabels()" class="w-full p-4 md:p-3 border rounded-xl bg-gray-50 text-sm font-bold input-mobile">
+                    <label class="text-[11px] sm:text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">1. Tamaño de Papel</label>
+                    <select id="paper-type" onchange="renderLabels()" class="w-full p-3 border rounded-xl bg-gray-50 text-sm font-bold input-mobile h-12">
                         <option value="A4">A4 (210x297mm)</option>
                         <option value="Letter">Carta (215.9x279.4mm)</option>
                         <option value="A3">A3 (297x420mm)</option>
@@ -111,29 +115,29 @@
                 </section>
 
                 <section>
-                    <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">2. Tamaño Sticker</label>
+                    <label class="text-[11px] sm:text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">2. Tamaño Sticker</label>
                     <div id="sticker-grid" class="grid grid-cols-3 gap-2"></div>
                 </section>
 
                 <section>
-                    <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">3. Cantidad Deseada</label>
-                    <input type="number" id="target-qty" oninput="renderLabels()" class="w-full p-4 border-2 border-green-100 rounded-xl text-xl font-bold text-green-800 outline-none focus:border-green-500 input-mobile" placeholder="Ej: 50">
+                    <label class="text-[11px] sm:text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">3. Cantidad Deseada</label>
+                    <input type="number" id="target-qty" oninput="renderLabels()" class="w-full p-3 sm:p-4 border-2 border-green-100 rounded-xl text-lg sm:text-xl font-bold text-green-800 outline-none focus:border-green-500 input-mobile h-14" placeholder="Ej: 50">
                 </section>
 
-                <div class="bg-green-900 text-white p-5 rounded-2xl shadow-lg border-b-4 border-black">
-                    <h3 class="text-[10px] font-black uppercase tracking-widest mb-4 flex items-center gap-2 border-b border-green-700 pb-2 text-green-300">Resumen</h3>
-                    <div class="grid grid-cols-2 gap-y-3 text-xs">
-                        <span class="opacity-70">Stickers/fila:</span><span id="res-fila" class="font-bold text-right">0</span>
-                        <span class="opacity-70">Total stickers:</span><span id="res-total" class="font-bold text-right text-green-300 text-base leading-none">0</span>
+                <div class="bg-green-900 text-white p-4 sm:p-5 rounded-2xl shadow-lg border-b-4 border-black">
+                    <h3 class="text-[11px] sm:text-[10px] font-black uppercase tracking-widest mb-3 sm:mb-4 flex items-center gap-2 border-b border-green-700 pb-2 text-green-300">Resumen</h3>
+                    <div class="grid grid-cols-2 gap-y-2 sm:gap-y-3 text-xs">
+                        <span class="opacity-70 flex items-center">Stickers/fila:</span><span id="res-fila" class="font-bold text-right text-sm">0</span>
+                        <span class="opacity-70 flex items-center">Total stickers:</span><span id="res-total" class="font-bold text-right text-green-300 text-base sm:text-lg leading-none">0</span>
                     </div>
                 </div>
 
-                <div class="flex items-center gap-2 p-4 bg-pink-50 rounded-xl border border-pink-100 text-xs font-bold text-pink-700 cursor-pointer" onclick="toggleCutLine()">
-                    <input type="checkbox" id="check-cutline" checked class="accent-pink-500 w-5 h-5 md:w-4 md:h-4">
-                    <i data-lucide="scissors"></i> Guía de troquelado
+                <div class="flex items-center gap-3 p-3 sm:p-4 bg-pink-50 rounded-xl border border-pink-100 text-xs font-bold text-pink-700 cursor-pointer select-none" onclick="toggleCutLine()">
+                    <input type="checkbox" id="check-cutline" checked class="accent-pink-500 w-5 h-5">
+                    <span class="flex items-center gap-2"><i data-lucide="scissors" class="w-4 h-4"></i> Guía de troquelado</span>
                 </div>
 
-                <button onclick="generatePDF()" id="btn-pdf-gen" class="w-full py-5 md:py-4 bg-green-600 hover:bg-green-700 text-white rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-xl active:scale-95 transition-all">
+                <button onclick="generatePDF()" id="btn-pdf-gen" class="w-full h-14 sm:h-16 bg-green-600 hover:bg-green-700 text-white rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-xl active:scale-95 transition-all">
                     <i data-lucide="download"></i> GUARDAR PDF EXACTO
                 </button>
             </div>
@@ -142,78 +146,78 @@
     </main>
 
     <!-- SECCIÓN 2: CALCULADORA -->
-    <main id="main-content-calculadora" class="hidden p-4 lg:p-10 max-w-4xl mx-auto space-y-6">
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100">
-            <h1 class="text-xl md:text-2xl font-black text-blue-900 mb-6 flex items-center gap-3"><i data-lucide="calendar-days"></i> Calculadora Vencimientos</h1>
-            <input type="date" id="calc-date-input" onchange="updateVencimientos()" class="w-full p-4 border-2 border-blue-50 rounded-xl text-lg md:text-xl font-bold outline-none focus:border-blue-400 input-mobile">
+    <main id="main-content-calculadora" class="hidden p-3 sm:p-4 lg:p-10 max-w-4xl mx-auto space-y-4 sm:space-y-6 w-full">
+        <div class="bg-white p-5 sm:p-8 rounded-2xl shadow-sm border border-gray-100">
+            <h1 class="text-lg sm:text-xl md:text-2xl font-black text-blue-900 mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3"><i data-lucide="calendar-days"></i> Calculadora Vencimientos</h1>
+            <input type="date" id="calc-date-input" onchange="updateVencimientos()" class="w-full p-3 sm:p-4 border-2 border-blue-50 rounded-xl text-base sm:text-lg md:text-xl font-bold outline-none focus:border-blue-400 input-mobile h-14">
         </div>
-        <div id="vencimientos-results" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+        <div id="vencimientos-results" class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4"></div>
     </main>
 
     <!-- SECCIÓN 3: REGISTRO / FINANZAS -->
-    <main id="main-content-registro" class="p-4 lg:p-10 max-w-6xl mx-auto space-y-6">
+    <main id="main-content-registro" class="p-3 sm:p-4 lg:p-10 max-w-6xl mx-auto space-y-4 sm:space-y-6 w-full">
         <!-- Sub-Navegación Registro -->
-        <div class="flex overflow-x-auto gap-2 mb-6 snap-x hide-scroll pb-2 no-print">
-            <button onclick="switchSubTab('lotes')" id="subnav-lotes" class="snap-start flex-shrink-0 px-5 py-4 md:px-4 md:py-3 rounded-xl font-bold text-sm flex items-center gap-2 active-sub-tab transition-all">
-                <i data-lucide="beaker"></i> 1. Hacer Lote
+        <div class="flex overflow-x-auto gap-2 mb-4 sm:mb-6 snap-x hide-scroll pb-2 scroll-smooth no-print">
+            <button onclick="switchSubTab('lotes')" id="subnav-lotes" class="snap-start flex-shrink-0 px-4 sm:px-5 py-3 sm:py-4 md:px-4 md:py-3 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 active-sub-tab transition-all">
+                <i data-lucide="beaker" class="w-4 h-4"></i> 1. Hacer Lote
             </button>
-            <button onclick="switchSubTab('nevera')" id="subnav-nevera" class="snap-start flex-shrink-0 px-5 py-4 md:px-4 md:py-3 rounded-xl font-bold text-sm flex items-center gap-2 bg-white text-gray-500 border border-gray-200 hover:bg-gray-50 transition-all">
-                <i data-lucide="store"></i> 2. Nevera y Salidas
+            <button onclick="switchSubTab('nevera')" id="subnav-nevera" class="snap-start flex-shrink-0 px-4 sm:px-5 py-3 sm:py-4 md:px-4 md:py-3 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 bg-white text-gray-500 border border-gray-200 hover:bg-gray-50 transition-all">
+                <i data-lucide="store" class="w-4 h-4"></i> 2. Nevera y Salidas
             </button>
-            <button onclick="switchSubTab('bodega')" id="subnav-bodega" class="snap-start flex-shrink-0 px-5 py-4 md:px-4 md:py-3 rounded-xl font-bold text-sm flex items-center gap-2 bg-white text-gray-500 border border-gray-200 hover:bg-gray-50 transition-all">
-                <i data-lucide="box"></i> Bodega Insumos
+            <button onclick="switchSubTab('bodega')" id="subnav-bodega" class="snap-start flex-shrink-0 px-4 sm:px-5 py-3 sm:py-4 md:px-4 md:py-3 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 bg-white text-gray-500 border border-gray-200 hover:bg-gray-50 transition-all">
+                <i data-lucide="box" class="w-4 h-4"></i> Bodega Insumos
             </button>
-            <button onclick="switchSubTab('historial')" id="subnav-historial" class="snap-start flex-shrink-0 px-5 py-4 md:px-4 md:py-3 rounded-xl font-bold text-sm flex items-center gap-2 bg-white text-gray-500 border border-gray-200 hover:bg-gray-50 transition-all">
-                <i data-lucide="trending-up"></i> Historial Real
+            <button onclick="switchSubTab('historial')" id="subnav-historial" class="snap-start flex-shrink-0 px-4 sm:px-5 py-3 sm:py-4 md:px-4 md:py-3 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 bg-white text-gray-500 border border-gray-200 hover:bg-gray-50 transition-all">
+                <i data-lucide="trending-up" class="w-4 h-4"></i> Historial Real
             </button>
         </div>
 
         <!-- HACER LOTE -->
-        <div id="subtab-content-lotes" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div class="lg:col-span-5 space-y-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-orange-100">
-                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
-                        <h2 class="text-base font-black text-orange-900 flex items-center gap-2"><i data-lucide="beaker"></i> Insumos Usados</h2>
-                        <input type="date" id="batch-date-input" class="p-3 sm:p-2 border rounded-xl sm:rounded-lg text-sm font-bold text-gray-500 input-mobile">
+        <div id="subtab-content-lotes" class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8">
+            <div class="lg:col-span-5 space-y-5 sm:space-y-6">
+                <div class="bg-white p-5 sm:p-6 rounded-2xl shadow-sm border border-orange-100">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 mb-5 sm:mb-6">
+                        <h2 class="text-base sm:text-lg font-black text-orange-900 flex items-center gap-2"><i data-lucide="beaker"></i> Insumos Usados</h2>
+                        <input type="date" id="batch-date-input" class="p-3 sm:p-2 border rounded-xl sm:rounded-lg text-sm font-bold text-gray-500 input-mobile h-12 sm:h-auto">
                     </div>
-                    <div id="ingredients-inputs" class="space-y-4"></div>
-                    <div class="bg-orange-50 p-5 rounded-xl border border-orange-100 mt-6 text-center shadow-inner">
-                        <p class="text-[10px] font-black text-orange-600 uppercase mb-1">Costo Base Lote (Insumos):</p>
-                        <p id="label-costo-base" class="text-3xl font-black text-orange-900">$0</p>
+                    <div id="ingredients-inputs" class="space-y-3 sm:space-y-4"></div>
+                    <div class="bg-orange-50 p-4 sm:p-5 rounded-xl border border-orange-100 mt-5 sm:mt-6 text-center shadow-inner">
+                        <p class="text-[11px] sm:text-[10px] font-black text-orange-600 uppercase mb-1">Costo Base Lote (Insumos):</p>
+                        <p id="label-costo-base" class="text-2xl sm:text-3xl font-black text-orange-900">$0</p>
                     </div>
                 </div>
             </div>
-            <div class="lg:col-span-7 space-y-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <h2 class="text-base font-black text-gray-800 mb-4 flex items-center gap-2"><i data-lucide="box"></i> 2. Empacados (A Nevera)</h2>
-                    <div class="bg-gray-50 p-4 sm:p-5 rounded-2xl mb-4 border border-gray-200 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <select id="input-prod-type" class="p-4 sm:p-3 border rounded-xl font-bold text-sm input-mobile">
+            <div class="lg:col-span-7 space-y-5 sm:space-y-6">
+                <div class="bg-white p-5 sm:p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h2 class="text-base sm:text-lg font-black text-gray-800 mb-4 flex items-center gap-2"><i data-lucide="box"></i> 2. Empacados (A Nevera)</h2>
+                    <div class="bg-gray-50 p-4 sm:p-5 rounded-2xl mb-4 border border-gray-200 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                        <select id="input-prod-type" class="p-3 border rounded-xl font-bold text-sm input-mobile h-12">
                             <option>Griego Natural</option>
                             <option selected>Griego con Fruta</option>
                             <option>Yogur Líquido</option>
                         </select>
-                        <select id="input-prod-size" onchange="suggestBatchPrice()" class="p-4 sm:p-3 border rounded-xl font-bold text-sm input-mobile"></select>
-                        <input type="number" id="input-prod-qty" placeholder="Unidades" class="p-4 sm:p-3 border rounded-xl font-bold input-mobile">
-                        <input type="number" id="input-prod-price" placeholder="P. Venta Esperado" class="p-4 sm:p-3 border rounded-xl font-bold text-green-700 input-mobile">
-                        <button onclick="addCurrentProduct()" class="sm:col-span-2 py-4 sm:py-3 bg-orange-600 text-white rounded-xl font-black uppercase shadow-md flex items-center justify-center gap-2 active:scale-95 transition-all">
+                        <select id="input-prod-size" onchange="suggestBatchPrice()" class="p-3 border rounded-xl font-bold text-sm input-mobile h-12"></select>
+                        <input type="number" id="input-prod-qty" placeholder="Unidades" class="p-3 border rounded-xl font-bold input-mobile h-12">
+                        <input type="number" id="input-prod-price" placeholder="P. Venta Esperado" class="p-3 border rounded-xl font-bold text-green-700 input-mobile h-12">
+                        <button onclick="addCurrentProduct()" class="sm:col-span-2 h-12 sm:h-14 bg-orange-600 text-white rounded-xl font-black uppercase shadow-md flex items-center justify-center gap-2 active:scale-95 transition-all text-xs sm:text-sm">
                             <i data-lucide="plus-circle"></i> Añadir al Lote
                         </button>
                     </div>
                     <div class="overflow-x-auto border rounded-xl hide-scroll">
-                        <table class="w-full text-left text-xs min-w-[450px]">
-                            <thead class="bg-gray-100 font-black border-b text-[10px] uppercase text-gray-500">
+                        <table class="w-full text-left text-xs sm:text-sm min-w-[500px] whitespace-nowrap">
+                            <thead class="bg-gray-100 font-black border-b text-[10px] sm:text-xs uppercase text-gray-500">
                                 <tr><th class="p-3">Producto</th><th class="p-3">Cant.</th><th class="p-3">C. Empaque</th><th class="p-3">Venta Est.</th><th class="p-3"></th></tr>
                             </thead>
                             <tbody id="batch-table-body" class="divide-y bg-white"></tbody>
                         </table>
                     </div>
                 </div>
-                <div class="bg-orange-100 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 border border-orange-200">
+                <div class="bg-orange-100 rounded-2xl p-5 sm:p-6 flex flex-col md:flex-row items-center justify-between gap-5 sm:gap-6 border border-orange-200">
                   <div class="text-center md:text-left">
-                    <p class="text-[10px] font-bold uppercase tracking-widest text-orange-900 mb-1">Inversión Total del Lote</p>
-                    <p id="label-inversion-total" class="text-4xl sm:text-3xl font-black text-orange-900">$0</p>
+                    <p class="text-[11px] sm:text-[10px] font-bold uppercase tracking-widest text-orange-900 mb-1">Inversión Total del Lote</p>
+                    <p id="label-inversion-total" class="text-3xl sm:text-4xl font-black text-orange-900">$0</p>
                   </div>
-                  <button onclick="confirmProduction()" class="w-full md:w-auto py-5 px-8 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-black uppercase shadow-xl flex items-center justify-center gap-2 transition-all active:scale-95">
+                  <button onclick="confirmProduction()" class="w-full md:w-auto h-14 sm:h-16 px-8 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-black uppercase shadow-xl flex items-center justify-center gap-2 transition-all active:scale-95 text-sm">
                     <i data-lucide="save"></i> Enviar a Nevera
                   </button>
                 </div>
@@ -221,21 +225,21 @@
         </div>
 
         <!-- NEVERA Y VENTAS -->
-        <div id="subtab-content-nevera" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div class="lg:col-span-7 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="p-6 border-b flex justify-between items-center bg-blue-50/50">
-                    <h2 class="text-lg font-black text-blue-900 uppercase tracking-tighter flex items-center gap-2"><i data-lucide="store"></i> Stock en Nevera</h2>
+        <div id="subtab-content-nevera" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8">
+            <div class="lg:col-span-7 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
+                <div class="p-5 sm:p-6 border-b flex justify-between items-center bg-blue-50/50">
+                    <h2 class="text-base sm:text-lg font-black text-blue-900 uppercase tracking-tighter flex items-center gap-2"><i data-lucide="store"></i> Stock en Nevera</h2>
                 </div>
-                <div id="fridge-items-grid" class="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 min-h-[300px] content-start"></div>
+                <div id="fridge-items-grid" class="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 bg-slate-50 flex-1 content-start overflow-y-auto max-h-[60vh] sm:max-h-none"></div>
             </div>
-            <div class="lg:col-span-5 space-y-6">
-                <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100 lg:sticky lg:top-24">
-                    <h2 class="text-xl font-black text-gray-800 mb-6 flex items-center gap-2"><i data-lucide="dollar-sign" class="text-green-500"></i> Registrar Salida</h2>
-                    <div class="space-y-5">
-                        <select id="sale-product-key" onchange="updateSalePricePlaceholder()" class="w-full p-4 border rounded-xl font-bold bg-gray-50 text-sm input-mobile"></select>
-                        <div class="grid grid-cols-2 gap-4">
-                            <input type="number" id="input-sale-qty" placeholder="Cant." class="p-4 border rounded-xl font-bold text-center input-mobile">
-                            <select id="select-sale-type" onchange="updateSaleFormUI()" class="p-4 border rounded-xl font-bold text-sm bg-gray-50 input-mobile focus:border-blue-500">
+            <div class="lg:col-span-5 space-y-5 sm:space-y-6">
+                <div class="bg-white p-5 sm:p-8 rounded-2xl shadow-sm border border-gray-100 lg:sticky lg:top-24">
+                    <h2 class="text-lg sm:text-xl font-black text-gray-800 mb-5 sm:mb-6 flex items-center gap-2"><i data-lucide="dollar-sign" class="text-green-500"></i> Registrar Salida</h2>
+                    <div class="space-y-4 sm:space-y-5">
+                        <select id="sale-product-key" onchange="updateSalePricePlaceholder()" class="w-full p-3 sm:p-4 border rounded-xl font-bold bg-gray-50 text-sm input-mobile h-14"></select>
+                        <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                            <input type="number" id="input-sale-qty" placeholder="Cant." class="p-3 sm:p-4 border rounded-xl font-bold text-center input-mobile h-14">
+                            <select id="select-sale-type" onchange="updateSaleFormUI()" class="p-3 sm:p-4 border rounded-xl font-bold text-sm bg-gray-50 input-mobile focus:border-blue-500 h-14">
                                 <option value="venta">Venta Exitosa</option>
                                 <option value="cortesia">Cortesía / Muestra</option>
                                 <option value="merma">Merma / Daño</option>
@@ -243,21 +247,21 @@
                         </div>
                         
                         <div id="container-sale-price" class="transition-all">
-                            <label class="text-[10px] font-bold text-gray-500 uppercase block mb-1">Precio de Venta Unitario ($)</label>
-                            <input type="number" id="input-sale-price" placeholder="A cuánto lo vendiste" class="w-full p-4 border rounded-xl font-black text-green-700 text-xl input-mobile">
+                            <label class="text-[11px] sm:text-[10px] font-bold text-gray-500 uppercase block mb-1">Precio de Venta Unitario ($)</label>
+                            <input type="number" id="input-sale-price" placeholder="A cuánto lo vendiste" class="w-full p-3 sm:p-4 border rounded-xl font-black text-green-700 text-lg sm:text-xl input-mobile h-14">
                         </div>
 
-                        <div id="alert-merma" class="hidden bg-red-50 p-4 rounded-xl border border-red-100 text-red-600 text-xs font-bold flex gap-3">
-                            <i data-lucide="alert-triangle" class="shrink-0 w-6 h-6"></i> 
+                        <div id="alert-merma" class="hidden bg-red-50 p-4 rounded-xl border border-red-100 text-red-600 text-xs sm:text-sm font-bold flex items-start gap-3">
+                            <i data-lucide="alert-triangle" class="shrink-0 w-5 h-5 sm:w-6 sm:h-6 mt-0.5"></i> 
                             <p>Esta cantidad se restará de la nevera y su costo de producción se contará como pérdida financiera.</p>
                         </div>
 
-                        <div id="alert-cortesia" class="hidden bg-purple-50 p-4 rounded-xl border border-purple-100 text-purple-700 text-xs font-bold flex gap-3">
-                            <i data-lucide="gift" class="shrink-0 w-6 h-6"></i> 
+                        <div id="alert-cortesia" class="hidden bg-purple-50 p-4 rounded-xl border border-purple-100 text-purple-700 text-xs sm:text-sm font-bold flex items-start gap-3">
+                            <i data-lucide="gift" class="shrink-0 w-5 h-5 sm:w-6 sm:h-6 mt-0.5"></i> 
                             <p>Se registrará como muestra gratis. Su costo se asume como una inversión de marketing, sin afectar tus mermas por daño.</p>
                         </div>
 
-                        <button onclick="registerSale()" class="w-full py-5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-black uppercase shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2">
+                        <button onclick="registerSale()" class="w-full h-14 sm:h-16 bg-green-600 hover:bg-green-700 text-white rounded-xl font-black uppercase shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 text-sm">
                             <i data-lucide="check-circle"></i> Confirmar Salida
                         </button>
                     </div>
@@ -266,40 +270,40 @@
         </div>
 
         <!-- BODEGA INSUMOS -->
-        <div id="subtab-content-bodega" class="hidden space-y-8">
-            <!-- Grid de Insumos con Botón de Ajuste Individual -->
-            <div id="inventory-summary-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4"></div>
+        <div id="subtab-content-bodega" class="hidden space-y-6 sm:space-y-8">
+            <!-- Grid de Insumos -->
+            <div id="inventory-summary-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4"></div>
             
-            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100">
-                <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4 border-b pb-4">
-                    <h2 class="text-lg font-black text-gray-800 flex items-center gap-2"><i data-lucide="shopping-cart" class="text-blue-500"></i> Comprar Insumo</h2>
-                    <button onclick="openResetModal()" class="text-red-500 bg-red-50 px-4 py-3 rounded-xl font-bold text-xs flex items-center gap-2 border border-red-100 hover:bg-red-100 transition-all w-full sm:w-auto justify-center">
+            <div class="bg-white p-5 sm:p-8 rounded-2xl shadow-sm border border-gray-100">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-5 sm:mb-6 gap-4 border-b pb-4">
+                    <h2 class="text-base sm:text-lg font-black text-gray-800 flex items-center gap-2"><i data-lucide="shopping-cart" class="text-blue-500"></i> Comprar Insumo</h2>
+                    <button onclick="openResetModal()" class="text-red-500 bg-red-50 h-10 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 border border-red-100 hover:bg-red-100 transition-all w-full sm:w-auto">
                         <i data-lucide="alert-triangle" class="w-4 h-4"></i> Reinicio Maestro
                     </button>
                 </div>
                 <!-- Formulario de Compra -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4 items-end">
                     <div class="md:col-span-1">
-                        <label class="text-[10px] font-black text-gray-400 uppercase mb-1 block">Insumo / Empaque</label>
-                        <select id="select-buy-item" class="w-full p-4 border rounded-xl font-bold bg-gray-50 text-sm input-mobile"></select>
+                        <label class="text-[11px] sm:text-[10px] font-black text-gray-400 uppercase mb-1 block">Insumo / Empaque</label>
+                        <select id="select-buy-item" class="w-full h-12 p-3 border rounded-xl font-bold bg-gray-50 text-sm input-mobile"></select>
                     </div>
                     <div class="md:col-span-1">
-                        <label class="text-[10px] font-black text-gray-400 uppercase mb-1 block">Cantidad</label>
-                        <input type="number" step="any" id="input-buy-qty" class="w-full p-4 border rounded-xl font-bold input-mobile" placeholder="Ej: 50">
+                        <label class="text-[11px] sm:text-[10px] font-black text-gray-400 uppercase mb-1 block">Cantidad</label>
+                        <input type="number" step="any" id="input-buy-qty" class="w-full h-12 p-3 border rounded-xl font-bold input-mobile" placeholder="Ej: 50">
                     </div>
                     <div class="md:col-span-1">
-                        <label class="text-[10px] font-black text-gray-400 uppercase mb-1 block">Modo de Costo</label>
-                        <select id="select-buy-mode" class="w-full p-4 border rounded-xl font-bold bg-gray-50 text-sm input-mobile text-blue-700">
+                        <label class="text-[11px] sm:text-[10px] font-black text-gray-400 uppercase mb-1 block">Modo de Costo</label>
+                        <select id="select-buy-mode" class="w-full h-12 p-3 border rounded-xl font-bold bg-gray-50 text-sm input-mobile text-blue-700">
                             <option value="total">Total Pagado ($)</option>
                             <option value="unit">Costo Unitario ($)</option>
                         </select>
                     </div>
                     <div class="md:col-span-1">
-                        <label class="text-[10px] font-black text-gray-400 uppercase mb-1 block">Monto ($)</label>
-                        <input type="number" id="input-buy-price" class="w-full p-4 border rounded-xl font-bold text-green-700 input-mobile" placeholder="Ej: 25000">
+                        <label class="text-[11px] sm:text-[10px] font-black text-gray-400 uppercase mb-1 block">Monto ($)</label>
+                        <input type="number" id="input-buy-price" class="w-full h-12 p-3 border rounded-xl font-bold text-green-700 input-mobile" placeholder="Ej: 25000">
                     </div>
                     <div class="md:col-span-1">
-                        <button onclick="registerPurchase()" class="w-full bg-slate-700 hover:bg-slate-800 text-white font-bold py-4 rounded-xl shadow-md transition-all active:scale-95 flex justify-center items-center gap-2">
+                        <button onclick="registerPurchase()" class="w-full h-12 bg-slate-700 hover:bg-slate-800 text-white font-bold rounded-xl shadow-md transition-all active:scale-95 flex justify-center items-center gap-2">
                             <i data-lucide="plus-circle" class="w-5 h-5"></i> Guardar
                         </button>
                     </div>
@@ -307,17 +311,17 @@
             </div>
 
             <!-- Respaldo de Datos (Importar/Exportar) -->
-            <div class="bg-blue-50 border border-blue-100 p-6 md:p-8 rounded-2xl shadow-sm">
-                <div class="flex items-center gap-3 mb-4">
+            <div class="bg-blue-50 border border-blue-100 p-5 sm:p-8 rounded-2xl shadow-sm">
+                <div class="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
                     <div class="bg-blue-200 p-2 rounded-full text-blue-700"><i data-lucide="save"></i></div>
-                    <h2 class="text-lg font-black text-blue-900">Respaldo de Datos</h2>
+                    <h2 class="text-base sm:text-lg font-black text-blue-900">Respaldo de Datos</h2>
                 </div>
-                <p class="text-sm text-blue-800 mb-6">Descarga un archivo con toda tu información (inventario, ventas, gastos) para guardarlo como copia de seguridad o pasarlo a otro dispositivo.</p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <button onclick="exportData()" class="w-full py-4 bg-white border border-blue-200 text-blue-700 hover:bg-blue-100 rounded-xl font-bold shadow-sm transition-all flex justify-center items-center gap-2">
+                <p class="text-xs sm:text-sm text-blue-800 mb-5 sm:mb-6">Descarga un archivo con toda tu información (inventario, ventas, gastos) para guardarlo como copia de seguridad o pasarlo a otro dispositivo.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    <button onclick="exportData()" class="w-full h-12 sm:h-14 bg-white border border-blue-200 text-blue-700 hover:bg-blue-100 rounded-xl font-bold shadow-sm transition-all flex justify-center items-center gap-2 text-sm">
                         <i data-lucide="download-cloud" class="w-5 h-5"></i> Exportar (Descargar)
                     </button>
-                    <label class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-md transition-all flex justify-center items-center gap-2 cursor-pointer active:scale-95">
+                    <label class="w-full h-12 sm:h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-md transition-all flex justify-center items-center gap-2 cursor-pointer active:scale-95 text-sm">
                         <i data-lucide="upload-cloud" class="w-5 h-5"></i> Importar (Subir)
                         <input type="file" id="import-file" accept=".json" onchange="importData(event)" class="hidden">
                     </label>
@@ -326,36 +330,43 @@
         </div>
 
         <!-- HISTORIAL REAL -->
-        <div id="subtab-content-historial" class="hidden space-y-6">
-            <div class="flex gap-2 border-b pb-4 overflow-x-auto hide-scroll no-print">
-                <button onclick="setHistoryView('finanzas')" id="hview-finanzas" class="snap-start flex-shrink-0 px-5 py-3 rounded-xl font-bold text-sm active-sub-tab bg-gray-100 text-gray-500 transition-colors">Resumen y Ventas</button>
-                <button onclick="setHistoryView('lotes')" id="hview-lotes" class="snap-start flex-shrink-0 px-5 py-3 rounded-xl font-bold text-sm bg-gray-100 text-gray-500 transition-colors">Trazabilidad de Lotes</button>
+        <div id="subtab-content-historial" class="hidden space-y-5 sm:space-y-6">
+            <div class="flex gap-2 border-b pb-3 sm:pb-4 overflow-x-auto hide-scroll no-print">
+                <button onclick="setHistoryView('finanzas')" id="hview-finanzas" class="snap-start flex-shrink-0 px-4 py-3 rounded-xl font-bold text-xs sm:text-sm active-sub-tab transition-colors">Resumen y Ventas</button>
+                <button onclick="setHistoryView('lotes')" id="hview-lotes" class="snap-start flex-shrink-0 px-4 py-3 rounded-xl font-bold text-xs sm:text-sm bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors">Trazabilidad de Lotes</button>
             </div>
             
-            <div id="hview-finanzas-content" class="space-y-6">
-                <div id="kpi-dashboard" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"></div>
-                <div id="star-product-metrics" class="bg-blue-50 border border-blue-100 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row gap-6 items-center"></div>
+            <div id="hview-finanzas-content" class="space-y-5 sm:space-y-6">
+                <!-- Dash de Finanzas adaptado para no verse aplastado en celular -->
+                <div id="kpi-dashboard" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4"></div>
                 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="bg-white rounded-2xl shadow-sm border overflow-hidden flex flex-col">
-                        <div class="p-5 border-b bg-gray-50/50 font-black text-sm uppercase flex items-center justify-between"><span class="flex items-center gap-2"><i data-lucide="wallet"></i> Gastos Fijos</span></div>
-                        <div class="p-5 border-b bg-orange-50/50 flex flex-col sm:flex-row gap-3">
-                            <input type="text" id="input-expense-desc" placeholder="Descripción (Ej: Luz, Aseo)" class="flex-1 p-3 border rounded-xl text-sm font-bold outline-none focus:border-orange-500 input-mobile">
+                <div id="star-product-metrics" class="bg-blue-50 border border-blue-100 rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col md:flex-row gap-4 sm:gap-6 items-center"></div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
+                    <!-- Gastos fijos -->
+                    <div class="bg-white rounded-2xl shadow-sm border overflow-hidden flex flex-col h-[400px] sm:h-auto">
+                        <div class="p-4 sm:p-5 border-b bg-gray-50/50 font-black text-sm uppercase flex items-center justify-between">
+                            <span class="flex items-center gap-2"><i data-lucide="wallet"></i> Gastos Fijos</span>
+                        </div>
+                        <div class="p-4 sm:p-5 border-b bg-orange-50/50 flex flex-col sm:flex-row gap-3">
+                            <input type="text" id="input-expense-desc" placeholder="Descripción (Ej: Luz)" class="flex-1 h-12 p-3 border rounded-xl text-sm font-bold outline-none focus:border-orange-500 input-mobile">
                             <div class="flex gap-2">
-                                <input type="number" id="input-expense-amt" placeholder="$ Monto" class="w-full sm:w-32 p-3 border rounded-xl text-sm font-bold outline-none focus:border-orange-500 input-mobile">
-                                <button onclick="addFixedExpense()" class="bg-orange-500 text-white px-4 py-3 rounded-xl font-bold hover:bg-orange-600 active:scale-95 transition-all"><i data-lucide="plus"></i></button>
+                                <input type="number" id="input-expense-amt" placeholder="$ Monto" class="w-full sm:w-32 h-12 p-3 border rounded-xl text-sm font-bold outline-none focus:border-orange-500 input-mobile">
+                                <button onclick="addFixedExpense()" class="bg-orange-500 text-white w-12 h-12 flex items-center justify-center rounded-xl font-bold hover:bg-orange-600 active:scale-95 transition-all shrink-0"><i data-lucide="plus"></i></button>
                             </div>
                         </div>
-                        <div id="list-fixed-expenses" class="p-4 max-h-80 overflow-y-auto space-y-2"></div>
+                        <div id="list-fixed-expenses" class="p-3 sm:p-4 flex-1 overflow-y-auto space-y-2"></div>
                     </div>
-                    <div class="bg-white rounded-2xl shadow-sm border overflow-hidden flex flex-col">
-                        <div class="p-5 border-b bg-gray-50/50 font-black text-sm uppercase"><i data-lucide="clipboard-list" class="inline w-4 h-4 mr-2"></i> Registro Salidas Reales</div>
-                        <div id="list-sales-merma" class="p-4 max-h-96 overflow-y-auto space-y-3"></div>
+                    
+                    <!-- Registro Salidas -->
+                    <div class="bg-white rounded-2xl shadow-sm border overflow-hidden flex flex-col h-[500px] sm:h-auto">
+                        <div class="p-4 sm:p-5 border-b bg-gray-50/50 font-black text-sm uppercase"><i data-lucide="clipboard-list" class="inline w-4 h-4 mr-2"></i> Registro Salidas Reales</div>
+                        <div id="list-sales-merma" class="p-3 sm:p-4 flex-1 overflow-y-auto space-y-3"></div>
                     </div>
                 </div>
             </div>
 
-            <div id="hview-lotes-content" class="hidden space-y-4">
+            <div id="hview-lotes-content" class="hidden space-y-3 sm:space-y-4">
                 <div id="list-batch-traceability" class="space-y-4"></div>
             </div>
         </div>
@@ -378,46 +389,46 @@
 
     <!-- Modal Reinicio Maestro -->
     <div id="modal-confirm-reset" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm p-4">
-        <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center border border-red-100 transform transition-all">
-            <div class="mx-auto bg-red-50 w-20 h-20 rounded-full flex items-center justify-center mb-6">
-                <i data-lucide="alert-triangle" class="text-red-500 w-10 h-10"></i>
+        <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center border border-red-100 transform transition-all max-h-[90vh] overflow-y-auto">
+            <div class="mx-auto bg-red-50 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mb-5 sm:mb-6">
+                <i data-lucide="alert-triangle" class="text-red-500 w-8 h-8 sm:w-10 sm:h-10"></i>
             </div>
-            <h3 class="text-2xl font-black text-gray-800 mb-3">Reinicio Maestro</h3>
-            <p class="text-sm text-gray-500 mb-8 leading-relaxed">Esta acción pondrá <b>todo el inventario en 0</b> y vaciará la nevera. Ideal para iniciar mes. <strong class="text-red-500 block mt-2">No se puede deshacer.</strong></p>
+            <h3 class="text-xl sm:text-2xl font-black text-gray-800 mb-2 sm:mb-3">Reinicio Maestro</h3>
+            <p class="text-xs sm:text-sm text-gray-500 mb-6 sm:mb-8 leading-relaxed">Esta acción pondrá <b>todo el inventario en 0</b> y vaciará la nevera. Ideal para iniciar mes. <strong class="text-red-500 block mt-2">No se puede deshacer.</strong></p>
             <div class="flex flex-col gap-3">
-                <button onclick="resetEverything()" class="py-4 bg-red-600 text-white rounded-xl font-bold shadow-lg shadow-red-200 transition-all active:scale-95 text-sm uppercase tracking-wider">Sí, Borrar Todo</button>
-                <button onclick="closeResetModal()" class="py-4 bg-gray-100 text-gray-700 rounded-xl font-bold text-sm uppercase tracking-wider">Cancelar</button>
+                <button onclick="resetEverything()" class="h-12 sm:h-14 bg-red-600 text-white rounded-xl font-bold shadow-lg shadow-red-200 transition-all active:scale-95 text-xs sm:text-sm uppercase tracking-wider">Sí, Borrar Todo</button>
+                <button onclick="closeResetModal()" class="h-12 sm:h-14 bg-gray-100 text-gray-700 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider">Cancelar</button>
             </div>
         </div>
     </div>
 
     <!-- Modal Ajuste Individual -->
     <div id="modal-adjust-item" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm p-4">
-        <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl max-w-sm w-full border border-blue-100 transform transition-all">
-            <div class="flex justify-between items-start mb-6">
-                <div>
-                    <h3 class="text-lg font-black text-gray-800">Ajuste Manual</h3>
-                    <p id="adjust-item-name" class="text-sm font-bold text-blue-600 mt-1"></p>
+        <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl max-w-sm w-full border border-blue-100 transform transition-all max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-start mb-5 sm:mb-6">
+                <div class="pr-4">
+                    <h3 class="text-base sm:text-lg font-black text-gray-800 leading-tight">Ajuste Manual</h3>
+                    <p id="adjust-item-name" class="text-xs sm:text-sm font-bold text-blue-600 mt-1"></p>
                 </div>
-                <button onclick="closeAdjustModal()" class="p-2 bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200"><i data-lucide="x" class="w-4 h-4"></i></button>
+                <button onclick="closeAdjustModal()" class="p-2 bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200 shrink-0"><i data-lucide="x" class="w-4 h-4"></i></button>
             </div>
             
             <input type="hidden" id="adjust-item-key">
             
-            <div class="space-y-5">
+            <div class="space-y-4 sm:space-y-5">
                 <div>
                     <label class="text-[10px] font-black text-gray-400 uppercase mb-1 block">Stock Actual (<span id="adjust-item-unit"></span>)</label>
-                    <input type="number" step="any" id="adjust-item-stock" class="w-full p-4 border rounded-xl font-bold text-lg text-center input-mobile bg-gray-50 focus:bg-white focus:border-blue-500 outline-none transition-all">
+                    <input type="number" step="any" id="adjust-item-stock" class="w-full h-12 sm:h-14 p-3 border rounded-xl font-bold text-base sm:text-lg text-center input-mobile bg-gray-50 focus:bg-white focus:border-blue-500 outline-none transition-all">
                 </div>
                 <div>
                     <label class="text-[10px] font-black text-gray-400 uppercase mb-1 block">Costo Promedio Unitario ($)</label>
-                    <input type="number" step="any" id="adjust-item-cost" class="w-full p-4 border rounded-xl font-bold text-lg text-center text-green-700 input-mobile bg-green-50/30 focus:bg-white focus:border-green-500 outline-none transition-all">
+                    <input type="number" step="any" id="adjust-item-cost" class="w-full h-12 sm:h-14 p-3 border rounded-xl font-bold text-base sm:text-lg text-center text-green-700 input-mobile bg-green-50/30 focus:bg-white focus:border-green-500 outline-none transition-all">
                 </div>
                 <div class="grid grid-cols-2 gap-3 pt-2">
-                    <button onclick="zeroItemAdjustment()" class="py-4 bg-red-50 text-red-600 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1 hover:bg-red-100 transition-colors">
-                        <i data-lucide="trash-2" class="w-4 h-4"></i> A cero
+                    <button onclick="zeroItemAdjustment()" class="h-12 sm:h-14 bg-red-50 text-red-600 rounded-xl font-bold text-[10px] sm:text-xs uppercase tracking-wider flex items-center justify-center gap-1 hover:bg-red-100 transition-colors">
+                        <i data-lucide="trash-2" class="w-3 h-3 sm:w-4 sm:h-4"></i> A cero
                     </button>
-                    <button onclick="saveItemAdjustment()" class="py-4 bg-blue-600 text-white rounded-xl font-bold text-xs uppercase tracking-wider shadow-md hover:bg-blue-700 active:scale-95 transition-all">
+                    <button onclick="saveItemAdjustment()" class="h-12 sm:h-14 bg-blue-600 text-white rounded-xl font-bold text-[10px] sm:text-xs uppercase tracking-wider shadow-md hover:bg-blue-700 active:scale-95 transition-all">
                         Guardar
                     </button>
                 </div>
@@ -469,16 +480,13 @@
             if (savedData) {
                 try {
                     const parsed = JSON.parse(savedData);
-                    
-                    // Fusión inteligente para no perder nuevas propiedades al actualizar el código
+                    // Fusión inteligente
                     for (const key in parsed) {
                         if (key === 'inventory' || key === 'fridge') {
                             for (const subKey in parsed[key]) {
                                 if (state[key][subKey]) {
-                                    // Si existe en el código base, actualizamos con los valores guardados
                                     state[key][subKey] = { ...state[key][subKey], ...parsed[key][subKey] };
                                 } else {
-                                    // Si no existe (ej. un producto viejo), lo mantenemos
                                     state[key][subKey] = parsed[key][subKey];
                                 }
                             }
@@ -492,11 +500,9 @@
             }
         }
 
-        // Exportar a JSON
         function exportData() {
-            // Guardamos el estado actual antes de exportar
             saveToLocalStorage(); 
-            const dataStr = localStorage.getItem('blanco_artesanal_v2');
+            const dataStr = localStorage.getItem('blanco_artesanal_v2') || JSON.stringify(state);
             const dataBlob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(dataBlob);
             const a = document.createElement('a');
@@ -509,7 +515,6 @@
             URL.revokeObjectURL(url);
         }
 
-        // Importar desde JSON con Fusión Inteligente
         function importData(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -519,8 +524,6 @@
                     const importedState = JSON.parse(e.target.result);
                     if (importedState && importedState.inventory) {
                         if(confirm("¿Estás seguro de importar este archivo? Tu información actual será reemplazada por los datos del archivo.")) {
-                            
-                            // Aplicar fusión inteligente a los datos importados
                             for (const key in importedState) {
                                 if (key === 'inventory' || key === 'fridge') {
                                     for (const subKey in importedState[key]) {
@@ -534,18 +537,17 @@
                                     state[key] = importedState[key];
                                 }
                             }
-                            
                             saveToLocalStorage();
                             renderFinance(); 
                             alert("¡Datos de Blanco Artesanal importados exitosamente!");
                         }
                     } else {
-                        alert("El archivo no parece ser un respaldo válido de Blanco Artesanal.");
+                        alert("El archivo no parece ser un respaldo válido.");
                     }
                 } catch (err) {
                     alert("Error al leer el archivo. Asegúrate de que sea un archivo .json válido.");
                 }
-                event.target.value = ''; // Reset input
+                event.target.value = '';
             };
             reader.readAsText(file);
         }
@@ -712,9 +714,9 @@
                 date.setDate(date.getDate() + item.d);
                 const meses = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
                 const label = `${date.getDate().toString().padStart(2,'0')} ${meses[date.getMonth()]} ${date.getFullYear().toString().slice(-2)}`;
-                container.innerHTML += `<div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-t-${item.c}-500">
-                        <h3 class="font-black text-gray-800 uppercase text-xs mb-4">${item.t}</h3>
-                        <div class="text-2xl font-black text-${item.c}-700 mb-2">${label}</div>
+                container.innerHTML += `<div class="bg-white p-5 sm:p-6 rounded-2xl shadow-sm border-t-4 border-t-${item.c}-500">
+                        <h3 class="font-black text-gray-800 uppercase text-xs mb-3 sm:mb-4">${item.t}</h3>
+                        <div class="text-xl sm:text-2xl font-black text-${item.c}-700 mb-2">${label}</div>
                         <div class="text-[10px] font-bold text-gray-400 bg-gray-50 p-2 rounded uppercase tracking-tighter">SELLO: VENCE ${label}</div>
                     </div>`;
             });
@@ -729,7 +731,6 @@
             lucide.createIcons();
         }
 
-        // --- MODAL DE AJUSTE INDIVIDUAL ---
         function openAdjustModal(key) {
             const item = state.inventory[key];
             if(!item) return;
@@ -775,24 +776,24 @@
                 const c = isDanger ? 'red' : (isWarning ? 'yellow' : 'blue');
                 
                 grid.innerHTML += `
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-${c}-100 relative group transition-all hover:shadow-md flex flex-col justify-between h-full">
-                        <button onclick="openAdjustModal('${k}')" class="absolute top-3 right-3 text-gray-400 hover:text-blue-600 p-1.5 bg-gray-50 hover:bg-blue-50 rounded-lg transition-all" title="Ajustar / Poner a cero">
+                    <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-${c}-100 relative group transition-all hover:shadow-md flex flex-col justify-between h-full">
+                        <button onclick="openAdjustModal('${k}')" class="absolute top-2 right-2 sm:top-3 sm:right-3 text-gray-400 hover:text-blue-600 p-2 bg-gray-50 hover:bg-blue-50 rounded-lg transition-all" title="Ajustar / Poner a cero">
                             <i data-lucide="edit-2" class="w-4 h-4"></i>
                         </button>
                         
                         <div class="pr-8">
                             <div class="flex items-center gap-1.5 mb-1">
-                                ${isWarning || isDanger ? `<i data-lucide="alert-triangle" class="w-3 h-3 text-${c}-500 shrink-0"></i>` : ''}
-                                <h3 class="font-bold text-gray-500 uppercase text-[10px] line-clamp-1 leading-none" title="${item.name}">${item.name}</h3>
+                                ${isWarning || isDanger ? `<i data-lucide="alert-triangle" class="w-3 h-3 sm:w-4 sm:h-4 text-${c}-500 shrink-0"></i>` : ''}
+                                <h3 class="font-bold text-gray-500 uppercase text-[10px] sm:text-[11px] line-clamp-1 leading-tight" title="${item.name}">${item.name}</h3>
                             </div>
-                            <p class="text-2xl font-black text-${c === 'gray' ? 'gray-800' : c + '-600'} leading-none mt-2">
+                            <p class="text-xl sm:text-2xl font-black text-${c === 'gray' ? 'gray-800' : c + '-600'} leading-none mt-2">
                                 ${item.stock.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 2})} 
-                                <span class="text-[10px] font-bold opacity-60 ml-1 uppercase tracking-wider">${item.unit.split(' ')[0]}</span>
+                                <span class="text-[9px] sm:text-[10px] font-bold opacity-60 ml-0.5 uppercase tracking-wider">${item.unit.split(' ')[0]}</span>
                             </p>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between items-center">
+                        <div class="mt-3 pt-3 border-t border-gray-100 flex justify-between items-center">
                             <span class="text-[9px] font-bold text-gray-400 uppercase">Costo Unit.</span>
-                            <span class="text-xs font-bold text-green-600">$${item.avgCost.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
+                            <span class="text-[11px] sm:text-xs font-bold text-green-600">$${item.avgCost.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
                         </div>
                     </div>`;
             });
@@ -859,24 +860,24 @@
             ];
             
             const outerGrid = document.createElement('div');
-            outerGrid.className = "grid grid-cols-1 sm:grid-cols-2 gap-4";
+            outerGrid.className = "grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4";
 
             inputs.forEach(inp => {
                 if(inp.hasUnits) {
                     outerGrid.innerHTML += `<div class="border-b-2 bg-gray-50 focus-within:border-orange-500 rounded-t-sm sm:col-span-2">
                             <div class="flex justify-between px-2 pt-2"><label class="text-[10px] font-bold text-gray-500 uppercase">${inp.label}</label></div>
                             <div class="flex items-center">
-                                <input type="number" id="bi-${inp.id}" oninput="updateBatchCosts()" class="w-full p-3 sm:p-2 bg-transparent outline-none font-bold text-lg input-mobile">
-                                <select id="bu-${inp.id}" onchange="updateBatchCosts()" class="bg-transparent text-sm sm:text-xs font-bold text-gray-500 outline-none pr-2 py-2 cursor-pointer input-mobile">
+                                <input type="number" id="bi-${inp.id}" oninput="updateBatchCosts()" class="w-full h-12 p-3 sm:p-2 bg-transparent outline-none font-bold text-lg input-mobile">
+                                <select id="bu-${inp.id}" onchange="updateBatchCosts()" class="bg-transparent h-12 text-sm sm:text-xs font-bold text-gray-500 outline-none pr-2 cursor-pointer input-mobile">
                                     <option value="g">Gramos</option><option value="kg">Kilos</option><option value="cucharada">Cuch.</option>
                                 </select>
                             </div>
                         </div>`;
                 } else {
                     const colSpan = inp.id === 'leche' ? 'sm:col-span-2' : '';
-                    outerGrid.innerHTML += `<div class="p-2 border-b-2 bg-gray-50 focus-within:border-orange-500 ${colSpan}">
-                            <label class="text-[10px] font-bold text-gray-500 uppercase block">${inp.label}</label>
-                            <input type="number" id="bi-${inp.id}" step="${inp.step || '1'}" oninput="updateBatchCosts()" class="w-full p-2 bg-transparent outline-none font-bold text-lg input-mobile">
+                    outerGrid.innerHTML += `<div class="border-b-2 bg-gray-50 focus-within:border-orange-500 ${colSpan}">
+                            <div class="flex justify-between px-2 pt-2"><label class="text-[10px] font-bold text-gray-500 uppercase">${inp.label}</label></div>
+                            <input type="number" id="bi-${inp.id}" step="${inp.step || '1'}" oninput="updateBatchCosts()" class="w-full h-12 p-3 sm:p-2 bg-transparent outline-none font-bold text-lg input-mobile">
                         </div>`;
                 }
             });
@@ -933,11 +934,11 @@
             tb.innerHTML = '';
             state.currentBatchProducts.forEach(p => {
                 tb.innerHTML += `<tr>
-                        <td class="p-3"><b>${p.type}</b> <span class="text-[10px] bg-orange-100 px-2 rounded-full">${p.size}</span></td>
+                        <td class="p-3 whitespace-nowrap"><b>${p.type}</b> <span class="text-[10px] bg-orange-100 text-orange-800 px-2 py-0.5 rounded-full ml-1">${p.size}</span></td>
                         <td class="p-3 font-bold">${p.qty}</td>
                         <td class="p-3 text-blue-600">$${Math.floor(p.pkgCost).toLocaleString()}</td>
                         <td class="p-3 text-green-700 font-bold">$${(p.qty * p.price).toLocaleString()}</td>
-                        <td class="p-3 text-right"><button onclick="removeFromBatch(${p.id})" class="text-red-400 p-2"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
+                        <td class="p-3 text-right"><button onclick="removeFromBatch(${p.id})" class="text-red-400 p-2 bg-red-50 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
                     </tr>`;
             });
             lucide.createIcons();
@@ -964,7 +965,6 @@
             const totalUnits = state.currentBatchProducts.reduce((s, p) => s + p.qty, 0);
             const liquidCostPerUnit = baseCost / totalUnits;
             
-            // Procesar Nevera y Bodega de Empaques
             state.currentBatchProducts.forEach(p => {
                 const key = `${p.type}_${p.size}`;
                 const realUnitCost = liquidCostPerUnit + (p.pkgCost / p.qty);
@@ -978,7 +978,6 @@
                 state.inventory[`envase_${p.size}`].stock = Math.max(0, state.inventory[`envase_${p.size}`].stock - p.qty);
             });
 
-            // Descontar Insumos
             state.inventory.leche.stock = Math.max(0, state.inventory.leche.stock - getVal('leche'));
             state.inventory.azucar.stock = Math.max(0, state.inventory.azucar.stock - toKg(getVal('azucar'), document.getElementById('bu-azucar').value));
             state.inventory.polvo.stock = Math.max(0, state.inventory.polvo.stock - toKg(getVal('polvo'), document.getElementById('bu-polvo').value));
@@ -1012,17 +1011,18 @@
             grid.innerHTML = '';
             sel.innerHTML = '<option value="">Seleccionar Producto...</option>';
             if(Object.keys(state.fridge).length === 0) {
-                grid.innerHTML = '<div class="col-span-2 text-center py-10 opacity-40 font-bold w-full">Nevera vacía.</div>';
+                grid.innerHTML = '<div class="col-span-2 text-center py-10 opacity-40 font-bold w-full text-sm">La nevera está vacía.</div>';
             }
             Object.entries(state.fridge).forEach(([key, item]) => {
                 grid.innerHTML += `
                     <div class="border border-blue-200 bg-white p-5 rounded-2xl shadow-sm flex flex-col justify-between hover:border-blue-400 hover:shadow-md transition-all cursor-pointer" onclick="selectFridgeItem('${key}')">
                         <div class="flex justify-between items-start mb-3">
-                            <div><h3 class="font-black text-gray-800 text-sm">${item.type}</h3><span class="text-[10px] bg-orange-100 text-orange-800 px-2 rounded-full font-black mt-1 inline-block uppercase">${item.size}</span></div>
-                            <span class="text-3xl font-black text-blue-600">${item.qty}</span>
+                            <div><h3 class="font-black text-gray-800 text-sm leading-tight">${item.type}</h3><span class="text-[10px] bg-orange-100 text-orange-800 px-2 rounded-full font-black mt-1 inline-block uppercase tracking-wider">${item.size}</span></div>
+                            <span class="text-3xl sm:text-4xl font-black text-blue-600 leading-none">${item.qty}</span>
                         </div>
-                        <div class="mt-2 pt-3 border-t border-gray-100 flex justify-between text-[10px] uppercase font-bold text-gray-400">
-                             <span>Costo Real: <b>$${item.unitCost.toFixed(0)}</b></span><span>PVP: <b class="text-green-600">$${item.defaultPrice}</b></span>
+                        <div class="mt-3 pt-3 border-t border-gray-100 flex justify-between items-center">
+                             <span class="text-[10px] uppercase font-bold text-gray-400">Costo: <b>$${item.unitCost.toFixed(0)}</b></span>
+                             <span class="text-[10px] uppercase font-bold text-gray-400">PVP: <b class="text-green-600 text-xs">$${item.defaultPrice}</b></span>
                         </div>
                     </div>`;
                 sel.innerHTML += `<option value="${key}">${item.type} ${item.size} (${item.qty} disp.)</option>`;
@@ -1125,12 +1125,12 @@
                 const dash = document.getElementById('kpi-dashboard');
                 if (dash) {
                     dash.innerHTML = `
-                        <div class="bg-white p-4 rounded-2xl border shadow-sm flex flex-col justify-center"><p class="text-[9px] font-bold text-gray-400 uppercase">Ventas</p><p class="text-xl lg:text-2xl font-black text-blue-600">$${revTotal.toLocaleString()}</p></div>
-                        <div class="bg-white p-4 rounded-2xl border shadow-sm flex flex-col justify-center"><p class="text-[9px] font-bold text-gray-400 uppercase">Costo Prod.</p><p class="text-xl lg:text-2xl font-black">$${costTotal.toLocaleString()}</p></div>
-                        <div class="bg-red-50 p-4 rounded-2xl border border-red-100 flex flex-col justify-center"><p class="text-[9px] font-bold text-red-400 uppercase">Mermas</p><p class="text-xl lg:text-2xl font-black text-red-600">$${mermas.toLocaleString()}</p></div>
-                        <div class="bg-purple-50 p-4 rounded-2xl border border-purple-100 flex flex-col justify-center"><p class="text-[9px] font-bold text-purple-500 uppercase">Cortesías (Muestras)</p><p class="text-xl lg:text-2xl font-black text-purple-600">$${cortesias.toLocaleString()}</p></div>
-                        <div class="bg-orange-50 p-4 rounded-2xl border border-orange-100 flex flex-col justify-center"><p class="text-[9px] font-bold text-orange-500 uppercase">Gastos Fijos</p><p class="text-xl lg:text-2xl font-black text-orange-600">$${exTotal.toLocaleString()}</p></div>
-                        <div class="bg-green-900 p-4 lg:p-5 rounded-2xl shadow-lg border border-black col-span-2 md:col-span-1 flex flex-col justify-center"><p class="text-[10px] font-bold text-green-300 uppercase">Utilidad Neta</p><p class="text-3xl lg:text-2xl font-black text-white">$${net.toLocaleString()}</p><p class="text-[10px] ${margin >= 30 ? 'text-green-400' : 'text-red-400'} font-bold mt-1">${margin}% Margen</p></div>`;
+                        <div class="bg-white p-4 sm:p-5 rounded-2xl border shadow-sm flex flex-col justify-center"><p class="text-[10px] font-bold text-gray-400 uppercase">Ventas</p><p class="text-xl sm:text-2xl font-black text-blue-600 leading-none mt-1">$${revTotal.toLocaleString()}</p></div>
+                        <div class="bg-white p-4 sm:p-5 rounded-2xl border shadow-sm flex flex-col justify-center"><p class="text-[10px] font-bold text-gray-400 uppercase">Costo Prod.</p><p class="text-xl sm:text-2xl font-black leading-none mt-1">$${costTotal.toLocaleString()}</p></div>
+                        <div class="bg-red-50 p-4 sm:p-5 rounded-2xl border border-red-100 flex flex-col justify-center"><p class="text-[10px] font-bold text-red-500 uppercase">Mermas</p><p class="text-xl sm:text-2xl font-black text-red-600 leading-none mt-1">$${mermas.toLocaleString()}</p></div>
+                        <div class="bg-purple-50 p-4 sm:p-5 rounded-2xl border border-purple-100 flex flex-col justify-center"><p class="text-[10px] font-bold text-purple-500 uppercase">Muestras</p><p class="text-xl sm:text-2xl font-black text-purple-600 leading-none mt-1">$${cortesias.toLocaleString()}</p></div>
+                        <div class="bg-orange-50 p-4 sm:p-5 rounded-2xl border border-orange-100 flex flex-col justify-center sm:col-span-2 lg:col-span-1"><p class="text-[10px] font-bold text-orange-500 uppercase">Gastos Fijos</p><p class="text-xl sm:text-2xl font-black text-orange-600 leading-none mt-1">$${exTotal.toLocaleString()}</p></div>
+                        <div class="bg-green-900 p-5 sm:p-6 rounded-2xl shadow-lg border border-black col-span-2 md:col-span-3 lg:col-span-1 flex flex-col justify-center"><p class="text-[11px] font-bold text-green-300 uppercase opacity-90">Utilidad Neta</p><p class="text-3xl sm:text-3xl font-black text-white leading-none mt-1">$${net.toLocaleString()}</p><p class="text-[11px] ${margin >= 30 ? 'text-green-400' : 'text-red-400'} font-bold mt-2">${margin}% Margen</p></div>`;
                 }
 
                 // Star Product Logic (Solo ventas reales)
@@ -1149,16 +1149,16 @@
                 const metricsPanel = document.getElementById('star-product-metrics');
                 if (metricsPanel) {
                     metricsPanel.innerHTML = `
-                        <div class="bg-blue-100 p-4 rounded-full text-blue-600 shadow-inner shrink-0"><i data-lucide="lightbulb" class="w-8 h-8"></i></div>
+                        <div class="bg-blue-100 p-4 rounded-full text-blue-600 shadow-inner shrink-0 hidden sm:flex"><i data-lucide="lightbulb" class="w-8 h-8"></i></div>
                         <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-                            <div class="bg-white p-5 rounded-xl border border-gray-100">
+                            <div class="bg-white p-5 rounded-xl border border-gray-100 relative overflow-hidden group">
                                 <p class="text-[10px] font-bold text-gray-400 uppercase">Producto Estrella (Ventas)</p>
-                                <p class="text-lg lg:text-xl font-black text-gray-800 line-clamp-1">${star.n}</p>
+                                <p class="text-lg sm:text-xl font-black text-gray-800 line-clamp-1 leading-tight mt-1">${star.n}</p>
                                 <p class="text-xs font-bold text-blue-600 mt-1">${star.v} uds.</p>
                             </div>
-                            <div class="bg-white p-5 rounded-xl border border-gray-100">
+                            <div class="bg-white p-5 rounded-xl border border-gray-100 relative overflow-hidden group">
                                 <p class="text-[10px] font-bold text-gray-400 uppercase">Más Rentable (Ganancia)</p>
-                                <p class="text-lg lg:text-xl font-black text-gray-800 line-clamp-1">${rich.n}</p>
+                                <p class="text-lg sm:text-xl font-black text-gray-800 line-clamp-1 leading-tight mt-1">${rich.n}</p>
                                 <p class="text-xs font-bold text-green-600 mt-1">$${Math.floor(rich.v).toLocaleString()} netos</p>
                             </div>
                         </div>`;
@@ -1166,22 +1166,22 @@
 
                 const exList = document.getElementById('list-fixed-expenses');
                 if (exList) {
-                    exList.innerHTML = state.expenses.length === 0 ? '<p class="text-center py-4 text-xs opacity-40">Sin gastos.</p>' : '';
+                    exList.innerHTML = state.expenses.length === 0 ? '<p class="text-center py-6 text-xs opacity-40">Sin gastos registrados.</p>' : '';
                     state.expenses.forEach(e => {
                         exList.innerHTML += `
-                            <div class="flex justify-between items-center p-4 border rounded-xl bg-gray-50/30">
-                                <div><p class="text-sm font-bold text-gray-700">${e.description}</p><p class="text-[9px] text-gray-400 mt-1">${e.date}</p></div>
-                                <div class="flex items-center gap-4"><span class="text-base font-black text-orange-600">-$${e.amount.toLocaleString()}</span><button onclick="removeExpense(${e.id})" class="text-red-400 hover:text-red-600 bg-red-50 p-2 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div>
+                            <div class="flex justify-between items-center p-4 border border-gray-50 rounded-xl bg-gray-50/50">
+                                <div><p class="text-sm font-bold text-gray-700">${e.description}</p><p class="text-[9px] text-gray-400 mt-1 uppercase">${e.date}</p></div>
+                                <div class="flex items-center gap-4"><span class="text-sm sm:text-base font-black text-orange-600">-$${e.amount.toLocaleString()}</span><button onclick="removeExpense(${e.id})" class="text-red-400 hover:text-red-600 bg-red-50 p-2 sm:p-2.5 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div>
                             </div>`;
                     });
                 }
 
                 const sList = document.getElementById('list-sales-merma');
                 if (sList) {
-                    sList.innerHTML = state.salesLogs.length === 0 ? '<p class="text-center py-10 text-xs opacity-40">Sin salidas registradas.</p>' : '';
+                    sList.innerHTML = state.salesLogs.length === 0 ? '<p class="text-center py-6 text-xs opacity-40">Sin salidas registradas.</p>' : '';
                     state.salesLogs.forEach(s => {
                         
-                        let bgColor = 'bg-white border-gray-100';
+                        let bgColor = 'bg-white border-gray-50';
                         let textColor = 'text-green-600';
                         let sign = '+';
                         let val = Math.floor(s.revenue);
@@ -1200,19 +1200,19 @@
                             textColor = 'text-purple-600';
                             sign = '-';
                             val = Math.floor(s.cost);
-                            subText = 'Inversión Marketing';
+                            subText = 'Inv. Marketing';
                             typeLabel = 'Cortesía';
                         }
 
                         sList.innerHTML += `
                             <div class="border rounded-xl p-4 flex justify-between items-center ${bgColor}">
                                 <div>
-                                    <p class="font-black text-gray-800 text-sm">${s.qty}x ${s.itemName}</p>
-                                    <p class="text-[10px] text-gray-500 uppercase mt-1">${s.date} - ${typeLabel}</p>
+                                    <p class="font-black text-gray-800 text-sm sm:text-base leading-none mb-1">${s.qty}x ${s.itemName}</p>
+                                    <p class="text-[10px] text-gray-500 uppercase">${s.date} <span class="mx-1">•</span> ${typeLabel}</p>
                                 </div>
                                 <div class="text-right">
-                                    <p class="text-base font-black ${textColor}">${sign}$${val.toLocaleString()}</p>
-                                    <p class="text-[10px] font-bold text-gray-400 mt-1">${subText}</p>
+                                    <p class="text-base sm:text-lg font-black ${textColor} leading-none mb-1">${sign}$${val.toLocaleString()}</p>
+                                    <p class="text-[9px] sm:text-[10px] font-bold text-gray-400 opacity-80">${subText}</p>
                                 </div>
                             </div>`;
                     });
@@ -1229,18 +1229,21 @@
                     list.innerHTML = state.productionLogs.length === 0 ? '<div class="text-center py-10 opacity-40 font-bold text-sm">No hay lotes registrados.</div>' : '';
                     state.productionLogs.forEach(log => {
                         list.innerHTML += `
-                            <div class="bg-white border rounded-xl p-5 flex flex-col md:flex-row justify-between items-center gap-6">
+                            <div class="bg-white border rounded-2xl p-5 sm:p-6 flex flex-col md:flex-row justify-between items-center gap-5 sm:gap-6 shadow-sm">
                                 <div class="flex-1 w-full text-center md:text-left">
-                                    <p class="font-black text-gray-800 text-lg">LOTE: ${log.lote} <span class="text-xs font-normal text-gray-400 ml-1">(${log.date})</span></p>
-                                    <div class="text-xs text-gray-500 mt-3 bg-gray-50 p-3 rounded-xl flex flex-wrap gap-2 justify-center md:justify-start">
-                                        ${log.products.map(p => `<span class="bg-white border px-2 py-1 rounded shadow-sm font-bold">${p.qty}x ${p.size} ${p.type}</span>`).join('')}
+                                    <p class="font-black text-gray-800 text-lg">LOTE: ${log.lote} <span class="text-xs font-bold text-gray-400 ml-2 bg-gray-100 px-2 py-1 rounded-full">${log.date}</span></p>
+                                    <div class="mt-4 flex flex-wrap gap-2 justify-center md:justify-start">
+                                        ${log.products.map(p => `<span class="bg-blue-50 border border-blue-100 text-blue-800 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm">${p.qty}x ${p.size} ${p.type}</span>`).join('')}
                                     </div>
                                 </div>
-                                <div class="flex items-center gap-4 w-full md:w-auto justify-center">
-                                    <div class="bg-white p-3 border rounded-xl text-center shadow-sm min-w-[100px]">
-                                        <p class="text-[9px] font-bold text-gray-400 uppercase mb-1">Costo Base</p><p class="font-black text-gray-700">$${Math.floor(log.baseCost).toLocaleString()}</p>
+                                <div class="flex items-center gap-3 w-full md:w-auto justify-center">
+                                    <div class="bg-gray-50 p-4 border rounded-xl text-center shadow-inner min-w-[110px]">
+                                        <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Costo Base</p>
+                                        <p class="font-black text-gray-800 text-base">$${Math.floor(log.baseCost).toLocaleString()}</p>
                                     </div>
-                                    <button onclick="undoProduction(${log.id})" class="bg-red-50 text-red-500 p-4 rounded-xl border border-red-100 hover:bg-red-500 hover:text-white transition-all shadow-sm flex flex-col items-center"><i data-lucide="trash-2"></i><span class="text-[8px] font-bold uppercase mt-1">Deshacer</span></button>
+                                    <button onclick="undoProduction(${log.id})" class="bg-red-50 text-red-500 p-4 rounded-xl border border-red-100 hover:bg-red-500 hover:text-white transition-all flex flex-col items-center justify-center shrink-0 active:scale-95 h-[70px] w-[70px]">
+                                        <i data-lucide="trash-2" class="w-5 h-5 mb-1"></i>
+                                    </button>
                                 </div>
                             </div>`;
                     });
@@ -1253,8 +1256,8 @@
             state.historyView = view;
             const btnFin = document.getElementById('hview-finanzas');
             const btnLot = document.getElementById('hview-lotes');
-            if (btnFin) btnFin.className = view === 'finanzas' ? 'px-5 py-3 rounded-xl font-bold text-sm active-sub-tab transition-colors' : 'px-5 py-3 rounded-xl font-bold text-sm bg-gray-100 text-gray-500 transition-colors';
-            if (btnLot) btnLot.className = view === 'lotes' ? 'px-5 py-3 rounded-xl font-bold text-sm active-sub-tab transition-colors' : 'px-5 py-3 rounded-xl font-bold text-sm bg-gray-100 text-gray-500 transition-colors';
+            if (btnFin) btnFin.className = view === 'finanzas' ? 'snap-start flex-shrink-0 px-4 sm:px-5 py-3 sm:py-4 rounded-xl font-bold text-xs sm:text-sm active-sub-tab transition-colors' : 'snap-start flex-shrink-0 px-4 sm:px-5 py-3 sm:py-4 rounded-xl font-bold text-xs sm:text-sm bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors';
+            if (btnLot) btnLot.className = view === 'lotes' ? 'snap-start flex-shrink-0 px-4 sm:px-5 py-3 sm:py-4 rounded-xl font-bold text-xs sm:text-sm active-sub-tab transition-colors' : 'snap-start flex-shrink-0 px-4 sm:px-5 py-3 sm:py-4 rounded-xl font-bold text-xs sm:text-sm bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors';
             renderHistory();
             saveToLocalStorage();
         };
@@ -1276,7 +1279,6 @@
             const log = state.productionLogs.find(l => l.id === id);
             if(!log) return;
             
-            // Check if products exist in fridge
             let canUndo = true;
             for(let p of log.products) {
                 const key = `${p.type}_${p.size}`;
@@ -1285,7 +1287,6 @@
             if(!canUndo) return alert("No se puede deshacer: Algunos productos ya fueron vendidos o mermados de la nevera.");
             if(!confirm("¿Seguro que quieres deshacer este lote? Se devolverán los insumos a bodega y se borrarán de la nevera.")) return;
             
-            // Undo Nevera
             log.products.forEach(p => {
                 const key = `${p.type}_${p.size}`;
                 state.fridge[key].qty -= p.qty;
@@ -1293,7 +1294,6 @@
                 state.inventory[`envase_${p.size}`].stock += p.qty;
             });
 
-            // Undo Bodega
             const raw = log.rawUsage || {};
             if(raw.leche) state.inventory.leche.stock += raw.leche;
             if(raw.azucarKg) state.inventory.azucar.stock += raw.azucarKg;
@@ -1331,7 +1331,7 @@
             if (grid) {
                 grid.innerHTML = '';
                 Object.keys(stickerSizes).forEach(s => {
-                    grid.innerHTML += `<button id="btn-size-${s}" onclick="setStickerSize('${s}')" class="p-4 md:p-3 text-[10px] font-bold border rounded-xl transition-all input-mobile ${s===state.stickerSize?'bg-green-600 text-white shadow-md scale-105':'bg-white'}">${s}</button>`;
+                    grid.innerHTML += `<button id="btn-size-${s}" onclick="setStickerSize('${s}')" class="h-12 sm:h-14 p-2 text-[11px] sm:text-xs font-bold border rounded-xl transition-all input-mobile ${s===state.stickerSize?'bg-green-600 text-white shadow-md scale-105':'bg-white hover:border-green-300'}">${s}</button>`;
                 });
             }
             switchTab('registro');
@@ -1339,4 +1339,4 @@
         };
     </script>
 </body>
-    </html>
+</html>
