@@ -346,6 +346,15 @@
                                 <tr><th class="p-3">Producto</th><th class="p-3 text-center">Cant.</th><th class="p-3">C. Empaque</th><th class="p-3">Venta Est.</th><th class="p-3"></th></tr>
                             </thead>
                             <tbody id="batch-table-body" class="divide-y bg-white"></tbody>
+                            <tfoot id="batch-table-foot" class="bg-gray-50 font-black border-t text-[10px] sm:text-xs uppercase text-gray-700 hidden">
+                                <tr>
+                                    <td class="p-3 text-right">TOTALES:</td>
+                                    <td class="p-3 text-center text-blue-600 text-base" id="batch-total-qty">0</td>
+                                    <td class="p-3"></td>
+                                    <td class="p-3 text-green-700 text-base" id="batch-total-venta">$0</td>
+                                    <td class="p-3"></td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -1450,17 +1459,36 @@
 
         function updateBatchTable() {
             const tb = document.getElementById('batch-table-body');
+            const tf = document.getElementById('batch-table-foot');
+            const tq = document.getElementById('batch-total-qty');
+            const tv = document.getElementById('batch-total-venta');
+
             if (!tb) return;
             tb.innerHTML = '';
+            
+            let totalQty = 0;
+            let totalVenta = 0;
+
             state.currentBatchProducts.forEach(p => {
+                totalQty += p.qty;
+                totalVenta += (p.qty * p.price);
                 tb.innerHTML += `<tr>
                         <td class="p-3 whitespace-nowrap"><b>${p.type}</b> <span class="text-[10px] bg-orange-100 text-orange-800 px-2 py-0.5 rounded-full ml-1">${p.size}</span></td>
-                        <td class="p-3 font-bold">${p.qty}</td>
+                        <td class="p-3 font-bold text-center">${p.qty}</td>
                         <td class="p-3 text-blue-600">$${Math.floor(p.pkgCost).toLocaleString()}</td>
                         <td class="p-3 text-green-700 font-bold">$${(p.qty * p.price).toLocaleString()}</td>
                         <td class="p-3 text-right"><button onclick="removeFromBatch(${p.id})" class="text-red-400 p-2 bg-red-50 rounded-lg hover:text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
                     </tr>`;
             });
+            
+            if (state.currentBatchProducts.length > 0) {
+                if (tf) tf.classList.remove('hidden');
+                if (tq) tq.innerText = totalQty;
+                if (tv) tv.innerText = `$${Math.floor(totalVenta).toLocaleString()}`;
+            } else {
+                if (tf) tf.classList.add('hidden');
+            }
+
             lucide.createIcons();
         }
 
@@ -1931,7 +1959,7 @@
                 const contentFinanzas = document.getElementById('hview-finanzas-content');
                 const contentLotes = document.getElementById('hview-lotes-content');
                 if (contentFinanzas) contentFinanzas.classList.add('hidden');
-                if (contentLotes) contentLotes.classList.remove('hidden');
+                if (contentLotes) contentLotes.classList.add('hidden');
                 
                 const list = document.getElementById('list-batch-traceability');
                 if (list) {
