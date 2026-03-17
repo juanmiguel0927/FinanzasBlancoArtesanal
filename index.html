@@ -418,6 +418,14 @@
 
         <!-- BODEGA INSUMOS -->
         <div id="subtab-content-bodega" class="hidden space-y-6 sm:space-y-8">
+            <div class="flex flex-col sm:flex-row justify-between sm:items-end gap-4 mb-2">
+                <h2 class="text-lg sm:text-xl font-black text-gray-800 flex items-center gap-2"><i data-lucide="package" class="text-blue-500"></i> Inventario Actual</h2>
+                <div class="bg-blue-50 p-3 sm:px-5 rounded-xl border border-blue-100 text-left sm:text-right">
+                    <p class="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-1">Inversión Total en Bodega</p>
+                    <p class="text-2xl font-black text-blue-700 leading-none" id="bodega-total-value">$0</p>
+                </div>
+            </div>
+
             <div id="inventory-summary-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4"></div>
             
             <div class="bg-white p-5 sm:p-8 rounded-2xl shadow-sm border border-gray-100">
@@ -483,6 +491,25 @@
             
             <div id="hview-finanzas-content" class="space-y-5 sm:space-y-6">
                 <div id="kpi-dashboard" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4"></div>
+                
+                <!-- Nuevo Balance General -->
+                <div class="bg-slate-800 p-5 sm:p-6 rounded-2xl shadow-lg border border-slate-700 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6">
+                    <div class="text-center md:text-left w-full md:w-auto">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Costo Total Producido</p>
+                        <p class="text-xl sm:text-2xl font-black text-white" id="bal-total-prod">$0</p>
+                    </div>
+                    <div class="hidden md:block text-slate-600"><i data-lucide="minus" class="w-6 h-6"></i></div>
+                    <div class="text-center md:text-left w-full md:w-auto">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Costo Entregado (Salidas)</p>
+                        <p class="text-xl sm:text-2xl font-black text-orange-400" id="bal-total-entregado">$0</p>
+                    </div>
+                    <div class="hidden md:block text-slate-600"><i data-lucide="equal" class="w-6 h-6"></i></div>
+                    <div class="text-center md:text-right w-full md:w-auto bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Balance (Valor en Nevera)</p>
+                        <p class="text-2xl sm:text-3xl font-black text-blue-400" id="bal-nevera-actual">$0</p>
+                    </div>
+                </div>
+
                 <div id="star-product-metrics" class="bg-blue-50 border border-blue-100 rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col md:flex-row gap-4 sm:gap-6 items-center"></div>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
@@ -922,23 +949,43 @@
                 try {
                     const importedState = JSON.parse(e.target.result);
                     if (importedState && importedState.inventory) {
-                        if(confirm("¿Seguro de importar este archivo? Tu información actual será reemplazada.")) {
-                            for (const key in importedState) {
-                                if (key === 'inventory' || key === 'fridge') {
-                                    for (const subKey in importedState[key]) {
-                                        if (state[key][subKey]) {
-                                            state[key][subKey] = { ...state[key][subKey], ...importedState[key][subKey] };
-                                        } else {
-                                            state[key][subKey] = importedState[key][subKey];
-                                        }
-                                    }
-                                } else {
-                                    state[key] = importedState[key];
-                                }
-                            }
+                        if(confirm("¿Seguro de importar este archivo? Tu información actual será reemplazada EXACTAMENTE por la del archivo.")) {
+                            
+                            // Reemplazo total para garantizar que todos los módulos queden idénticos al respaldo
+                            state.inventory = importedState.inventory;
+                            state.fridge = importedState.fridge || {};
+                            state.salesLogs = importedState.salesLogs || [];
+                            state.productionLogs = importedState.productionLogs || [];
+                            state.expenses = importedState.expenses || [];
+                            state.currentBatchProducts = importedState.currentBatchProducts || [];
+                            state.olla = importedState.olla || {};
+
+                            // Restaurar preferencias visuales
+                            if (importedState.activeTab) state.activeTab = importedState.activeTab;
+                            if (importedState.activeFinanceTab) state.activeFinanceTab = importedState.activeFinanceTab;
+                            if (importedState.historyView) state.historyView = importedState.historyView;
+                            if (importedState.stickerSize) state.stickerSize = importedState.stickerSize;
+
                             saveToLocalStorage();
-                            renderFinance(); 
-                            alert("¡Datos importados exitosamente!");
+
+                            // Restaurar visualmente los insumos de la olla en el HTML
+                            if (state.olla) {
+                                if(document.getElementById('bi-leche')) document.getElementById('bi-leche').value = state.olla.leche || '';
+                                if(document.getElementById('bi-fresas')) document.getElementById('bi-fresas').value = state.olla.fresas || '';
+                                if(document.getElementById('bi-azucar')) document.getElementById('bi-azucar').value = state.olla.azucar || '';
+                                if(document.getElementById('bu-azucar')) document.getElementById('bu-azucar').value = state.olla.azucarUnidad || 'g';
+                                if(document.getElementById('bi-polvo')) document.getElementById('bi-polvo').value = state.olla.polvo || '';
+                                if(document.getElementById('bu-polvo')) document.getElementById('bu-polvo').value = state.olla.polvoUnidad || 'g';
+                                if(document.getElementById('bi-kumis')) document.getElementById('bi-kumis').value = state.olla.kumis || '';
+                                if(document.getElementById('bi-limon')) document.getElementById('bi-limon').value = state.olla.limon || '';
+                                if(document.getElementById('bi-others')) document.getElementById('bi-others').value = state.olla.others || '';
+                            }
+
+                            // Refrescar toda la interfaz gráfica para aplicar los cambios (Lotes, Nevera, Historial)
+                            switchTab(state.activeTab);
+                            switchSubTab(state.activeFinanceTab);
+                            
+                            alert("¡Datos importados exitosamente! Tu sistema está exactamente igual al archivo de respaldo.");
                         }
                     } else {
                         alert("El archivo no es válido.");
@@ -1205,8 +1252,14 @@
             const grid = document.getElementById('inventory-summary-grid');
             if (!grid) return;
             grid.innerHTML = '';
+            
+            let totalInvertido = 0;
+            
             Object.entries(state.inventory).forEach(([k, item]) => {
                 if(item.hideBodega) return; // No mostrar productos a granel en la vista de compras de insumos
+                
+                totalInvertido += (item.stock * item.avgCost) || 0;
+                
                 const isDanger = item.stock <= 0;
                 const isWarning = item.stock <= item.minStock && !isDanger;
                 const c = isDanger ? 'red' : (isWarning ? 'yellow' : 'blue');
@@ -1233,6 +1286,9 @@
                         </div>
                     </div>`;
             });
+
+            const elTotal = document.getElementById('bodega-total-value');
+            if (elTotal) elTotal.innerText = `$${Math.floor(totalInvertido).toLocaleString()}`;
 
             const sel = document.getElementById('select-buy-item');
             if (sel) {
@@ -1870,6 +1926,26 @@
                         <div class="bg-orange-50 p-4 sm:p-5 rounded-2xl border border-orange-100 flex flex-col justify-center sm:col-span-2 lg:col-span-1"><p class="text-[10px] font-bold text-orange-500 uppercase">Gastos Fijos</p><p class="text-xl sm:text-2xl font-black text-orange-600 leading-none mt-1">$${Math.floor(exTotal).toLocaleString()}</p></div>
                         <div class="bg-green-900 p-5 sm:p-6 rounded-2xl shadow-lg border border-black col-span-2 md:col-span-3 lg:col-span-1 flex flex-col justify-center"><p class="text-[11px] font-bold text-green-300 uppercase opacity-90">Utilidad Neta</p><p class="text-3xl sm:text-3xl font-black text-white leading-none mt-1">$${Math.floor(net).toLocaleString()}</p><p class="text-[11px] ${margin >= 30 ? 'text-green-400' : 'text-red-400'} font-bold mt-2">${margin}% Margen</p></div>`;
                 }
+
+                // Cálculos del Balance General
+                let totalProdCost = 0;
+                state.productionLogs.forEach(log => {
+                    totalProdCost += log.baseCost || 0;
+                    log.products.forEach(p => totalProdCost += p.pkgCost || 0);
+                });
+
+                let actualFridgeValue = 0;
+                Object.values(state.fridge).forEach(item => {
+                    actualFridgeValue += (item.qty * item.unitCost) || 0;
+                });
+
+                const elTotalProd = document.getElementById('bal-total-prod');
+                const elTotalEntregado = document.getElementById('bal-total-entregado');
+                const elNevera = document.getElementById('bal-nevera-actual');
+
+                if (elTotalProd) elTotalProd.innerText = `$${Math.floor(totalProdCost).toLocaleString()}`;
+                if (elTotalEntregado) elTotalEntregado.innerText = `$${Math.floor(costTotal).toLocaleString()}`;
+                if (elNevera) elNevera.innerText = `$${Math.floor(actualFridgeValue).toLocaleString()}`;
 
                 const metrics = {};
                 state.salesLogs.filter(s => s.type === 'venta').forEach(s => {
