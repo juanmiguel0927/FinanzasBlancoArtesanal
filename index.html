@@ -30,10 +30,9 @@
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
         }
 
-        /* Contenedor del sticker circular */
         .sticker-wrapper {
             box-sizing: border-box;
-            border-radius: 50% !important; /* Fuerza la forma circular */
+            border-radius: 50% !important; 
             display: flex;
             align-items: center;
             justify-content: center;
@@ -42,18 +41,15 @@
             overflow: hidden;
         }
 
-        /* Optimización Móvil (Anti-Zoom automático y ajustes de tap) */
         @media screen and (max-width: 768px) {
             .input-mobile, input, select, textarea {
                 font-size: 16px !important;
             }
-            /* Evita el destello azul al tocar botones en móviles Android/iOS */
             button, select, input {
                 -webkit-tap-highlight-color: transparent;
             }
         }
 
-        /* Estilos Críticos para PDF */
         body.pdf-exporting {
             overflow: visible !important;
             height: auto !important;
@@ -211,13 +207,17 @@
                             <tbody id="batch-table-body" class="divide-y bg-white"></tbody>
                         </table>
                     </div>
+
+                    <!-- BALANCE DE MASA (ESCANDALLO) -->
+                    <div id="balance-container" class="transition-all mt-6"></div>
+
                 </div>
                 <div class="bg-orange-100 rounded-2xl p-5 sm:p-6 flex flex-col md:flex-row items-center justify-between gap-5 sm:gap-6 border border-orange-200">
                   <div class="text-center md:text-left">
                     <p class="text-[11px] sm:text-[10px] font-bold uppercase tracking-widest text-orange-900 mb-1">Inversión Total del Lote</p>
                     <p id="label-inversion-total" class="text-3xl sm:text-4xl font-black text-orange-900">$0</p>
                   </div>
-                  <button onclick="confirmProduction()" class="w-full md:w-auto h-14 sm:h-16 px-8 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-black uppercase shadow-xl flex items-center justify-center gap-2 transition-all active:scale-95 text-sm">
+                  <button id="btn-save-batch" onclick="confirmProduction()" class="w-full md:w-auto h-14 sm:h-16 px-8 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-black uppercase shadow-xl flex items-center justify-center gap-2 transition-all active:scale-95 text-sm">
                     <i data-lucide="save"></i> Enviar a Nevera
                   </button>
                 </div>
@@ -271,36 +271,36 @@
 
         <!-- BODEGA INSUMOS -->
         <div id="subtab-content-bodega" class="hidden space-y-6 sm:space-y-8">
-            <!-- Grid de Insumos -->
-            <div id="inventory-summary-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4"></div>
+            <!-- Grid de Insumos con Botón de Ajuste Individual -->
+            <div id="inventory-summary-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4"></div>
             
-            <div class="bg-white p-5 sm:p-8 rounded-2xl shadow-sm border border-gray-100">
-                <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-5 sm:mb-6 gap-4 border-b pb-4">
-                    <h2 class="text-base sm:text-lg font-black text-gray-800 flex items-center gap-2"><i data-lucide="shopping-cart" class="text-blue-500"></i> Comprar Insumo</h2>
-                    <button onclick="openResetModal()" class="text-red-500 bg-red-50 h-10 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 border border-red-100 hover:bg-red-100 transition-all w-full sm:w-auto">
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100">
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4 border-b pb-4">
+                    <h2 class="text-lg font-black text-gray-800 flex items-center gap-2"><i data-lucide="shopping-cart" class="text-blue-500"></i> Comprar Insumo</h2>
+                    <button onclick="openResetModal()" class="text-red-500 bg-red-50 px-4 py-3 rounded-xl font-bold text-xs flex items-center gap-2 border border-red-100 hover:bg-red-100 transition-all w-full sm:w-auto justify-center">
                         <i data-lucide="alert-triangle" class="w-4 h-4"></i> Reinicio Maestro
                     </button>
                 </div>
                 <!-- Formulario de Compra -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4 items-end">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end">
                     <div class="md:col-span-1">
-                        <label class="text-[11px] sm:text-[10px] font-black text-gray-400 uppercase mb-1 block">Insumo / Empaque</label>
-                        <select id="select-buy-item" class="w-full h-12 p-3 border rounded-xl font-bold bg-gray-50 text-sm input-mobile"></select>
+                        <label class="text-[10px] font-black text-gray-400 uppercase mb-1 block">Insumo / Empaque</label>
+                        <select id="select-buy-item" class="w-full p-4 border rounded-xl font-bold bg-gray-50 text-sm input-mobile h-12"></select>
                     </div>
                     <div class="md:col-span-1">
-                        <label class="text-[11px] sm:text-[10px] font-black text-gray-400 uppercase mb-1 block">Cantidad</label>
-                        <input type="number" step="any" id="input-buy-qty" class="w-full h-12 p-3 border rounded-xl font-bold input-mobile" placeholder="Ej: 50">
+                        <label class="text-[10px] font-black text-gray-400 uppercase mb-1 block">Cantidad</label>
+                        <input type="number" step="any" id="input-buy-qty" class="w-full p-4 border rounded-xl font-bold input-mobile h-12" placeholder="Ej: 50">
                     </div>
                     <div class="md:col-span-1">
-                        <label class="text-[11px] sm:text-[10px] font-black text-gray-400 uppercase mb-1 block">Modo de Costo</label>
-                        <select id="select-buy-mode" class="w-full h-12 p-3 border rounded-xl font-bold bg-gray-50 text-sm input-mobile text-blue-700">
+                        <label class="text-[10px] font-black text-gray-400 uppercase mb-1 block">Modo de Costo</label>
+                        <select id="select-buy-mode" class="w-full p-4 border rounded-xl font-bold bg-gray-50 text-sm input-mobile h-12 text-blue-700">
                             <option value="total">Total Pagado ($)</option>
                             <option value="unit">Costo Unitario ($)</option>
                         </select>
                     </div>
                     <div class="md:col-span-1">
-                        <label class="text-[11px] sm:text-[10px] font-black text-gray-400 uppercase mb-1 block">Monto ($)</label>
-                        <input type="number" id="input-buy-price" class="w-full h-12 p-3 border rounded-xl font-bold text-green-700 input-mobile" placeholder="Ej: 25000">
+                        <label class="text-[10px] font-black text-gray-400 uppercase mb-1 block">Monto ($)</label>
+                        <input type="number" id="input-buy-price" class="w-full p-4 border rounded-xl font-bold text-green-700 input-mobile h-12" placeholder="Ej: 25000">
                     </div>
                     <div class="md:col-span-1">
                         <button onclick="registerPurchase()" class="w-full h-12 bg-slate-700 hover:bg-slate-800 text-white font-bold rounded-xl shadow-md transition-all active:scale-95 flex justify-center items-center gap-2">
@@ -332,12 +332,12 @@
         <!-- HISTORIAL REAL -->
         <div id="subtab-content-historial" class="hidden space-y-5 sm:space-y-6">
             <div class="flex gap-2 border-b pb-3 sm:pb-4 overflow-x-auto hide-scroll no-print">
-                <button onclick="setHistoryView('finanzas')" id="hview-finanzas" class="snap-start flex-shrink-0 px-4 py-3 rounded-xl font-bold text-xs sm:text-sm active-sub-tab transition-colors">Resumen y Ventas</button>
-                <button onclick="setHistoryView('lotes')" id="hview-lotes" class="snap-start flex-shrink-0 px-4 py-3 rounded-xl font-bold text-xs sm:text-sm bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors">Trazabilidad de Lotes</button>
+                <button onclick="setHistoryView('finanzas')" id="hview-finanzas" class="snap-start flex-shrink-0 px-5 py-3 rounded-xl font-bold text-sm active-sub-tab bg-gray-100 text-gray-500 transition-colors">Resumen y Ventas</button>
+                <button onclick="setHistoryView('lotes')" id="hview-lotes" class="snap-start flex-shrink-0 px-5 py-3 rounded-xl font-bold text-sm bg-gray-100 text-gray-500 transition-colors">Trazabilidad de Lotes</button>
             </div>
             
             <div id="hview-finanzas-content" class="space-y-5 sm:space-y-6">
-                <!-- Dash de Finanzas adaptado para no verse aplastado en celular -->
+                <!-- Dash de Finanzas -->
                 <div id="kpi-dashboard" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4"></div>
                 
                 <div id="star-product-metrics" class="bg-blue-50 border border-blue-100 rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col md:flex-row gap-4 sm:gap-6 items-center"></div>
@@ -469,8 +469,10 @@
 
         const stickerSizes = { '5oz': 45, '10oz': 55, '16oz': 65, '32oz': 85, '1lt': 95, '2lt': 110 };
         const defaultSalePrices = { '5oz': 8000, '10oz': 15000, '16oz': 25000, '32oz': 45000, '1lt': 11000, '2lt': 20000 };
+        // Capacidades en g/ml para el cálculo de balance (escandallo)
+        const sizeCapacities = { '5oz': 150, '10oz': 300, '16oz': 500, '32oz': 1000, '1lt': 1000, '2lt': 2000, 'Granel': 1 };
 
-        // --- PERSISTENCIA LOCAL Y FUSIÓN INTELIGENTE (SMART MERGE) ---
+        // --- PERSISTENCIA LOCAL Y FUSIÓN INTELIGENTE ---
         function saveToLocalStorage() {
             localStorage.setItem('blanco_artesanal_v2', JSON.stringify(state));
         }
@@ -480,7 +482,6 @@
             if (savedData) {
                 try {
                     const parsed = JSON.parse(savedData);
-                    // Fusión inteligente
                     for (const key in parsed) {
                         if (key === 'inventory' || key === 'fridge') {
                             for (const subKey in parsed[key]) {
@@ -539,13 +540,13 @@
                             }
                             saveToLocalStorage();
                             renderFinance(); 
-                            alert("¡Datos de Blanco Artesanal importados exitosamente!");
+                            alert("¡Datos importados exitosamente!");
                         }
                     } else {
                         alert("El archivo no parece ser un respaldo válido.");
                     }
                 } catch (err) {
-                    alert("Error al leer el archivo. Asegúrate de que sea un archivo .json válido.");
+                    alert("Error al leer el archivo.");
                 }
                 event.target.value = '';
             };
@@ -660,13 +661,7 @@
                 margin: 0,
                 filename: 'Blanco_Artesanal_Etiquetas.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2, 
-                    useCORS: true, 
-                    backgroundColor: '#ffffff',
-                    scrollY: 0, 
-                    windowScrollY: 0 
-                },
+                html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', scrollY: 0, windowScrollY: 0 },
                 jsPDF: { unit: 'mm', format: [w, h], orientation: 'portrait', compress: true }
             };
             try {
@@ -844,7 +839,7 @@
             saveToLocalStorage();
         }
 
-        // --- LOTES Y PRODUCCIÓN ---
+        // --- LOTES Y PRODUCCIÓN (CON BALANCE DE MASA) ---
         function renderLotes() {
             const container = document.getElementById('ingredients-inputs');
             if (!container) return;
@@ -864,7 +859,7 @@
 
             inputs.forEach(inp => {
                 if(inp.hasUnits) {
-                    outerGrid.innerHTML += `<div class="border-b-2 bg-gray-50 focus-within:border-orange-500 rounded-t-sm sm:col-span-2">
+                    outerGrid.innerHTML += `<div class="border-b-2 bg-gray-50 focus-within:border-orange-500 rounded-t-sm sm:col-span-2 transition-colors">
                             <div class="flex justify-between px-2 pt-2"><label class="text-[10px] font-bold text-gray-500 uppercase">${inp.label}</label></div>
                             <div class="flex items-center">
                                 <input type="number" id="bi-${inp.id}" oninput="updateBatchCosts()" class="w-full h-12 p-3 sm:p-2 bg-transparent outline-none font-bold text-lg input-mobile">
@@ -875,7 +870,7 @@
                         </div>`;
                 } else {
                     const colSpan = inp.id === 'leche' ? 'sm:col-span-2' : '';
-                    outerGrid.innerHTML += `<div class="border-b-2 bg-gray-50 focus-within:border-orange-500 ${colSpan}">
+                    outerGrid.innerHTML += `<div class="border-b-2 bg-gray-50 focus-within:border-orange-500 ${colSpan} transition-colors">
                             <div class="flex justify-between px-2 pt-2"><label class="text-[10px] font-bold text-gray-500 uppercase">${inp.label}</label></div>
                             <input type="number" id="bi-${inp.id}" step="${inp.step || '1'}" oninput="updateBatchCosts()" class="w-full h-12 p-3 sm:p-2 bg-transparent outline-none font-bold text-lg input-mobile">
                         </div>`;
@@ -896,17 +891,92 @@
         function updateBatchCosts() {
             const getVal = (id) => parseFloat(document.getElementById(`bi-${id}`).value) || 0;
             const toKg = (val, unit) => unit === 'kg' ? val : (unit === 'cucharada' ? (val * 15) / 1000 : val / 1000);
-            const costInsumos = (getVal('leche') * state.inventory.leche.avgCost) +
-                                (toKg(getVal('azucar'), document.getElementById('bu-azucar').value) * state.inventory.azucar.avgCost) +
-                                (toKg(getVal('polvo'), document.getElementById('bu-polvo').value) * state.inventory.polvo.avgCost) +
-                                (getVal('fresas') * state.inventory.fresas.avgCost) +
-                                (getVal('kumis') * state.inventory.kumis.avgCost) +
-                                (getVal('limon') * state.inventory.limon.avgCost) +
-                                getVal('others');
-            document.getElementById('label-costo-base').innerText = `$${Math.floor(costInsumos).toLocaleString()}`;
+            const milkBoxes = getVal('leche');
+            
+            const baseCost = (milkBoxes * state.inventory.leche.avgCost) +
+                             (toKg(getVal('azucar'), document.getElementById('bu-azucar').value) * state.inventory.azucar.avgCost) +
+                             (toKg(getVal('polvo'), document.getElementById('bu-polvo').value) * state.inventory.polvo.avgCost) +
+                             (getVal('fresas') * state.inventory.fresas.avgCost) +
+                             (getVal('kumis') * state.inventory.kumis.avgCost) +
+                             (getVal('limon') * state.inventory.limon.avgCost) +
+                             getVal('others');
+            
+            document.getElementById('label-costo-base').innerText = `$${Math.floor(baseCost).toLocaleString()}`;
+            
             let costPkg = 0;
-            state.currentBatchProducts.forEach(p => costPkg += p.pkgCost);
-            document.getElementById('label-inversion-total').innerText = `$${Math.floor(costInsumos + costPkg).toLocaleString()}`;
+            let consumedME = 0; // Milk Equivalents consumidos
+
+            state.currentBatchProducts.forEach(p => {
+                costPkg += p.pkgCost;
+                // Cálculo de Balance: 4 cajas = 1000g Griego o 4000ml Liquido
+                // 1 caja = 250g Griego o 1000ml Liquido
+                const isGreek = p.type.toLowerCase().includes('griego');
+                const cap = sizeCapacities[p.size] || 0;
+                const volume = p.qty * cap;
+                p.me = isGreek ? (volume / 250) : (volume / 1000);
+                consumedME += p.me;
+            });
+            
+            document.getElementById('label-inversion-total').innerText = `$${Math.floor(baseCost + costPkg).toLocaleString()}`;
+
+            // RENDERIZAR BALANCE DE MASA
+            const balanceContainer = document.getElementById('balance-container');
+            const btnSave = document.getElementById('btn-save-batch');
+            
+            if (milkBoxes > 0) {
+                const leftoverME = milkBoxes - consumedME;
+                const leftGreek = leftoverME * 250;
+                const leftLiquid = leftoverME * 1000;
+                const isOver = leftoverME < -0.01;
+
+                let html = `<div class="bg-${isOver ? 'red' : 'blue'}-50 border border-${isOver ? 'red' : 'blue'}-200 p-4 sm:p-5 rounded-2xl">
+                    <h3 class="text-[10px] font-black text-${isOver ? 'red' : 'blue'}-800 uppercase tracking-widest mb-3 flex items-center gap-1.5"><i data-lucide="scale" class="w-3.5 h-3.5"></i> Balance de Rendimiento (Escandallo)</h3>
+                    <div class="flex justify-between items-center text-xs mb-3 bg-white p-3 rounded-xl border border-${isOver ? 'red' : 'blue'}-100">
+                        <span class="text-gray-600">Leche Base: <b class="text-gray-900">${milkBoxes} cjs</b></span>
+                        <span class="text-gray-600">Utilizado: <b class="text-gray-900">${consumedME.toFixed(2)} cjs</b></span>
+                    </div>`;
+                
+                if (isOver) {
+                    html += `<div class="text-xs font-bold text-red-600 bg-red-100 p-3 rounded-xl flex items-start gap-2"><i data-lucide="alert-octagon" class="shrink-0 w-4 h-4 mt-0.5"></i> <span>¡Error! Estás empacando más producto del que rinde la leche. Faltan ${Math.abs(leftoverME).toFixed(2)} cajas de leche equivalentes.</span></div></div>`;
+                    if (btnSave) {
+                        btnSave.disabled = true;
+                        btnSave.classList.add('opacity-50', 'cursor-not-allowed');
+                    }
+                } else {
+                    html += `
+                    <div class="bg-white p-4 rounded-xl border border-blue-100 shadow-sm relative overflow-hidden">
+                        <div class="absolute right-0 top-0 h-full w-2 bg-blue-400"></div>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Producto Sobrante en Olla:</p>
+                        <p class="text-xl sm:text-2xl font-black text-blue-700 leading-none">${leftoverME.toFixed(2)} cajas <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider ml-1">Equivalente a:</span></p>
+                        <div class="flex gap-3 mt-2 text-sm sm:text-base font-black text-gray-700">
+                            <span>${leftGreek.toFixed(0)}g Griego</span> <span class="text-gray-300 font-normal">o</span> <span>${leftLiquid.toFixed(0)}ml Líquido</span>
+                        </div>
+                    </div>`;
+
+                    if (leftoverME > 0.01) {
+                        html += `<div class="mt-4">
+                            <label class="text-[10px] font-black text-blue-600 uppercase block mb-1">Guardar sobrante en nevera como:</label>
+                            <select id="select-leftover-type" class="w-full h-12 p-3 border border-blue-200 rounded-xl font-bold text-sm bg-white input-mobile focus:border-blue-500 outline-none text-gray-700">
+                                <option value="griego">Base Griego a Granel (${leftGreek.toFixed(0)}g)</option>
+                                <option value="liquido">Base Líquida a Granel (${leftLiquid.toFixed(0)}ml)</option>
+                            </select>
+                        </div>`;
+                    }
+                    html += `</div>`;
+                    if (btnSave) {
+                        btnSave.disabled = false;
+                        btnSave.classList.remove('opacity-50', 'cursor-not-allowed');
+                    }
+                }
+                balanceContainer.innerHTML = html;
+                lucide.createIcons();
+            } else {
+                balanceContainer.innerHTML = '';
+                if (btnSave) {
+                    btnSave.disabled = false;
+                    btnSave.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            }
         }
 
         function suggestBatchPrice() {
@@ -954,7 +1024,9 @@
             if(state.currentBatchProducts.length === 0) return alert("Añade productos al lote.");
             const getVal = (id) => parseFloat(document.getElementById(`bi-${id}`).value) || 0;
             const toKg = (val, unit) => unit === 'kg' ? val : (unit === 'cucharada' ? (val * 15) / 1000 : val / 1000);
-            const baseCost = (getVal('leche') * state.inventory.leche.avgCost) +
+            
+            const milkBoxes = getVal('leche');
+            const baseCost = (milkBoxes * state.inventory.leche.avgCost) +
                              (toKg(getVal('azucar'), document.getElementById('bu-azucar').value) * state.inventory.azucar.avgCost) +
                              (toKg(getVal('polvo'), document.getElementById('bu-polvo').value) * state.inventory.polvo.avgCost) +
                              (getVal('fresas') * state.inventory.fresas.avgCost) +
@@ -962,12 +1034,54 @@
                              (getVal('limon') * state.inventory.limon.avgCost) +
                              getVal('others');
 
-            const totalUnits = state.currentBatchProducts.reduce((s, p) => s + p.qty, 0);
-            const liquidCostPerUnit = baseCost / totalUnits;
-            
+            // Calcular ME y sobrantes
+            let consumedME = 0;
+            state.currentBatchProducts.forEach(p => {
+                const isGreek = p.type.toLowerCase().includes('griego');
+                const cap = sizeCapacities[p.size] || 0;
+                p.me = isGreek ? ((p.qty * cap) / 250) : ((p.qty * cap) / 1000);
+                consumedME += p.me;
+            });
+
+            const totalME = milkBoxes > 0 ? milkBoxes : consumedME; // Fallback si no pone leche
+            const costPerME = totalME > 0 ? (baseCost / totalME) : 0;
+            const leftoverME = milkBoxes > 0 ? (milkBoxes - consumedME) : 0;
+
+            if (leftoverME < -0.01) return alert("Error: Estás empacando más producto del que rinde la leche.");
+
+            // Agregar sobrante como producto virtual
+            if (leftoverME > 0.01) {
+                const leftoverType = document.getElementById('select-leftover-type').value;
+                const isGreek = leftoverType === 'griego';
+                const qty = isGreek ? (leftoverME * 250) : (leftoverME * 1000);
+                const typeName = isGreek ? 'Base Griego a Granel' : 'Base Líquida a Granel';
+                
+                state.currentBatchProducts.push({
+                    id: Date.now() + 1,
+                    type: typeName,
+                    size: 'Granel',
+                    qty: Math.round(qty),
+                    price: 0,
+                    pkgCost: 0,
+                    me: leftoverME,
+                    isLeftover: true,
+                    totalCost: leftoverME * costPerME // Costo exacto asignado al sobrante
+                });
+            }
+
+            // Guardar en Nevera
             state.currentBatchProducts.forEach(p => {
                 const key = `${p.type}_${p.size}`;
-                const realUnitCost = liquidCostPerUnit + (p.pkgCost / p.qty);
+                let realUnitCost = 0;
+                
+                if (p.isLeftover) {
+                    realUnitCost = p.qty > 0 ? (p.totalCost / p.qty) : 0;
+                } else {
+                    realUnitCost = p.qty > 0 ? (((p.me * costPerME) + p.pkgCost) / p.qty) : 0;
+                    // Descontar envase (el sobrante no usa envase)
+                    state.inventory[`envase_${p.size}`].stock = Math.max(0, state.inventory[`envase_${p.size}`].stock - p.qty);
+                }
+
                 if(state.fridge[key]) {
                     const newQty = state.fridge[key].qty + p.qty;
                     state.fridge[key].unitCost = ((state.fridge[key].qty * state.fridge[key].unitCost) + (p.qty * realUnitCost)) / newQty;
@@ -975,9 +1089,9 @@
                 } else {
                     state.fridge[key] = { type: p.type, size: p.size, qty: p.qty, unitCost: realUnitCost, defaultPrice: p.price };
                 }
-                state.inventory[`envase_${p.size}`].stock = Math.max(0, state.inventory[`envase_${p.size}`].stock - p.qty);
             });
 
+            // Descontar Insumos
             state.inventory.leche.stock = Math.max(0, state.inventory.leche.stock - getVal('leche'));
             state.inventory.azucar.stock = Math.max(0, state.inventory.azucar.stock - toKg(getVal('azucar'), document.getElementById('bu-azucar').value));
             state.inventory.polvo.stock = Math.max(0, state.inventory.polvo.stock - toKg(getVal('polvo'), document.getElementById('bu-polvo').value));
@@ -1021,7 +1135,7 @@
                             <span class="text-3xl sm:text-4xl font-black text-blue-600 leading-none">${item.qty}</span>
                         </div>
                         <div class="mt-3 pt-3 border-t border-gray-100 flex justify-between items-center">
-                             <span class="text-[10px] uppercase font-bold text-gray-400">Costo: <b>$${item.unitCost.toFixed(0)}</b></span>
+                             <span class="text-[10px] uppercase font-bold text-gray-400">Costo Base: <b>$${item.unitCost.toFixed(0)}</b></span>
                              <span class="text-[10px] uppercase font-bold text-gray-400">PVP: <b class="text-green-600 text-xs">$${item.defaultPrice}</b></span>
                         </div>
                     </div>`;
@@ -1178,7 +1292,7 @@
 
                 const sList = document.getElementById('list-sales-merma');
                 if (sList) {
-                    sList.innerHTML = state.salesLogs.length === 0 ? '<p class="text-center py-6 text-xs opacity-40">Sin salidas registradas.</p>' : '';
+                    sList.innerHTML = state.salesLogs.length === 0 ? '<p class="text-center py-10 text-xs opacity-40">Sin salidas registradas.</p>' : '';
                     state.salesLogs.forEach(s => {
                         
                         let bgColor = 'bg-white border-gray-50';
@@ -1200,7 +1314,7 @@
                             textColor = 'text-purple-600';
                             sign = '-';
                             val = Math.floor(s.cost);
-                            subText = 'Inv. Marketing';
+                            subText = 'Inversión Marketing';
                             typeLabel = 'Cortesía';
                         }
 
@@ -1291,7 +1405,7 @@
                 const key = `${p.type}_${p.size}`;
                 state.fridge[key].qty -= p.qty;
                 if(state.fridge[key].qty <= 0) delete state.fridge[key];
-                state.inventory[`envase_${p.size}`].stock += p.qty;
+                if(!p.isLeftover) state.inventory[`envase_${p.size}`].stock += p.qty;
             });
 
             const raw = log.rawUsage || {};
