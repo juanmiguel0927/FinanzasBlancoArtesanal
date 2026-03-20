@@ -862,7 +862,7 @@
             if(document.getElementById('label-costo-base')) document.getElementById('label-costo-base').innerText = `$${Math.floor(costO).toLocaleString()}`;
             
             let cons = 0, cP = 0;
-            window.state.currentBatchProducts.forEach(p => { cP += p.pkgCost; const isG = p.type.toLowerCase().includes('griego'); p.me = isG ? (p.qty * window.sizeCapacities[p.size]) / 250 : (p.qty * window.sizeCapacities[p.size]) / 1000; cons += p.me; });
+            window.state.currentBatchProducts.forEach(p => { cP += p.pkgCost; const isG = p.type.toLowerCase().includes('griego'); p.me = isG ? (p.qty * window.sizeCapacities[p.size.replace(/\s+/g,'').toLowerCase()]) / 250 : (p.qty * window.sizeCapacities[p.size.replace(/\s+/g,'').toLowerCase()]) / 1000; cons += p.me; });
             
             if(document.getElementById('label-inversion-total')) document.getElementById('label-inversion-total').innerText = `$${Math.floor(costO + cP).toLocaleString()}`;
             const left = boxes - cons;
@@ -900,7 +900,7 @@
 
         window.renderLotes = function() { window.updateBatchTable(); window.updateBatchProjections(); }
         
-        window.suggestBatchPrice = function() { const s = document.getElementById('input-prod-size').value; if(window.defaultSalePrices[s]) document.getElementById('input-prod-price').value = window.defaultSalePrices[s]; }
+        window.suggestBatchPrice = function() { const s = document.getElementById('input-prod-size').value; if(window.defaultSalePrices[s.replace(/\s+/g,'').toLowerCase()]) document.getElementById('input-prod-price').value = window.defaultSalePrices[s.replace(/\s+/g,'').toLowerCase()]; }
         
         window.addCurrentProduct = function() { 
             const t = document.getElementById('input-prod-type').value;
@@ -912,7 +912,7 @@
             if(!q || isNaN(p)) return; 
             
             window.state.currentBatchProducts.push({ 
-                id: Date.now(), type: t, size: s, qty: q, price: p, client: c, pkgCost: (window.state.inventory[`envase_${s}`]?.avgCost || 0) * q 
+                id: Date.now(), type: t, size: s, qty: q, price: p, client: c, pkgCost: (window.state.inventory[`envase_${s.replace(/\s+/g,'').toLowerCase()}`]?.avgCost || 0) * q 
             }); 
             
             document.getElementById('input-prod-qty').value = ''; 
@@ -932,14 +932,15 @@
             if(leche < consumed - 0.01) return alert("Sobregiro en olla."); 
             
             window.state.currentBatchProducts.forEach(p => { 
-                const k = `${p.type}_${p.size}`; 
+                const sizeKey = p.size.replace(/\s+/g,'').toLowerCase();
+                const k = `${p.type}_${sizeKey}`; 
                 if(window.state.fridge[k]) { 
                     window.state.fridge[k].unitCost = ((window.state.fridge[k].qty * window.state.fridge[k].unitCost) + (p.qty * (p.pkgCost / p.qty))) / (window.state.fridge[k].qty + p.qty); 
                     window.state.fridge[k].qty += p.qty; 
                 } else { 
-                    window.state.fridge[k] = { type: p.type, size: p.size, qty: p.qty, unitCost: (p.pkgCost / p.qty), defaultPrice: p.price }; 
+                    window.state.fridge[k] = { type: p.type, size: sizeKey, qty: p.qty, unitCost: (p.pkgCost / p.qty), defaultPrice: p.price }; 
                 } 
-                const envKey = `envase_${p.size}`; if(window.state.inventory[envKey]) window.state.inventory[envKey].stock -= p.qty; 
+                const envKey = `envase_${sizeKey}`; if(window.state.inventory[envKey]) window.state.inventory[envKey].stock -= p.qty; 
             }); 
             
             window.state.inventory.leche.stock -= consumed; 
@@ -967,7 +968,7 @@
             list.innerHTML = '';
             let total = 0;
             
-            if(window.state.currentInvoice.length === 0) {
+            if(!window.state.currentInvoice || window.state.currentInvoice.length === 0) {
                 list.innerHTML = '<div class="p-4 text-center text-xs text-gray-400 font-bold">No hay productos en la factura actual.</div>';
                 totalEl.innerText = "$0";
                 return;
@@ -998,6 +999,8 @@
             
             if(!window.state.fridge[k] || q <= 0 || isNaN(q) || isNaN(p)) return alert("Datos de salida inválidos.");
             
+            if(!window.state.currentInvoice) window.state.currentInvoice = [];
+            
             let inCart = 0;
             window.state.currentInvoice.forEach(item => { if(item.key === k) inCart += item.qty; });
             if((inCart + q) > window.state.fridge[k].qty) return alert(`Solo hay ${window.state.fridge[k].qty} unidades en la nevera y ya tienes ${inCart} en la factura.`);
@@ -1016,13 +1019,14 @@
         }
 
         window.removeFromInvoice = function(index) {
+            if(!window.state.currentInvoice) window.state.currentInvoice = [];
             window.state.currentInvoice.splice(index, 1);
             window.renderInvoiceList();
             window.saveToLocalStorage();
         }
 
         window.processInvoice = function() {
-            if(window.state.currentInvoice.length === 0) return alert("Añade productos a la factura primero.");
+            if(!window.state.currentInvoice || window.state.currentInvoice.length === 0) return alert("Añade productos a la factura primero.");
             
             const t = document.getElementById('select-sale-type').value;
             const client = document.getElementById('invoice-client').value.trim() || 'Cliente General';
@@ -1479,7 +1483,7 @@
         window.resetInventoryOnly = function() { Object.keys(window.state.inventory).forEach(k => { window.state.inventory[k].stock = 0; window.state.inventory[k].avgCost = 0; }); window.state.purchaseLogs = []; window.state.totalInvestment = 0; window.saveToLocalStorage(); window.renderBodega(); window.closeResetInventoryModal(); alert("Bodega vaciada exitosamente."); }
 
         window.exportData = function() { window.saveToLocalStorage(); const b = new Blob([localStorage.getItem('blanco_artesanal_v3')], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `Respaldo_TOTAL.json`; a.click(); }
-        window.importData = function(event) { const f = event.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = (e) => { try { const d = JSON.parse(e.target.result); if (d && d.inventory) { window.state = d; window.recalculateTotalInvestment(); window.saveToLocalStorage(); window.syncOllaInputs(); window.renderFinance(); alert("¡Importación Correcta!"); } } catch (err) { alert("Error."); } }; r.readAsText(f); }
+        window.importData = function(event) { const f = event.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = (e) => { try { const d = JSON.parse(e.target.result); if (d && d.inventory) { window.state = d; if(!window.state.currentInvoice) window.state.currentInvoice = []; window.recalculateTotalInvestment(); window.saveToLocalStorage(); window.syncOllaInputs(); window.renderFinance(); alert("¡Importación Correcta!"); } } catch (err) { alert("Error."); } }; r.readAsText(f); }
 
         window.openPlannerModal = function() { const modal = document.getElementById('modal-planner'); if(modal) { modal.classList.remove('hidden'); const curM = parseFloat(document.getElementById('bi-leche')?.value) || 0; const inp = document.getElementById('plan-leche'); if(inp) inp.value = curM > 0 ? curM : ''; window.calculatePlanner(); if(typeof lucide !== 'undefined') lucide.createIcons(); } };
         window.closePlannerModal = function() { document.getElementById('modal-planner')?.classList.add('hidden'); }
@@ -1551,6 +1555,37 @@
             window.renderLabels(); window.saveToLocalStorage();
         }
 
+        // --- RESTORED FUNCTIONS ---
+        window.openFridgeAdjustModal = function(k) { const i = window.state.fridge[k]; if(!i) return; document.getElementById('fridge-adjust-key').value = k; document.getElementById('fridge-adjust-name').innerText = i.type; document.getElementById('fridge-adjust-max').value = i.qty; document.getElementById('fridge-adjust-max-label').innerText = i.qty; document.getElementById('modal-fridge-adjust').classList.remove('hidden'); if(typeof lucide !== 'undefined') lucide.createIcons(); }
+        
+        window.closeFridgeAdjustModal = function() { document.getElementById('modal-fridge-adjust').classList.add('hidden'); }
+        
+        window.returnAllFromFridge = function() { const m = document.getElementById('fridge-adjust-max').value; document.getElementById('fridge-adjust-qty').value = m; window.confirmFridgeReturn(); }
+        
+        window.confirmFridgeReturn = function() { 
+            const k = document.getElementById('fridge-adjust-key').value, q = parseInt(document.getElementById('fridge-adjust-qty').value), i = window.state.fridge[k]; 
+            if(!i || q <= 0 || q > i.qty) return alert("Inválido."); 
+            const sizeKey = i.size.replace(/\s+/g,'').toLowerCase();
+            const cap = window.sizeCapacities[sizeKey] || 0; 
+            const vol = q * cap; 
+            const isG = i.type.toLowerCase().includes('griego'); 
+            const me = isG ? vol/250 : vol/1000; 
+            window.state.inventory.leche.stock += me; 
+            if(sizeKey !== 'granel' && window.state.inventory[`envase_${sizeKey}`]) window.state.inventory[`envase_${sizeKey}`].stock += q; 
+            i.qty -= q; 
+            if(i.qty <= 0) delete window.state.fridge[k]; 
+            window.renderFinance(); 
+            window.closeFridgeAdjustModal(); 
+            window.saveToLocalStorage(); 
+        }
+        
+        window.selectFridgeItem = function(k) { const el = document.getElementById('sale-product-key'); if(el) el.value = k; window.updateSalePricePlaceholder(); }
+        
+        window.updateSalePricePlaceholder = function() { const k = document.getElementById('sale-product-key').value; if(window.state.fridge[k]) document.getElementById('input-sale-price').value = window.state.fridge[k].defaultPrice; }
+        
+        window.updateSaleFormUI = function() { const t = document.getElementById('select-sale-type').value; const p = document.getElementById('container-sale-price'); if(p) p.classList.toggle('hidden', t !== 'venta'); }
+
+
         // --- INICIO ---
         window.onload = function() {
             window.loadFromLocalStorage();
@@ -1575,4 +1610,4 @@
         };
     </script>
 </body>
-                                </html>
+</html>
