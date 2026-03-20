@@ -616,23 +616,23 @@
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm leading-none font-black font-black font-black font-black">
                     <div class="border border-gray-200 rounded-xl p-3 bg-gray-50 focus-within:bg-white transition-all leading-none font-black font-black font-black font-black">
                         <span class="text-[10px] font-bold text-gray-500 uppercase block mb-1 leading-none font-black font-black font-black font-black font-black">Griego 5 OZ</span>
-                        <input type="number" id="plan-5oz" oninput="window.calculatePlanner()" class="w-full bg-transparent font-black text-lg outline-none leading-none font-black font-black font-black font-black text-slate-800">
+                        <input type="number" id="plan-5oz" oninput="window.calculatePlanner()" class="w-full bg-transparent font-black text-lg outline-none leading-none font-black font-black font-black font-black font-black text-slate-800">
                     </div>
                     <div class="border border-gray-200 rounded-xl p-3 bg-gray-50 focus-within:bg-white transition-all leading-none font-black font-black font-black font-black">
                         <span class="text-[10px] font-bold text-gray-500 uppercase block mb-1 leading-none font-black font-black font-black font-black font-black">Griego 10 OZ</span>
-                        <input type="number" id="plan-10oz" oninput="window.calculatePlanner()" class="w-full bg-transparent font-black text-lg outline-none leading-none font-black font-black font-black font-black text-slate-800">
+                        <input type="number" id="plan-10oz" oninput="window.calculatePlanner()" class="w-full bg-transparent font-black text-lg outline-none leading-none font-black font-black font-black font-black font-black text-slate-800">
                     </div>
                     <div class="border border-gray-200 rounded-xl p-3 bg-gray-50 focus-within:bg-white transition-all leading-none font-black font-black font-black font-black">
                         <span class="text-[10px] font-bold text-gray-500 uppercase block mb-1 leading-none font-black font-black font-black font-black font-black">Griego 16 OZ</span>
-                        <input type="number" id="plan-16oz" oninput="window.calculatePlanner()" class="w-full bg-transparent font-black text-lg outline-none leading-none font-black font-black font-black font-black text-slate-800">
+                        <input type="number" id="plan-16oz" oninput="window.calculatePlanner()" class="w-full bg-transparent font-black text-lg outline-none leading-none font-black font-black font-black font-black font-black text-slate-800">
                     </div>
                     <div class="border border-gray-200 rounded-xl p-3 bg-gray-50 focus-within:bg-white transition-all leading-none font-black font-black font-black font-black">
                         <span class="text-[10px] font-bold text-gray-500 uppercase block mb-1 leading-none font-black font-black font-black font-black font-black">Griego 32 OZ</span>
-                        <input type="number" id="plan-32oz" oninput="window.calculatePlanner()" class="w-full bg-transparent font-black text-lg outline-none leading-none font-black font-black font-black font-black text-slate-800">
+                        <input type="number" id="plan-32oz" oninput="window.calculatePlanner()" class="w-full bg-transparent font-black text-lg outline-none leading-none font-black font-black font-black font-black font-black text-slate-800">
                     </div>
                     <div class="border border-blue-200 rounded-xl p-3 bg-blue-50 focus-within:bg-white transition-all sm:col-span-2 leading-none font-black font-black font-black font-black font-black">
                         <span class="text-[10px] font-bold text-blue-500 uppercase block mb-1 font-black leading-none font-black font-black font-black font-black font-black">Líquido 1 LT</span>
-                        <input type="number" id="plan-1lt" oninput="window.calculatePlanner()" class="w-full bg-transparent font-black text-lg outline-none text-blue-900 leading-none font-black font-black font-black font-black">
+                        <input type="number" id="plan-1lt" oninput="window.calculatePlanner()" class="w-full bg-transparent font-black text-lg outline-none text-blue-900 leading-none font-black font-black font-black font-black font-black">
                     </div>
                 </div>
             </div>
@@ -713,7 +713,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT PRINCIPAL UNIFICADO Y COMPLETO -->
+    <!-- SCRIPT PRINCIPAL UNIFICADO -->
     <script>
         // --- ESTADO Y CONSTANTES GLOBALES ---
         window.state = {
@@ -817,7 +817,7 @@
             window.renderFinance(); 
             if(t === 'etiquetas') window.renderLabels(); 
             if(t === 'calculadora') window.updateVencimientos(); 
-            lucide.createIcons(); 
+            if(typeof lucide !== 'undefined') lucide.createIcons(); 
             window.saveToLocalStorage(); 
         }
         
@@ -895,7 +895,7 @@
                 if(ventaEl) ventaEl.innerText = `$${Math.floor(tV).toLocaleString()}`; 
             }
             window.updateBatchProjections();
-            lucide.createIcons();
+            if(typeof lucide !== 'undefined') lucide.createIcons();
         }
 
         window.renderLotes = function() { window.updateBatchTable(); window.updateBatchProjections(); }
@@ -988,7 +988,7 @@
                 `;
             });
             totalEl.innerText = `$${Math.floor(total).toLocaleString()}`;
-            lucide.createIcons();
+            if(typeof lucide !== 'undefined') lucide.createIcons();
         }
 
         window.addToInvoice = function() {
@@ -1102,7 +1102,7 @@
             html2pdf().set(opt).from(container).save().finally(() => { 
                 document.body.classList.remove('pdf-exporting'); 
                 container.classList.add('hidden');
-                lucide.createIcons(); 
+                if(typeof lucide !== 'undefined') lucide.createIcons(); 
             });
         }
 
@@ -1175,7 +1175,7 @@
             });
             const sel = document.getElementById('sale-product-key'); if(sel) { sel.innerHTML = '<option value="">Producto...</option>'; Object.entries(window.state.fridge).forEach(([k,i]) => sel.innerHTML += `<option value="${k}">${i.type} ${window.formatSize(i.size)}</option>`); }
             window.renderInvoiceList();
-            lucide.createIcons();
+            if(typeof lucide !== 'undefined') lucide.createIcons();
         }
 
         window.renderHistory = function() {
@@ -1242,7 +1242,7 @@
             }
             
             window.renderFinanceChart();
-            lucide.createIcons();
+            if(typeof lucide !== 'undefined') lucide.createIcons();
         }
 
         window.renderFinanceChart = function() {
@@ -1429,31 +1429,66 @@
             }
             
             document.getElementById('modal-cost-history').classList.remove('hidden');
-            lucide.createIcons();
+            if(typeof lucide !== 'undefined') lucide.createIcons();
         }
 
         window.closeCostHistoryModal = function() {
             document.getElementById('modal-cost-history').classList.add('hidden');
         }
 
-        // --- SISTEMA: BORRADO Y EXPORTACIÓN ---
-        window.openHardResetModal = function() { document.getElementById('modal-hard-reset')?.classList.remove('hidden'); lucide.createIcons(); }
+        // --- SISTEMA: BORRADO Y AJUSTE MANUAL ---
+        window.openAdjustModal = function(k) { const i = window.state.inventory[k]; if(!i) return; document.getElementById('adjust-item-key').value = k; document.getElementById('adjust-item-name').innerText = i.name; document.getElementById('adjust-item-stock').value = i.stock; document.getElementById('adjust-item-cost').value = i.avgCost; document.getElementById('modal-adjust-item').classList.remove('hidden'); if(typeof lucide !== 'undefined') lucide.createIcons(); }
+        window.closeAdjustModal = function() { document.getElementById('modal-adjust-item').classList.add('hidden'); }
+        
+        window.saveItemAdjustment = function() { 
+            const k = document.getElementById('adjust-item-key').value;
+            const s = parseFloat(document.getElementById('adjust-item-stock').value);
+            const c = parseFloat(document.getElementById('adjust-item-cost').value); 
+            
+            const oldVal = window.state.inventory[k].stock * window.state.inventory[k].avgCost;
+            const newVal = s * c;
+            const diff = newVal - oldVal;
+            
+            // Registrar la diferencia monetaria en el historial de compras para que afecte la "Inversión Histórica"
+            if(diff !== 0) {
+                if(!window.state.purchaseLogs) window.state.purchaseLogs = [];
+                window.state.purchaseLogs.push({ 
+                    id: Date.now(), 
+                    itemName: window.state.inventory[k].name, 
+                    provider: 'Ajuste Manual', 
+                    qty: s - window.state.inventory[k].stock, 
+                    totalCost: diff, 
+                    date: window.state.packDate || new Date().toISOString().split('T')[0] 
+                });
+            }
+            
+            window.state.inventory[k].stock = s; 
+            window.state.inventory[k].avgCost = c; 
+            window.renderFinance(); 
+            window.closeAdjustModal(); 
+            window.saveToLocalStorage(); 
+        }
+        
+        window.zeroItemAdjustment = function() { document.getElementById('adjust-item-stock').value = 0; document.getElementById('adjust-item-cost').value = 0; }
+
+        window.openHardResetModal = function() { document.getElementById('modal-hard-reset')?.classList.remove('hidden'); if(typeof lucide !== 'undefined') lucide.createIcons(); }
         window.closeHardResetModal = function() { document.getElementById('modal-hard-reset')?.classList.add('hidden'); }
         window.hardResetApp = function() { localStorage.removeItem('blanco_artesanal_v3'); location.reload(); }
         
-        window.openResetInventoryModal = function() { document.getElementById('modal-reset-inventory')?.classList.remove('hidden'); lucide.createIcons(); }
+        window.openResetInventoryModal = function() { document.getElementById('modal-reset-inventory')?.classList.remove('hidden'); if(typeof lucide !== 'undefined') lucide.createIcons(); }
         window.closeResetInventoryModal = function() { document.getElementById('modal-reset-inventory')?.classList.add('hidden'); }
         window.resetInventoryOnly = function() { Object.keys(window.state.inventory).forEach(k => { window.state.inventory[k].stock = 0; window.state.inventory[k].avgCost = 0; }); window.state.purchaseLogs = []; window.state.totalInvestment = 0; window.saveToLocalStorage(); window.renderBodega(); window.closeResetInventoryModal(); alert("Bodega vaciada."); }
 
         window.exportData = function() { window.saveToLocalStorage(); const b = new Blob([localStorage.getItem('blanco_artesanal_v3')], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `Respaldo_TOTAL.json`; a.click(); }
         window.importData = function(event) { const f = event.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = (e) => { try { const d = JSON.parse(e.target.result); if (d && d.inventory) { window.state = d; window.recalculateTotalInvestment(); window.saveToLocalStorage(); window.syncOllaInputs(); window.renderFinance(); alert("¡Importación Correcta!"); } } catch (err) { alert("Error."); } }; r.readAsText(f); }
 
-        window.openPlannerModal = function() { const modal = document.getElementById('modal-planner'); if(modal) { modal.classList.remove('hidden'); const curM = parseFloat(document.getElementById('bi-leche')?.value) || 0; const inp = document.getElementById('plan-leche'); if(inp) inp.value = curM > 0 ? curM : ''; window.calculatePlanner(); lucide.createIcons(); } };
+        // --- PLANIFICADOR ---
+        window.openPlannerModal = function() { const modal = document.getElementById('modal-planner'); if(modal) { modal.classList.remove('hidden'); const curM = parseFloat(document.getElementById('bi-leche')?.value) || 0; const inp = document.getElementById('plan-leche'); if(inp) inp.value = curM > 0 ? curM : ''; window.calculatePlanner(); if(typeof lucide !== 'undefined') lucide.createIcons(); } };
         window.closePlannerModal = function() { document.getElementById('modal-planner')?.classList.add('hidden'); }
         window.calculatePlanner = function() { const getV = id => { const el = document.getElementById(id); return el ? parseFloat(el.value) || 0 : 0; }; const boxes = getV('plan-leche'); const cons = ((getV('plan-5oz')*150)+(getV('plan-10oz')*300)+(getV('plan-16oz')*500)+(getV('plan-32oz')*1000))/250 + (getV('plan-1lt')*1000)/900; const rem = boxes - cons; const elL = document.getElementById('plan-rem-leche'), elG = document.getElementById('plan-rem-griego'); if(elL) elL.innerText = rem.toFixed(2); if(elG) elG.innerText = (rem * 250).toFixed(0); const sum = document.getElementById('planner-summary'), btn = document.getElementById('btn-apply-plan'); if(sum && btn) { if (rem < -0.01) { sum.classList.replace('bg-gray-900', 'bg-red-900'); btn.disabled = true; } else { sum.classList.replace('bg-red-900', 'bg-gray-900'); btn.disabled = false; } } }
-        window.applyPlanner = function() { const getV = id => { const el = document.getElementById(id); return el ? parseFloat(el.value) || 0 : 0; }; const boxes = getV('plan-leche'), q1lt = getV('plan-1lt'), q5oz = getV('plan-5oz'), q10oz = getV('plan-10oz'), q16oz = getV('plan-16oz'), q32oz = getV('plan-32oz'); if (boxes <= 0) return; const frL = q1lt / 4, sugL = (q1lt / 4) * 400, totalG = (q5oz*150)+(q10oz*300)+(q16oz*500)+(q32oz*1000), frG = (totalG * 0.20) / 300, sugG = totalG * 0.08; document.getElementById('bi-leche').value = boxes.toFixed(1); document.getElementById('bi-fresas').value = (frG + frL).toFixed(2); document.getElementById('bi-azucar').value = (sugG + sugL).toFixed(0); document.getElementById('bu-azucar').value = 'g'; window.state.currentBatchProducts = []; const add = (size, qty, name) => { if (qty > 0) window.state.currentBatchProducts.push({ id: Date.now()+Math.random(), type: name, size, qty, price: window.defaultSalePrices[size], pkgCost: (window.state.inventory[`envase_${size}`]?.avgCost || 0) * qty }); }; add('5oz', q5oz, 'Griego Fresa Con Azúcar'); add('10oz', q10oz, 'Griego Fresa Con Azúcar'); add('16oz', q16oz, 'Griego Fresa Con Azúcar'); add('32oz', q32oz, 'Griego Fresa Con Azúcar'); add('1lt', q1lt, 'Líquido Fresa Con Azúcar'); window.closePlannerModal(); window.renderLotes(); }
+        window.applyPlanner = function() { const getV = id => { const el = document.getElementById(id); return el ? parseFloat(el.value) || 0 : 0; }; const boxes = getV('plan-leche'), q1lt = getV('plan-1lt'), q5oz = getV('plan-5oz'), q10oz = getV('plan-10oz'), q16oz = getV('plan-16oz'), q32oz = getV('plan-32oz'); if (boxes <= 0) return; const frL = q1lt / 4, sugL = (q1lt / 4) * 400, totalG = (q5oz*150)+(q10oz*300)+(q16oz*500)+(q32oz*1000), frG = (totalG * 0.20) / 300, sugG = totalG * 0.08; document.getElementById('bi-leche').value = boxes.toFixed(1); document.getElementById('bi-fresas').value = (frG + frL).toFixed(2); document.getElementById('bi-azucar').value = (sugG + sugL).toFixed(0); document.getElementById('bu-azucar').value = 'g'; window.state.currentBatchProducts = []; const add = (size, qty, name) => { if (qty > 0) window.state.currentBatchProducts.push({ id: Date.now()+Math.random(), type: name, size, qty, price: window.defaultSalePrices[size.replace(/\s+/g,'').toLowerCase()], pkgCost: (window.state.inventory[`envase_${size.replace(/\s+/g,'').toLowerCase()}`]?.avgCost || 0) * qty }); }; add('5 OZ', q5oz, 'Griego Fresa Con Azúcar'); add('10 OZ', q10oz, 'Griego Fresa Con Azúcar'); add('16 OZ', q16oz, 'Griego Fresa Con Azúcar'); add('32 OZ', q32oz, 'Griego Fresa Con Azúcar'); add('1 LT', q1lt, 'Líquido Fresa Con Azúcar'); window.closePlannerModal(); window.renderLotes(); }
 
-        // --- RESTAURAR FUNCIONES ELIMINADAS (VENCIMIENTOS Y ETIQUETAS) ---
+        // --- FUNCIONES RESTAURADAS: CALCULADORA Y ETIQUETAS ---
         window.updateVencimientos = function() {
             const el = document.getElementById('calc-date-input'); if(!el) return;
             const dStr = el.value, container = document.getElementById('vencimientos-results'); if (!container) return;
@@ -1496,7 +1531,7 @@
             window.scrollTo(0, 0); document.body.classList.add('pdf-exporting');
             const firstSheet = document.querySelector('.page-sheet'); if (!firstSheet) { document.body.classList.remove('pdf-exporting'); return; }
             const opt = { margin: 0, filename: 'Etiquetas.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: [parseFloat(firstSheet.style.width), parseFloat(firstSheet.style.height)], orientation: 'portrait' } };
-            html2pdf().set(opt).from(container).save().finally(() => { document.body.classList.remove('pdf-exporting'); lucide.createIcons(); });
+            html2pdf().set(opt).from(container).save().finally(() => { document.body.classList.remove('pdf-exporting'); if(typeof lucide !== 'undefined') lucide.createIcons(); });
         }
 
         window.toggleCutLine = function() {
@@ -1541,4 +1576,4 @@
         };
     </script>
 </body>
-                                                                                                                     </html>
+                            </html>
