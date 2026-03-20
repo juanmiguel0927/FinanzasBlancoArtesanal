@@ -566,6 +566,18 @@
     </div>
 
     <!-- MODALES ÚNICOS (Planificador, Ajustes, Borrado, Historial de Precios) -->
+    <div id="modal-confirm-invoice" class="hidden fixed inset-0 bg-slate-900/80 flex items-center justify-center z-50 backdrop-blur-sm p-4 leading-none font-black font-black font-black font-black">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center border border-green-100 transform transition-all leading-none font-black font-black font-black font-black font-black">
+            <div class="mx-auto bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mb-5 leading-none font-black font-black font-black font-black font-black font-black"><i data-lucide="help-circle" class="text-green-600 w-8 h-8 leading-none font-black font-black font-black font-black"></i></div>
+            <h3 class="text-xl font-black text-gray-800 mb-2 leading-none font-black font-black font-black font-black font-black font-black">¿Confirmar Factura?</h3>
+            <p class="text-xs text-gray-500 mb-6 leading-relaxed font-bold font-black font-black font-black font-black font-black font-black">¿Estás seguro de generar la factura y registrar las salidas?</p>
+            <div class="flex flex-col gap-3 leading-none font-black font-black font-black font-black font-black font-black font-black font-black">
+                <button onclick="window.executeProcessInvoice()" class="h-14 bg-green-600 text-white rounded-xl font-black uppercase shadow-lg active:scale-95 transition-all leading-none font-black font-black font-black font-black font-black font-black font-black font-black font-black">Sí, Confirmar</button>
+                <button onclick="window.closeConfirmInvoiceModal()" class="h-14 bg-gray-100 text-gray-700 rounded-xl font-bold uppercase leading-none font-black font-black font-black font-black font-black font-black font-black font-black">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
     <div id="modal-cost-history" class="hidden fixed inset-0 bg-slate-900/80 flex items-center justify-center z-50 backdrop-blur-sm p-4 leading-none text-slate-800 font-black">
         <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl max-w-lg w-full leading-none font-black max-h-[80vh] flex flex-col">
             <div class="flex justify-between items-start mb-5 leading-none font-black">
@@ -1030,7 +1042,16 @@
 
         window.processInvoice = function() {
             if(!window.state.currentInvoice || window.state.currentInvoice.length === 0) return alert("Añade productos a la factura primero.");
-            
+            document.getElementById('modal-confirm-invoice').classList.remove('hidden');
+            if(typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        window.closeConfirmInvoiceModal = function() {
+            document.getElementById('modal-confirm-invoice').classList.add('hidden');
+        }
+
+        window.executeProcessInvoice = function() {
+            window.closeConfirmInvoiceModal();
             const t = document.getElementById('select-sale-type').value;
             const client = document.getElementById('invoice-client').value.trim() || 'Cliente General';
             const notes = document.getElementById('invoice-notes').value.trim();
