@@ -1449,7 +1449,6 @@
             const newVal = s * c;
             const diff = newVal - oldVal;
             
-            // Registrar la diferencia monetaria en el historial de compras para que afecte la "Inversión Histórica"
             if(diff !== 0) {
                 if(!window.state.purchaseLogs) window.state.purchaseLogs = [];
                 window.state.purchaseLogs.push({ 
@@ -1477,12 +1476,11 @@
         
         window.openResetInventoryModal = function() { document.getElementById('modal-reset-inventory')?.classList.remove('hidden'); if(typeof lucide !== 'undefined') lucide.createIcons(); }
         window.closeResetInventoryModal = function() { document.getElementById('modal-reset-inventory')?.classList.add('hidden'); }
-        window.resetInventoryOnly = function() { Object.keys(window.state.inventory).forEach(k => { window.state.inventory[k].stock = 0; window.state.inventory[k].avgCost = 0; }); window.state.purchaseLogs = []; window.state.totalInvestment = 0; window.saveToLocalStorage(); window.renderBodega(); window.closeResetInventoryModal(); alert("Bodega vaciada."); }
+        window.resetInventoryOnly = function() { Object.keys(window.state.inventory).forEach(k => { window.state.inventory[k].stock = 0; window.state.inventory[k].avgCost = 0; }); window.state.purchaseLogs = []; window.state.totalInvestment = 0; window.saveToLocalStorage(); window.renderBodega(); window.closeResetInventoryModal(); alert("Bodega vaciada exitosamente."); }
 
         window.exportData = function() { window.saveToLocalStorage(); const b = new Blob([localStorage.getItem('blanco_artesanal_v3')], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `Respaldo_TOTAL.json`; a.click(); }
         window.importData = function(event) { const f = event.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = (e) => { try { const d = JSON.parse(e.target.result); if (d && d.inventory) { window.state = d; window.recalculateTotalInvestment(); window.saveToLocalStorage(); window.syncOllaInputs(); window.renderFinance(); alert("¡Importación Correcta!"); } } catch (err) { alert("Error."); } }; r.readAsText(f); }
 
-        // --- PLANIFICADOR ---
         window.openPlannerModal = function() { const modal = document.getElementById('modal-planner'); if(modal) { modal.classList.remove('hidden'); const curM = parseFloat(document.getElementById('bi-leche')?.value) || 0; const inp = document.getElementById('plan-leche'); if(inp) inp.value = curM > 0 ? curM : ''; window.calculatePlanner(); if(typeof lucide !== 'undefined') lucide.createIcons(); } };
         window.closePlannerModal = function() { document.getElementById('modal-planner')?.classList.add('hidden'); }
         window.calculatePlanner = function() { const getV = id => { const el = document.getElementById(id); return el ? parseFloat(el.value) || 0 : 0; }; const boxes = getV('plan-leche'); const cons = ((getV('plan-5oz')*150)+(getV('plan-10oz')*300)+(getV('plan-16oz')*500)+(getV('plan-32oz')*1000))/250 + (getV('plan-1lt')*1000)/900; const rem = boxes - cons; const elL = document.getElementById('plan-rem-leche'), elG = document.getElementById('plan-rem-griego'); if(elL) elL.innerText = rem.toFixed(2); if(elG) elG.innerText = (rem * 250).toFixed(0); const sum = document.getElementById('planner-summary'), btn = document.getElementById('btn-apply-plan'); if(sum && btn) { if (rem < -0.01) { sum.classList.replace('bg-gray-900', 'bg-red-900'); btn.disabled = true; } else { sum.classList.replace('bg-red-900', 'bg-gray-900'); btn.disabled = false; } } }
@@ -1572,8 +1570,9 @@
                 });
             }
             window.syncOllaInputs(); 
+            window.suggestBatchPrice();
             window.switchTab('registro');
         };
     </script>
 </body>
-                            </html>
+                                </html>
