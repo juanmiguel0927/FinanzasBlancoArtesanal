@@ -20,9 +20,9 @@
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
 
         .active-nav-tab {
-            border-bottom: 4px solid #16a34a;
-            color: #15803d;
-            background-color: #f0fdf4;
+            border-bottom: 4px solid #16a34a !important;
+            color: #15803d !important;
+            background-color: #f0fdf4 !important;
         }
 
         .active-sub-tab {
@@ -90,7 +90,7 @@
             <button onclick="window.switchTab('calculadora')" id="btn-nav-calculadora" class="snap-start flex-shrink-0 flex items-center gap-2 px-5 sm:px-6 py-4 font-bold text-sm border-b-4 border-transparent text-gray-400 hover:bg-gray-50 transition-colors leading-none">
                 <i data-lucide="calendar-days" class="w-5 h-5 sm:w-4 sm:h-4"></i> Vencimientos
             </button>
-            <button onclick="window.switchTab('registro')" id="btn-nav-registro" class="snap-start flex-shrink-0 flex items-center gap-2 px-5 sm:px-6 py-4 font-bold text-sm border-b-4 active-nav-tab transition-colors leading-none">
+            <button onclick="window.switchTab('registro')" id="btn-nav-registro" class="snap-start flex-shrink-0 flex items-center gap-2 px-5 sm:px-6 py-4 font-bold text-sm border-b-4 border-transparent text-gray-400 hover:bg-gray-50 active-nav-tab transition-colors leading-none">
                 <i data-lucide="database" class="w-5 h-5 sm:w-4 sm:h-4"></i> Finanzas e Inventario
             </button>
         </div>
@@ -730,7 +730,7 @@
                     <i data-lucide="lightbulb" class="w-4 h-4 text-yellow-400 shrink-0 leading-none font-black font-black font-black"></i> 
                     <span id="plan-sugg-text" class="leading-none font-black font-black font-black">Ingresa valores para calcular.</span>
                 </div>
-                <button id="btn-apply-plan" onclick="window.applyPlanner()" class="w-full h-14 bg-blue-600 hover:bg-blue-50 text-white rounded-xl font-black uppercase shadow-lg transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 leading-none font-black font-black font-black font-black">
+                <button id="btn-apply-plan" onclick="window.applyPlanner()" class="w-full h-14 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-black uppercase shadow-lg transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 leading-none font-black font-black font-black font-black">
                     <i data-lucide="check-circle" class="w-4 h-4 leading-none font-black font-black font-black"></i> Aplicar al Lote Principal
                 </button>
             </div>
@@ -906,8 +906,16 @@
             window.state.activeTab = t; 
             document.querySelectorAll('main').forEach(m => m.classList.add('hidden')); 
             document.getElementById(`main-content-${t}`)?.classList.remove('hidden'); 
-            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-nav-tab')); 
-            document.getElementById(`btn-nav-${t}`)?.classList.add('active-nav-tab'); 
+            
+            document.querySelectorAll('nav button').forEach(b => {
+                b.classList.remove('active-nav-tab', 'text-green-700', 'border-green-600', 'bg-green-50');
+            }); 
+            
+            const activeBtn = document.getElementById(`btn-nav-${t}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active-nav-tab'); 
+            }
+            
             window.renderFinance(); 
             if(t === 'etiquetas') window.renderLabels(); 
             if(t === 'calculadora') window.updateVencimientos(); 
@@ -1918,9 +1926,9 @@
             }
             window.syncOllaInputs(); 
             window.suggestBatchPrice();
-            window.updateClientsDatalist(); 
+            window.updateClientsDatalist(); // Actualizar Datalist al inicio
             window.switchTab('registro');
         };
     </script>
 </body>
-</html>
+    </html>
