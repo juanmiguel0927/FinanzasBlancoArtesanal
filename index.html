@@ -248,7 +248,7 @@
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 leading-none text-slate-800 font-black">
                     <h2 class="text-base sm:text-lg font-black mb-4 flex items-center gap-2 leading-none font-black font-black uppercase tracking-tighter font-black"><i data-lucide="box" class="w-4 h-4 leading-none"></i> 2. Armar Productos</h2>
                     <div class="bg-gray-50 p-5 rounded-2xl mb-6 border border-gray-200 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 leading-none font-black font-black shadow-inner">
-                        <select id="input-prod-type" class="p-3 border rounded-xl font-bold text-sm h-12 leading-none text-slate-800 font-black lg:col-span-2">
+                        <select id="input-prod-type" onchange="window.handleProductTypeChange()" class="p-3 border rounded-xl font-bold text-sm h-12 leading-none text-slate-800 font-black lg:col-span-2">
                             <option value="Griego Natural Sin Azúcar">Griego Natural (Sin Azúcar)</option>
                             <option value="Griego Natural Con Azúcar">Griego Natural (Con Azúcar)</option>
                             <option value="Griego Fresa Sin Azúcar">Griego Fresa (Sin Azúcar)</option>
@@ -653,7 +653,7 @@
                 <button onclick="window.closeCostHistoryModal()" class="p-2 bg-gray-100 rounded-full text-gray-500 shrink-0 leading-none font-black"><i data-lucide="x" class="w-4 h-4 leading-none font-black"></i></button>
             </div>
             <div class="overflow-y-auto flex-1 pr-2 space-y-3" id="cost-history-list">
-                </div>
+            </div>
         </div>
     </div>
 
@@ -1023,6 +1023,24 @@
         
         window.suggestBatchPrice = function() { const s = document.getElementById('input-prod-size').value; if(window.defaultSalePrices[s.replace(/\s+/g,'').toLowerCase()]) document.getElementById('input-prod-price').value = window.defaultSalePrices[s.replace(/\s+/g,'').toLowerCase()]; }
         
+        window.handleProductTypeChange = function() {
+            const type = document.getElementById('input-prod-type').value;
+            const sizeSelect = document.getElementById('input-prod-size');
+            const isLiquido = type.toLowerCase().includes('líquido') || type.toLowerCase().includes('liquido');
+            
+            sizeSelect.innerHTML = '';
+            if (isLiquido) {
+                sizeSelect.innerHTML += '<option value="1lt" selected>1 LT</option>';
+                sizeSelect.innerHTML += '<option value="2lt">2 LT</option>';
+            } else {
+                sizeSelect.innerHTML += '<option value="5oz">5 OZ</option>';
+                sizeSelect.innerHTML += '<option value="10oz">10 OZ</option>';
+                sizeSelect.innerHTML += '<option value="16oz" selected>16 OZ</option>';
+                sizeSelect.innerHTML += '<option value="32oz">32 OZ</option>';
+            }
+            window.suggestBatchPrice();
+        }
+
         window.addCurrentProduct = function() { 
             const t = document.getElementById('input-prod-type').value;
             const s = document.getElementById('input-prod-size').value;
@@ -1825,6 +1843,42 @@
         
         window.zeroItemAdjustment = function() { document.getElementById('adjust-item-stock').value = 0; document.getElementById('adjust-item-cost').value = 0; }
 
+        // --- FUNCIONES RESTAURADAS: NEVERA Y FACTURACION ---
+        window.openFridgeAdjustModal = function(k) { const i = window.state.fridge[k]; if(!i) return; document.getElementById('fridge-adjust-key').value = k; document.getElementById('fridge-adjust-name').innerText = i.type; document.getElementById('fridge-adjust-max').value = i.qty; document.getElementById('fridge-adjust-max-label').innerText = i.qty; document.getElementById('modal-fridge-adjust').classList.remove('hidden'); if(typeof lucide !== 'undefined') lucide.createIcons(); }
+        window.closeFridgeAdjustModal = function() { document.getElementById('modal-fridge-adjust').classList.add('hidden'); }
+        window.returnAllFromFridge = function() { const m = document.getElementById('fridge-adjust-max').value; document.getElementById('fridge-adjust-qty').value = m; window.confirmFridgeReturn(); }
+        window.confirmFridgeReturn = function() { 
+            const k = document.getElementById('fridge-adjust-key').value, q = parseInt(document.getElementById('fridge-adjust-qty').value), i = window.state.fridge[k]; 
+            if(!i || q <= 0 || q > i.qty) return alert("Inválido."); 
+            const sizeKey = i.size.replace(/\s+/g,'').toLowerCase();
+            const cap = window.sizeCapacities[sizeKey] || 0; 
+            const vol = q * cap; 
+            const isG = i.type.toLowerCase().includes('griego'); 
+            const me = isG ? vol/250 : vol/1000; 
+            window.state.inventory.leche.stock += me; 
+            if(sizeKey !== 'granel' && window.state.inventory[`envase_${sizeKey}`]) window.state.inventory[`envase_${sizeKey}`].stock += q; 
+            i.qty -= q; 
+            if(i.qty <= 0) delete window.state.fridge[k]; 
+            window.renderFinance(); 
+            window.closeFridgeAdjustModal(); 
+            window.saveToLocalStorage(); 
+        }
+        
+        window.selectFridgeItem = function(k) { const el = document.getElementById('sale-product-key'); if(el) el.value = k; window.updateSalePricePlaceholder(); }
+        window.updateSalePricePlaceholder = function() { const k = document.getElementById('sale-product-key').value; if(window.state.fridge[k]) document.getElementById('input-sale-price').value = window.state.fridge[k].defaultPrice; }
+        
+        window.updateSaleFormUI = function() { 
+            const t = document.getElementById('select-sale-type').value; 
+            const mR = document.getElementById('select-merma-reason');
+            if(mR) {
+                if(t === 'merma') {
+                    mR.classList.remove('hidden');
+                } else {
+                    mR.classList.add('hidden');
+                }
+            }
+        }
+
         window.openHardResetModal = function() { document.getElementById('modal-hard-reset')?.classList.remove('hidden'); if(typeof lucide !== 'undefined') lucide.createIcons(); }
         window.closeHardResetModal = function() { document.getElementById('modal-hard-reset')?.classList.add('hidden'); }
         window.hardResetApp = function() { localStorage.removeItem('blanco_artesanal_v3'); location.reload(); }
@@ -1925,10 +1979,10 @@
                 });
             }
             window.syncOllaInputs(); 
-            window.suggestBatchPrice();
+            window.handleProductTypeChange();
             window.updateClientsDatalist(); // Actualizar Datalist al inicio
             window.switchTab('registro');
         };
     </script>
 </body>
-    </html>
+</html>
