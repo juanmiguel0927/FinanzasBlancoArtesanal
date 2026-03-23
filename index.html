@@ -191,24 +191,22 @@
                     <div class="space-y-4 leading-none font-black">
                         <div class="border border-gray-200 rounded-xl p-3 focus-within:border-orange-500 transition-colors leading-none shadow-sm">
                             <label class="text-[10px] font-black text-gray-400 uppercase block mb-1 leading-none font-black tracking-widest">Cajas Leche (900ml)</label>
-                            <input type="number" id="bi-leche" step="0.1" oninput="window.updateBatchProjections()" class="w-full h-10 bg-transparent outline-none font-black text-2xl text-gray-800 leading-none" placeholder="0">
+                            <input type="number" id="bi-leche" step="0.1" oninput="window.autoFillOlla(); window.updateBatchProjections();" class="w-full h-10 bg-transparent outline-none font-black text-2xl text-gray-800 leading-none" placeholder="0">
                             <div class="mt-2 text-[10px] font-bold bg-gray-50 p-2 rounded-lg text-gray-500 flex justify-between leading-none font-black uppercase">
                                 <span id="prev-leche-bodega">Bodega: 0</span>
                                 <span id="prev-leche-restante" class="text-blue-600 font-black tracking-tighter">Quedarán: 0</span>
                             </div>
                         </div>
                         <div class="border border-gray-200 rounded-xl p-3 focus-within:border-orange-500 transition-colors leading-none font-black shadow-sm">
-                            <label class="text-[10px] font-black text-gray-500 uppercase block mb-1 leading-none font-black tracking-widest">Fresas / Fruta (Empaque)</label>
+                            <label class="text-[10px] font-black text-gray-500 uppercase block mb-1 leading-none font-black tracking-widest">Fresas / Fruta (Empaques 300g)</label>
                             <input type="number" id="bi-fresas" step="any" oninput="window.updateBatchProjections()" class="w-full h-10 bg-transparent outline-none font-black text-xl text-gray-800 leading-none font-black" placeholder="0">
                         </div>
                         <div class="border border-gray-200 rounded-xl p-3 focus-within:border-orange-500 transition-colors leading-none font-black shadow-sm">
-                            <label class="text-[10px] font-black text-gray-400 uppercase block mb-1 leading-none font-black tracking-widest">Azúcar Adicional (Total Olla)</label>
+                            <label class="text-[10px] font-black text-gray-400 uppercase block mb-1 leading-none font-black tracking-widest">Azúcar Total (Gramos)</label>
                             <div class="flex gap-2 leading-none font-black">
                                 <input type="number" id="bi-azucar" step="any" oninput="window.updateBatchProjections()" class="w-2/3 h-10 bg-transparent outline-none font-black text-xl text-gray-800" placeholder="0">
-                                <select id="bu-azucar" onchange="window.updateBatchProjections()" class="w-1/3 h-10 bg-gray-50 border rounded-lg px-2 text-xs font-bold outline-none text-slate-800 leading-none font-black uppercase">
+                                <select id="bu-azucar" onchange="window.updateBatchProjections()" class="w-1/3 h-10 bg-gray-50 border rounded-lg px-2 text-xs font-bold outline-none text-slate-800 leading-none font-black uppercase pointer-events-none appearance-none">
                                     <option value="g">Gramos</option>
-                                    <option value="kg">Kilos</option>
-                                    <option value="cucharada">Cuch.</option>
                                 </select>
                             </div>
                         </div>
@@ -218,13 +216,13 @@
                                 <input type="number" id="bi-polvo" step="any" oninput="window.updateBatchProjections()" class="w-full bg-transparent font-bold">
                             </div>
                             <div class="border border-gray-200 rounded-xl p-3 bg-gray-50 leading-none shadow-inner">
-                                <label class="font-black uppercase mb-1 block text-gray-400 font-black leading-none">Kumis (Uds)</label>
-                                <input type="number" id="bi-kumis" step="1" oninput="window.updateBatchProjections()" class="w-full bg-transparent font-bold leading-none">
+                                <label class="font-black uppercase mb-1 block text-gray-400 font-black leading-none">Limón (Uds)</label>
+                                <input type="number" id="bi-limon" step="any" oninput="window.updateBatchProjections()" class="w-full bg-transparent font-bold leading-none">
                             </div>
                         </div>
                     </div>
                     <div class="bg-orange-50 p-4 rounded-xl border border-orange-100 mt-5 text-center leading-none font-black">
-                        <p class="text-[10px] font-black text-orange-600 uppercase mb-1 leading-none font-black tracking-widest">Costo Base Lote:</p>
+                        <p class="text-[10px] font-black text-orange-600 uppercase mb-1 leading-none font-black tracking-widest">Costo Insumos Olla:</p>
                         <p id="label-costo-base" class="text-2xl font-black text-orange-900 leading-none font-black">$0</p>
                     </div>
                 </div>
@@ -284,7 +282,7 @@
                     <div class="overflow-x-auto border rounded-xl leading-none font-black shadow-sm mb-6">
                         <table class="w-full text-left text-xs sm:text-sm whitespace-nowrap leading-none font-black">
                             <thead class="bg-gray-100 font-black border-b text-[10px] uppercase text-gray-500 leading-none font-black font-black">
-                                <tr><th class="p-3 text-left">Producto</th><th class="p-3 text-center">Cant.</th><th class="p-3 text-left">Asignado a</th><th class="p-3 text-left">Cost. Empaque</th><th class="p-3"></th></tr>
+                                <tr><th class="p-3 text-left">Producto</th><th class="p-3 text-center">Cant.</th><th class="p-3 text-left">Asignado a</th><th class="p-3 text-left">Cost. Exacto</th><th class="p-3"></th></tr>
                             </thead>
                             <tbody id="batch-table-body" class="divide-y leading-none text-slate-700 font-black"></tbody>
                             <tfoot id="batch-table-foot" class="bg-gray-50 font-black border-t text-gray-700 hidden leading-none font-black">
@@ -301,11 +299,12 @@
                         <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">Notas del Lote (Opcional)</label>
                         <textarea id="batch-notes" class="w-full p-3 border rounded-xl font-bold text-sm h-20 outline-none focus:border-orange-500 text-slate-800" placeholder="Escribe aquí cualquier observación sobre esta preparación..."></textarea>
                     </div>
+
                 </div>
 
                 <div class="bg-orange-100 rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 border border-orange-200 leading-none font-black shadow-md">
                   <div class="leading-none font-black">
-                    <p class="text-[10px] font-bold uppercase tracking-widest text-orange-900 mb-1 leading-none font-black">Inversión Lote</p>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-orange-900 mb-1 leading-none font-black">Costo Total Productos</p>
                     <p id="label-inversion-total" class="text-3xl font-black text-orange-900 leading-tight font-black">$0</p>
                   </div>
                   <button id="btn-save-batch" onclick="window.confirmProduction()" class="w-full md:w-auto h-16 px-8 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-black uppercase shadow-xl flex items-center justify-center gap-2 transition-all active:scale-95 leading-none font-black font-black">
@@ -552,9 +551,9 @@
                 </div>
                 
                 <div class="bg-slate-800 p-6 rounded-3xl shadow-lg border border-slate-700 flex flex-col md:flex-row justify-between items-center gap-6 leading-none font-black font-black mt-6">
-                    <div class="text-center md:text-left w-full md:w-auto leading-none font-black font-black"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 leading-none font-black font-black">Costo Total Producido</p><p class="text-xl sm:text-2xl font-black text-white leading-none font-black font-black" id="bal-total-prod">$0</p></div>
-                    <div class="text-center md:text-left w-full md:w-auto leading-none font-black font-black"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 leading-none text-orange-400 font-black font-black">Costo Entregado (Salidas)</p><p class="text-xl sm:text-2xl font-black text-orange-400 leading-none font-black font-black" id="bal-total-entregado">$0</p></div>
-                    <div class="text-center md:text-right w-full md:w-auto bg-slate-900 p-4 rounded-2xl border border-slate-700 leading-none font-black font-black"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 leading-none text-balance text-blue-400 font-black font-black">Saldo en Nevera</p><p class="text-2xl sm:text-3xl font-black text-blue-400 font-black font-black" id="bal-nevera-actual">$0</p></div>
+                    <div class="text-center md:text-left w-full md:w-auto leading-none font-black font-black"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 leading-none font-black font-black">Capital Invertido en Nevera</p><p class="text-xl sm:text-2xl font-black text-white leading-none font-black font-black" id="bal-nevera-costo">$0</p></div>
+                    <div class="text-center md:text-left w-full md:w-auto leading-none font-black font-black"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 leading-none text-red-400 font-black font-black">Costo de Mermas Registradas</p><p class="text-xl sm:text-2xl font-black text-red-400 leading-none font-black font-black" id="bal-mermas-costo">$0</p></div>
+                    <div class="text-center md:text-right w-full md:w-auto bg-slate-900 p-4 rounded-2xl border border-slate-700 leading-none font-black font-black"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 leading-none text-balance text-blue-400 font-black font-black">Ganancia Esperada (Al vender todo)</p><p class="text-2xl sm:text-3xl font-black text-blue-400 font-black font-black" id="bal-nevera-ganancia">$0</p></div>
                 </div>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 leading-none font-black font-black text-slate-800 font-black">
@@ -923,9 +922,25 @@
         window.syncOllaInputs = function() { 
             if (!window.state.olla) return; 
             const s = (id, v) => { const el = document.getElementById(id); if(el) el.value = (v !== undefined && v !== null) ? v : ''; }; 
-            s('bi-leche', window.state.olla.leche); s('bi-fresas', window.state.olla.fresas); s('bi-azucar', window.state.olla.azucar); s('bu-azucar', window.state.olla.azucarUnidad || 'g'); s('bi-polvo', window.state.olla.polvo); s('bu-polvo', window.state.olla.polvoUnidad || 'g'); s('bi-kumis', window.state.olla.kumis); s('bi-limon', window.state.olla.limon); s('bi-others', window.state.olla.others); 
+            s('bi-leche', window.state.olla.leche); s('bi-fresas', window.state.olla.fresas); s('bi-azucar', window.state.olla.azucar); s('bu-azucar', window.state.olla.azucarUnidad || 'g'); s('bi-polvo', window.state.olla.polvo); s('bi-limon', window.state.olla.limon); s('bi-others', window.state.olla.others); 
         }
         
+        window.autoFillOlla = function() {
+            const leche = parseFloat(document.getElementById('bi-leche').value) || 0;
+            if(leche > 0) {
+                document.getElementById('bi-fresas').value = (leche / 4).toFixed(2);
+                document.getElementById('bi-azucar').value = ((leche / 4) * 500).toFixed(0);
+                document.getElementById('bu-azucar').value = 'g';
+                document.getElementById('bi-polvo').value = ((leche / 4) * 105).toFixed(0);
+                document.getElementById('bi-limon').value = (leche / 4).toFixed(1);
+            } else {
+                document.getElementById('bi-fresas').value = '';
+                document.getElementById('bi-azucar').value = '';
+                document.getElementById('bi-polvo').value = '';
+                document.getElementById('bi-limon').value = '';
+            }
+        }
+
         window.updateClientsDatalist = function() {
             const datalist = document.getElementById('clients-datalist');
             if(datalist && window.state.clients) {
@@ -1006,7 +1021,7 @@
             }
         };
 
-        // --- GESTIÓN DE LOTES (OLLA) ---
+        // --- GESTIÓN DE LOTES (OLLA) Y COSTOS EXACTOS ---
         window.updateBatchProjections = function() {
             const getVal = id => { const el = document.getElementById(id); return el ? parseFloat(el.value) || 0 : 0; };
             const uA = document.getElementById('bu-azucar')?.value || 'g';
@@ -1021,43 +1036,42 @@
                           (getVal('bi-fresas') * window.state.inventory.fresas.avgCost) + 
                           (toK(getVal('bi-azucar'), uA) * window.state.inventory.azucar.avgCost) + 
                           ((getVal('bi-polvo') / 1000) * window.state.inventory.polvo.avgCost) + 
-                          (getVal('bi-kumis') * window.state.inventory.kumis.avgCost); 
+                          (getVal('bi-limon') * window.state.inventory.limon.avgCost); 
             
             if(document.getElementById('label-costo-base')) document.getElementById('label-costo-base').innerText = `$${Math.floor(costO).toLocaleString()}`;
             
-            let cons = 0, cP = 0;
-            window.state.currentBatchProducts.forEach(p => { cP += p.pkgCost; const isG = p.type.toLowerCase().includes('griego'); p.me = isG ? (p.qty * window.sizeCapacities[p.size.replace(/\s+/g,'').toLowerCase()]) / 250 : (p.qty * window.sizeCapacities[p.size.replace(/\s+/g,'').toLowerCase()]) / 1000; cons += p.me; });
+            let cons = 0;
+            window.state.currentBatchProducts.forEach(p => { const isG = p.type.toLowerCase().includes('griego'); p.me = isG ? (p.qty * window.sizeCapacities[p.size.replace(/\s+/g,'').toLowerCase()]) / 250 : (p.qty * window.sizeCapacities[p.size.replace(/\s+/g,'').toLowerCase()]) / 1000; cons += p.me; });
             
-            if(document.getElementById('label-inversion-total')) document.getElementById('label-inversion-total').innerText = `$${Math.floor(costO + cP).toLocaleString()}`;
             const left = boxes - cons;
             if(document.getElementById('proj-me-left')) document.getElementById('proj-me-left').innerText = Math.max(0, left).toFixed(2);
             if(document.getElementById('proj-g-left')) document.getElementById('proj-g-left').innerText = Math.max(0, left * 250).toFixed(0);
             
             const bar = document.getElementById('proj-bar'); if(bar) bar.style.width = `${boxes > 0 ? Math.min(100, (cons/boxes)*100) : 0}%`;
-            window.state.olla = { leche: boxes, fresas: getVal('bi-fresas'), azucar: getVal('bi-azucar'), azucarUnidad: uA, polvo: getVal('bi-polvo'), polvoUnidad: document.getElementById('bu-polvo')?.value || 'g', kumis: getVal('bi-kumis'), limon: getVal('bi-limon') };
+            window.state.olla = { leche: boxes, fresas: getVal('bi-fresas'), azucar: getVal('bi-azucar'), azucarUnidad: uA, polvo: getVal('bi-polvo'), polvoUnidad: document.getElementById('bu-polvo')?.value || 'g', limon: getVal('bi-limon') };
             window.saveToLocalStorage();
         }
 
         window.updateBatchTable = function() {
             const tb = document.getElementById('batch-table-body'), tf = document.getElementById('batch-table-foot'); if(!tb) return;
-            tb.innerHTML = ''; let tQ = 0, tV = 0;
+            tb.innerHTML = ''; let tQ = 0, tCost = 0;
             window.state.currentBatchProducts.forEach(p => {
-                tQ += p.qty; tV += p.qty * p.price;
+                tQ += p.qty; 
+                const trueItemCost = (p.exactContentCost * p.qty) + p.pkgCost;
+                tCost += trueItemCost;
                 tb.innerHTML += `<tr class="text-xs text-slate-700 font-black">
                     <td class="p-3"><b>${p.type}</b> <br> <span class="bg-orange-100 text-orange-800 px-2 rounded-full text-[9px] font-black uppercase inline-block mt-1">${window.formatSize(p.size)}</span></td>
                     <td class="text-center font-black p-3 text-sm">${p.qty}</td>
                     <td class="p-3 text-gray-500">${p.client || '-'}</td>
-                    <td class="text-blue-600 p-3 leading-none">$${Math.floor(p.pkgCost).toLocaleString()}</td>
+                    <td class="text-blue-600 p-3 leading-none">$${Math.floor(trueItemCost).toLocaleString()}</td>
                     <td class="text-right p-3"><button onclick="window.removeFromBatch(${p.id})" class="text-red-400 hover:text-red-600 bg-red-50 p-2 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
                 </tr>`;
             });
             if(tf) { 
                 tf.classList.toggle('hidden', !tQ); 
-                const qtyEl = document.getElementById('batch-total-qty');
-                if(qtyEl) qtyEl.innerText = tQ;
-                const ventaEl = document.getElementById('batch-total-venta');
-                if(ventaEl) ventaEl.innerText = `$${Math.floor(tV).toLocaleString()}`; 
+                document.getElementById('batch-total-qty').innerText = tQ;
             }
+            document.getElementById('label-inversion-total').innerText = `$${Math.floor(tCost).toLocaleString()}`;
             window.updateBatchProjections();
             if(typeof lucide !== 'undefined') lucide.createIcons();
         }
@@ -1093,8 +1107,61 @@
             
             if(!q || isNaN(p)) return; 
             
+            // --- CÁLCULO EXACTO BASADO EN RECETA MATEMÁTICA ---
+            const sizeKey = s.replace(/\s+/g,'').toLowerCase();
+            const cap = window.sizeCapacities[sizeKey] || 0; 
+            const isG = t.toLowerCase().includes('griego');
+            const isFresa = t.toLowerCase().includes('fresa');
+            const isDulce = t.toLowerCase().includes('con azúcar') || t.toLowerCase().includes('saborizado');
+
+            const inv = window.state.inventory;
+            const costo_leche = inv.leche.avgCost;
+            const costo_azucar_g = inv.azucar.avgCost / 1000;
+            const costo_polvo_g = inv.polvo.avgCost / 1000;
+            const costo_fresa_empaque = inv.fresas.avgCost; 
+            const costo_limon_u = inv.limon.avgCost;
+
+            // Costo Mermelada x gramo (300g fresa(1 emp) + 300g azucar + 1 limon = 400g mermelada por 4 cajas)
+            const costo_receta_mermelada = costo_fresa_empaque + (300 * costo_azucar_g) + costo_limon_u;
+            const costo_mermelada_g = costo_receta_mermelada / 400;
+
+            // Costo Leche Base x caja (1 caja + 26.25g polvo que equivale a 1.75 cuch de 15g)
+            const costo_base_caja = costo_leche + (26.25 * costo_polvo_g);
+
+            let contentCost = 0;
+            if (isG) { // GRIEGO
+                contentCost += (cap / 262.5) * costo_base_caja; // 2 cajas = 525g -> 1 caja = 262.5g
+                if (isFresa) {
+                    let jamQty = 0;
+                    if (sizeKey === '5oz') jamQty = 30;
+                    else if (sizeKey === '10oz') jamQty = 60;
+                    else if (sizeKey === '16oz') jamQty = 100;
+                    else if (sizeKey === '32oz') jamQty = 200;
+                    contentCost += jamQty * costo_mermelada_g;
+                } else if (isDulce) {
+                    contentCost += (cap * (50 / 500)) * costo_azucar_g; // Asumido 50g azucar x 500g griego
+                }
+            } else { // LIQUIDO
+                contentCost += (cap / 900) * costo_base_caja; // 1 caja = 900ml
+                if (isFresa) {
+                    contentCost += (cap * (400 / 3600)) * costo_mermelada_g; // 400g mermelada x 4 cajas(3600ml)
+                    contentCost += (cap * (200 / 3600)) * costo_azucar_g; // 200g azucar extra x 4 cajas(3600ml)
+                } else if (isDulce) {
+                    contentCost += (cap * (200 / 3600)) * costo_azucar_g;
+                }
+            }
+
+            const envaseCost = (inv[`envase_${sizeKey}`]?.avgCost || 0);
+
             window.state.currentBatchProducts.push({ 
-                id: Date.now(), type: t, size: s, qty: q, price: p, client: c, pkgCost: (window.state.inventory[`envase_${s.replace(/\s+/g,'').toLowerCase()}`]?.avgCost || 0) * q 
+                id: Date.now(), 
+                type: t, 
+                size: s, 
+                qty: q, 
+                price: p, 
+                client: c, 
+                pkgCost: envaseCost * q,
+                exactContentCost: contentCost 
             }); 
             
             document.getElementById('input-prod-qty').value = ''; 
@@ -1107,35 +1174,27 @@
         window.confirmProduction = function() { 
             const getVal = id => { const el = document.getElementById(id); return el ? parseFloat(el.value) || 0 : 0; }; 
             const leche = getVal('bi-leche'); 
+            const fresas = getVal('bi-fresas');
+            const azucar = getVal('bi-azucar');
+            const polvo = getVal('bi-polvo');
+            const limon = getVal('bi-limon');
+            
             const notes = document.getElementById('batch-notes').value.trim();
             const dateStr = document.getElementById('batch-date-input').value || window.state.packDate;
             
             if(window.state.currentBatchProducts.length === 0 || leche <= 0) return alert("Datos incompletos."); 
-            let consumed = 0; window.state.currentBatchProducts.forEach(p => {
-                const isG = p.type.toLowerCase().includes('griego'); 
-                p.me = isG ? (p.qty * window.sizeCapacities[p.size.replace(/\s+/g,'').toLowerCase()]) / 250 : (p.qty * window.sizeCapacities[p.size.replace(/\s+/g,'').toLowerCase()]) / 1000; 
-                consumed += p.me;
-            }); 
-            if(leche < consumed - 0.01) return alert("Sobregiro en olla."); 
             
-            const uA = document.getElementById('bu-azucar')?.value || 'g';
-            const toK = (v, u) => u === 'kg' ? v : (u === 'cucharada' ? (v*15)/1000 : v/1000);
-            const totalBaseCost = (leche * window.state.inventory.leche.avgCost) + 
-                                  (getVal('bi-fresas') * window.state.inventory.fresas.avgCost) + 
-                                  (toK(getVal('bi-azucar'), uA) * window.state.inventory.azucar.avgCost) + 
-                                  ((getVal('bi-polvo') / 1000) * window.state.inventory.polvo.avgCost) + 
-                                  (getVal('bi-kumis') * window.state.inventory.kumis.avgCost);
-
-            const costPerME = consumed > 0 ? (totalBaseCost / consumed) : 0;
             let totalPkgCost = 0;
+            let totalExactContentCost = 0;
 
             window.state.currentBatchProducts.forEach(p => { 
                 totalPkgCost += p.pkgCost;
+                totalExactContentCost += (p.exactContentCost * p.qty);
+
                 const sizeKey = p.size.replace(/\s+/g,'').toLowerCase();
                 const k = `${p.type}_${sizeKey}`; 
                 
-                const itemBaseCost = p.me * costPerME;
-                const itemTotalCost = itemBaseCost + p.pkgCost;
+                const itemTotalCost = (p.exactContentCost * p.qty) + p.pkgCost;
                 const itemUnitCost = itemTotalCost / p.qty;
 
                 if(window.state.fridge[k]) { 
@@ -1154,12 +1213,22 @@
                 const envKey = `envase_${sizeKey}`; if(window.state.inventory[envKey]) window.state.inventory[envKey].stock -= p.qty; 
             }); 
             
-            window.state.inventory.leche.stock -= consumed; 
+            const uA = document.getElementById('bu-azucar')?.value || 'g';
+            const toK = (v, u) => u === 'kg' ? v : (u === 'cucharada' ? (v*15)/1000 : v/1000);
+            
+            // Restar stock
+            window.state.inventory.leche.stock -= leche; 
+            window.state.inventory.fresas.stock -= fresas; 
+            window.state.inventory.azucar.stock -= toK(azucar, uA); 
+            window.state.inventory.polvo.stock -= (polvo / 1000); 
+            window.state.inventory.limon.stock -= limon; 
+
+            // Registrar Trazabilidad (Guardamos el costo EXACTO para que cuadre todo al 100%)
             window.state.productionLogs.unshift({ 
                 id: Date.now(), 
                 lote: dateStr.split('-').reverse().join('').slice(0,4), 
                 date: dateStr, 
-                baseCost: totalBaseCost,
+                baseCost: totalExactContentCost,
                 pkgCost: totalPkgCost, 
                 products: [...window.state.currentBatchProducts],
                 notes: notes
@@ -1614,9 +1683,8 @@
             const rT = window.state.salesLogs.filter(s => s.type.includes('venta')).reduce((a,b) => a + b.revenue, 0);
             const cS_ventas = window.state.salesLogs.filter(s => s.type.includes('venta')).reduce((a,b) => a + b.cost, 0);
             const cS_mermas = window.state.salesLogs.filter(s => !s.type.includes('venta')).reduce((a,b) => a + b.cost, 0);
-            const cS = cS_ventas + cS_mermas;
-            
             const eT = window.state.expenses ? window.state.expenses.reduce((a,b) => a + b.amount, 0) : 0;
+            
             const cProd = window.state.productionLogs.reduce((a,b) => a + (b.baseCost || 0) + (b.pkgCost || 0), 0);
             
             const utilidadBruta = rT - cS_ventas;
@@ -1683,7 +1751,7 @@
             }
 
             if(document.getElementById('bal-total-prod')) document.getElementById('bal-total-prod').innerText = `$${Math.floor(cProd).toLocaleString()}`;
-            if(document.getElementById('bal-total-entregado')) document.getElementById('bal-total-entregado').innerText = `$${Math.floor(cS).toLocaleString()}`;
+            if(document.getElementById('bal-total-entregado')) document.getElementById('bal-total-entregado').innerText = `$${Math.floor(cS_ventas + cS_mermas).toLocaleString()}`;
             if(document.getElementById('bal-nevera-actual')) { let vN = 0; Object.values(window.state.fridge).forEach(i => vN += i.qty * i.unitCost); document.getElementById('bal-nevera-actual').innerText = `$${Math.floor(vN).toLocaleString()}`; }
             
             const sL = document.getElementById('list-sales-merma'); 
@@ -1745,7 +1813,9 @@
             window.state.salesLogs.forEach(log => {
                 const month = log.date.substring(0, 7);
                 if(!monthlyData[month]) monthlyData[month] = { rev: 0, cost: 0 };
-                if(log.type.includes('venta')) monthlyData[month].rev += log.revenue;
+                if(log.type.includes('venta')) {
+                    monthlyData[month].rev += log.revenue;
+                }
                 monthlyData[month].cost += log.cost;
             });
             
@@ -2076,9 +2146,25 @@
         }
 
         window.getStickerHTML = function(d) {
-            const scale = d / 55, logo = 'https://raw.githubusercontent.com/juanmiguel0927/PedidosBlancoArtesanal/ca1c2c4df24364a5c325f8426a4e483e0b2874bd/Logo.jpg';
+            const scale = d / 55;
+            // URL original de tu logo. Si dejó de funcionar en GitHub, puedes reemplazar este enlace por uno nuevo (ej. Imgur o Postimages).
+            const logo = 'https://raw.githubusercontent.com/juanmiguel0927/PedidosBlancoArtesanal/ca1c2c4df24364a5c325f8426a4e483e0b2874bd/Logo.jpg';
             const bS = window.state.showCutLine ? 'border: 0.15mm solid #ff00ff;' : 'border: 0.15mm solid transparent;';
-            return `<div class="sticker-wrapper" style="width:${d}mm; height:${d}mm; ${bS} border-radius:50%;"><div style="width:100%; height:100%; border-radius:50%; display:flex; flex-direction:column; align-items:center; border:${0.4*scale}mm solid #7cb342; padding:${1*scale}mm; box-sizing:border-box;"><div style="height:75%; display:flex; align-items:center; justify-content:center; overflow:hidden;"><img src="${logo}" style="width:90%; height:100%; object-fit:contain;"></div><div style="width:60%; height:${0.3*scale}mm; background:#7cb342; margin:${1*scale}mm 0;"></div><div style="width:100%; text-align:center; color:#1b4332; font-weight:900; font-family:sans-serif; font-size:${Math.floor(8.5*scale)}px; line-height:1.2;">LOTE: ____________<br>VENCE: ____________</div></div></div>`;
+            
+            // Retorna la etiqueta con un sistema de Respaldo: Si la imagen falla (onerror), muestra un texto elegante en su lugar.
+            return `<div class="sticker-wrapper" style="width:${d}mm; height:${d}mm; ${bS} border-radius:50%;">
+                <div style="width:100%; height:100%; border-radius:50%; display:flex; flex-direction:column; align-items:center; border:${0.4*scale}mm solid #7cb342; padding:${1*scale}mm; box-sizing:border-box;">
+                    <div style="height:75%; width:100%; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative;">
+                        <img src="${logo}" crossorigin="anonymous" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" style="width:90%; height:100%; object-fit:contain; position:relative; z-index:2;">
+                        <div style="display:none; flex-direction:column; align-items:center; justify-content:center; height:100%; width:100%; font-family:sans-serif; position:absolute; top:0; left:0; z-index:1;">
+                            <span style="font-size:${15*scale}px; font-weight:900; color:#15803d; line-height:1;">BLANCO</span>
+                            <span style="font-size:${10*scale}px; font-weight:900; color:#ea580c; line-height:1;">ARTESANAL</span>
+                        </div>
+                    </div>
+                    <div style="width:60%; height:${0.3*scale}mm; background:#7cb342; margin:${1*scale}mm 0;"></div>
+                    <div style="width:100%; text-align:center; color:#1b4332; font-weight:900; font-family:sans-serif; font-size:${Math.floor(8.5*scale)}px; line-height:1.2;">LOTE: ____________<br>VENCE: ____________</div>
+                </div>
+            </div>`;
         }
 
         window.generatePDF = function() {
