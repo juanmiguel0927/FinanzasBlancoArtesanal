@@ -82,6 +82,7 @@
 </head>
 <body class="min-h-screen flex flex-col leading-none">
 
+    <!-- NAVEGACIÓN PRINCIPAL -->
     <nav class="bg-white border-b shadow-sm sticky top-0 z-30 no-print leading-none">
         <div class="max-w-7xl mx-auto flex overflow-x-auto snap-x hide-scroll scroll-smooth leading-none text-slate-800 font-black uppercase">
             <button onclick="window.switchTab('etiquetas')" id="btn-nav-etiquetas" class="snap-start flex-shrink-0 flex items-center gap-2 px-5 sm:px-6 py-4 font-bold text-sm border-b-4 border-transparent text-gray-400 hover:bg-gray-50 transition-colors leading-none">
@@ -90,12 +91,13 @@
             <button onclick="window.switchTab('calculadora')" id="btn-nav-calculadora" class="snap-start flex-shrink-0 flex items-center gap-2 px-5 sm:px-6 py-4 font-bold text-sm border-b-4 border-transparent text-gray-400 hover:bg-gray-50 transition-colors leading-none">
                 <i data-lucide="calendar-days" class="w-5 h-5 sm:w-4 sm:h-4"></i> Vencimientos
             </button>
-            <button onclick="window.switchTab('registro')" id="btn-nav-registro" class="snap-start flex-shrink-0 flex items-center gap-2 px-5 sm:px-6 py-4 font-bold text-sm border-b-4 border-transparent text-gray-400 hover:bg-gray-50 active-nav-tab transition-colors leading-none">
+            <button onclick="window.switchTab('registro')" id="btn-nav-registro" class="snap-start flex-shrink-0 flex items-center gap-2 px-5 sm:px-6 py-4 font-bold text-sm border-b-4 active-nav-tab transition-colors leading-none">
                 <i data-lucide="database" class="w-5 h-5 sm:w-4 sm:h-4"></i> Finanzas e Inventario
             </button>
         </div>
     </nav>
 
+    <!-- MAIN: ETIQUETAS -->
     <main id="main-content-etiquetas" class="hidden flex-1 flex flex-col lg:flex-row h-[calc(100vh-56px)] overflow-hidden">
         <aside class="w-full lg:w-[420px] bg-white border-r p-4 sm:p-6 overflow-y-auto no-print shadow-xl z-20">
             <div class="flex items-center gap-2 mb-5 sm:mb-6 text-green-700 border-b pb-3 sm:pb-4 leading-none font-black uppercase">
@@ -145,6 +147,7 @@
         <div id="print-area" class="flex-1 bg-slate-300 overflow-auto p-4 sm:p-8 print:p-0 print:bg-white flex flex-col items-center gap-8 shadow-inner"></div>
     </main>
 
+    <!-- MAIN: CALCULADORA -->
     <main id="main-content-calculadora" class="hidden p-3 sm:p-10 max-w-4xl mx-auto space-y-6 w-full text-slate-800">
         <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center">
             <h1 class="text-xl md:text-2xl font-black text-blue-900 mb-6 flex items-center justify-center gap-3 leading-none font-black uppercase tracking-tighter"><i data-lucide="calendar-days"></i> Calculadora Vencimientos</h1>
@@ -153,7 +156,9 @@
         <div id="vencimientos-results" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
     </main>
 
+    <!-- MAIN: REGISTRO / FINANZAS -->
     <main id="main-content-registro" class="p-3 sm:p-10 max-w-6xl mx-auto space-y-6 w-full text-slate-800 leading-none">
+        
         <div class="flex overflow-x-auto gap-2 mb-6 snap-x hide-scroll pb-2 no-print leading-none">
             <button onclick="window.switchSubTab('lotes')" id="subnav-lotes" class="snap-start flex-shrink-0 px-5 py-4 rounded-xl font-bold text-sm flex items-center gap-2 active-sub-tab leading-none transition-all uppercase font-black shadow-sm">
                 <i data-lucide="beaker" class="w-4 h-4 leading-none"></i> Hacer Lote
@@ -172,6 +177,7 @@
             </button>
         </div>
 
+        <!-- SUBTAB: HACER LOTE -->
         <div id="subtab-content-lotes" class="grid grid-cols-1 lg:grid-cols-12 gap-8 leading-none">
             <div class="lg:col-span-5 space-y-5 sm:space-y-6 leading-none">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-orange-100 leading-none text-slate-800">
@@ -295,7 +301,6 @@
                         <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">Notas del Lote (Opcional)</label>
                         <textarea id="batch-notes" class="w-full p-3 border rounded-xl font-bold text-sm h-20 outline-none focus:border-orange-500 text-slate-800" placeholder="Escribe aquí cualquier observación sobre esta preparación..."></textarea>
                     </div>
-
                 </div>
 
                 <div class="bg-orange-100 rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 border border-orange-200 leading-none font-black shadow-md">
@@ -310,6 +315,7 @@
             </div>
         </div>
 
+        <!-- SUBTAB: NEVERA Y FACTURACIÓN -->
         <div id="subtab-content-nevera" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8 leading-none font-black">
             <!-- Columna Stock -->
             <div class="lg:col-span-6 bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden flex flex-col leading-none font-black">
@@ -324,6 +330,7 @@
                 <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-gray-100 lg:sticky lg:top-24 space-y-6 leading-none font-black">
                     <h2 class="text-xl font-black text-gray-800 flex items-center gap-2 leading-none font-black uppercase tracking-tighter"><i data-lucide="receipt" class="text-green-500 font-black"></i> Crear Factura / Salida</h2>
                     
+                    <!-- Añadir al carrito de factura -->
                     <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200 space-y-3">
                         <select id="sale-product-key" onchange="window.updateSalePricePlaceholder()" class="w-full p-3 border rounded-xl font-bold bg-white text-sm h-12 text-slate-800 leading-none font-black font-black font-black"></select>
                         
@@ -340,7 +347,7 @@
                                 <option value="Degustación">Degustación / Muestra</option>
                             </select>
                         </div>
-
+                        
                         <div class="flex gap-3">
                             <input type="number" id="input-sale-qty" placeholder="Cant." class="w-1/3 p-3 border rounded-xl font-bold text-center h-12 text-slate-800 leading-none font-black font-black">
                             <input type="number" id="input-sale-price" placeholder="PVP ($)" class="w-2/3 p-3 border rounded-xl font-black text-green-700 text-lg h-12 leading-none font-black font-black">
@@ -364,13 +371,17 @@
 
                     <!-- Datos del Cliente y Cierre -->
                     <div class="space-y-3">
-                        <!-- Selector de Estado de Pago (Para Créditos) -->
-                        <select id="invoice-status" class="w-full p-3 border rounded-xl font-bold text-sm h-12 text-indigo-800 bg-indigo-50 leading-none">
-                            <option value="pagada">✅ Factura Pagada</option>
-                            <option value="pendiente">⏳ Dejar Pendiente (Crédito)</option>
-                        </select>
+                        <div class="flex gap-2">
+                            <select id="invoice-status" class="w-full p-3 border rounded-xl font-bold text-sm h-12 text-indigo-800 bg-indigo-50 leading-none">
+                                <option value="pagada">✅ Factura Pagada</option>
+                                <option value="pendiente">⏳ Dejar Pendiente (Crédito)</option>
+                            </select>
+                            <select id="invoice-payment-method" class="w-full p-3 border rounded-xl font-bold text-sm h-12 text-slate-800 leading-none">
+                                <option value="efectivo">💵 Efectivo</option>
+                                <option value="transferencia">🏦 Transferencia</option>
+                            </select>
+                        </div>
 
-                        <!-- Autocompletado de Clientes con Datalist -->
                         <datalist id="clients-datalist"></datalist>
                         <input type="text" id="invoice-client" list="clients-datalist" placeholder="Nombre del Cliente (CRM Automático)" class="w-full p-3 border rounded-xl font-bold h-12 text-slate-800">
                         
@@ -384,8 +395,8 @@
             </div>
         </div>
 
+        <!-- SUBTAB: CLIENTES Y CRÉDITOS (CRM) -->
         <div id="subtab-content-clientes" class="hidden space-y-8 leading-none font-black">
-            
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <div class="bg-indigo-600 p-6 rounded-3xl shadow-lg text-white border border-indigo-700 flex items-center justify-between col-span-1 md:col-span-3">
                     <div>
@@ -398,13 +409,12 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                
                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-[500px]">
                     <div class="p-5 border-b bg-red-50/50">
                         <h2 class="text-lg font-black text-red-800 uppercase flex items-center gap-2"><i data-lucide="alert-circle" class="w-5 h-5"></i> Cuentas por Cobrar</h2>
                     </div>
                     <div id="crm-pending-invoices" class="p-5 overflow-y-auto flex-1 space-y-4 bg-slate-50">
-                        </div>
+                    </div>
                 </div>
 
                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-[500px]">
@@ -421,14 +431,14 @@
                                 </tr>
                             </thead>
                             <tbody id="crm-clients-list" class="divide-y text-slate-700">
-                                </tbody>
+                            </tbody>
                         </table>
                     </div>
                 </div>
-
             </div>
         </div>
 
+        <!-- SUBTAB: BODEGA -->
         <div id="subtab-content-bodega" class="hidden space-y-8 leading-none font-black font-black">
             <div class="flex flex-col sm:flex-row justify-between sm:items-start gap-4 mb-2 leading-none font-black font-black">
                 <h2 class="text-lg sm:text-xl font-black text-gray-800 flex items-center gap-2 leading-none font-black uppercase tracking-tighter font-black font-black font-black"><i data-lucide="package" class="font-black"></i> Bodega</h2>
@@ -523,6 +533,7 @@
             </div>
         </div>
 
+        <!-- SUBTAB: HISTORIAL REAL -->
         <div id="subtab-content-historial" class="hidden space-y-6 leading-none font-black">
             <div class="flex gap-2 border-b pb-4 overflow-x-auto text-sm no-print leading-none font-black font-black">
                 <button onclick="window.setHistoryView('finanzas')" id="hview-finanzas" class="px-5 py-3 rounded-xl font-bold active-sub-tab transition-all leading-none font-black font-black">Resumen Financiero</button>
@@ -530,9 +541,7 @@
             </div>
             
             <div id="hview-finanzas-content" class="space-y-6 leading-none font-black font-black font-black">
-                
                 <div id="monthly-goal-card"></div>
-
                 <div id="kpi-dashboard" class="grid grid-cols-2 lg:grid-cols-5 gap-4 leading-none font-black font-black"></div>
                 
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 mt-6">
@@ -547,15 +556,32 @@
                     <div class="text-center md:text-left w-full md:w-auto leading-none font-black font-black"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 leading-none text-orange-400 font-black font-black">Costo Entregado (Salidas)</p><p class="text-xl sm:text-2xl font-black text-orange-400 leading-none font-black font-black" id="bal-total-entregado">$0</p></div>
                     <div class="text-center md:text-right w-full md:w-auto bg-slate-900 p-4 rounded-2xl border border-slate-700 leading-none font-black font-black"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 leading-none text-balance text-blue-400 font-black font-black">Saldo en Nevera</p><p class="text-2xl sm:text-3xl font-black text-blue-400 font-black font-black" id="bal-nevera-actual">$0</p></div>
                 </div>
+                
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 leading-none font-black font-black text-slate-800 font-black">
-                    <div class="bg-white rounded-2xl shadow-sm border overflow-hidden flex flex-col leading-none font-black font-black"><div class="p-4 border-b bg-gray-50 font-black text-xs uppercase flex items-center justify-between leading-none font-black font-black"><span><i data-lucide="wallet" class="w-4 h-4 leading-none font-black font-black"></i> Gastos Fijos</span></div><div class="p-4 border-b bg-orange-50/30 flex flex-col sm:flex-row gap-2 leading-none font-black font-black"><input type="text" id="input-expense-desc" placeholder="Descripción" class="flex-1 h-10 p-3 border rounded-lg text-sm font-bold outline-none focus:border-orange-500 leading-none font-black"><div class="flex gap-2 leading-none font-black"><input type="number" id="input-expense-amt" placeholder="$ Monto" class="w-full sm:w-28 h-10 p-3 border rounded-lg text-sm font-bold outline-none focus:border-orange-500 leading-none text-slate-800 font-black font-black"><button onclick="window.addFixedExpense()" class="bg-orange-500 text-white px-3 h-10 flex items-center justify-center rounded-lg font-bold hover:bg-orange-600 transition-all shrink-0 leading-none font-black font-black font-black"><i data-lucide="plus" class="w-4 h-4 leading-none font-black"></i></button></div></div><div id="list-fixed-expenses" class="p-4 flex-1 overflow-y-auto max-h-[300px] space-y-2 text-sm leading-none font-black font-black"></div></div>
-                    <div class="bg-white rounded-2xl shadow-sm border overflow-hidden flex flex-col leading-none font-black font-black"><div class="p-4 border-b bg-gray-50 font-black text-xs uppercase flex items-center gap-2 leading-none font-black font-black font-black"><i data-lucide="clipboard-list" class="w-4 h-4 leading-none font-black font-black"></i> Facturas y Salidas</div><div id="list-sales-merma" class="p-4 flex-1 overflow-y-auto max-h-[400px] space-y-3 leading-none font-black font-black text-slate-800 font-black"></div></div>
+                    <div class="bg-white rounded-2xl shadow-sm border overflow-hidden flex flex-col leading-none font-black font-black">
+                        <div class="p-4 border-b bg-gray-50 font-black text-xs uppercase flex items-center justify-between leading-none font-black font-black"><span><i data-lucide="wallet" class="w-4 h-4 leading-none font-black font-black"></i> Gastos Fijos</span></div>
+                        <div class="p-4 border-b bg-orange-50/30 flex flex-col sm:flex-row gap-2 leading-none font-black font-black">
+                            <input type="text" id="input-expense-desc" placeholder="Descripción" class="flex-1 h-10 p-3 border rounded-lg text-sm font-bold outline-none focus:border-orange-500 leading-none font-black">
+                            <div class="flex gap-2 leading-none font-black">
+                                <input type="number" id="input-expense-amt" placeholder="$ Monto" class="w-full sm:w-28 h-10 p-3 border rounded-lg text-sm font-bold outline-none focus:border-orange-500 leading-none text-slate-800 font-black font-black">
+                                <button onclick="window.addFixedExpense()" class="bg-orange-500 text-white px-3 h-10 flex items-center justify-center rounded-lg font-bold hover:bg-orange-600 transition-all shrink-0 leading-none font-black font-black font-black"><i data-lucide="plus" class="w-4 h-4 leading-none font-black"></i></button>
+                            </div>
+                        </div>
+                        <div id="list-fixed-expenses" class="p-4 flex-1 overflow-y-auto max-h-[300px] space-y-2 text-sm leading-none font-black font-black"></div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-sm border overflow-hidden flex flex-col leading-none font-black font-black">
+                        <div class="p-4 border-b bg-gray-50 font-black text-xs uppercase flex items-center gap-2 leading-none font-black font-black font-black"><i data-lucide="clipboard-list" class="w-4 h-4 leading-none font-black font-black"></i> Facturas y Salidas</div>
+                        <div id="list-sales-merma" class="p-4 flex-1 overflow-y-auto max-h-[400px] space-y-3 leading-none font-black font-black text-slate-800 font-black"></div>
+                    </div>
                 </div>
             </div>
-            <div id="hview-lotes-content" class="hidden space-y-4 text-sm leading-none font-black font-black"><div id="list-batch-traceability" class="space-y-4 leading-none font-black font-black text-slate-800"></div></div>
+            <div id="hview-lotes-content" class="hidden space-y-4 text-sm leading-none font-black font-black">
+                <div id="list-batch-traceability" class="space-y-4 leading-none font-black font-black text-slate-800"></div>
+            </div>
         </div>
     </main>
 
+    <!-- FOOTER -->
     <footer class="mt-auto py-10 bg-white border-t no-print text-center shadow-inner relative z-10 leading-none text-slate-800 font-black font-black">
         <div class="max-w-7xl mx-auto px-4 leading-none font-black font-black font-black">
             <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 leading-none font-black font-black font-black font-black">ERP Blanco Artesanal v3</p>
@@ -570,6 +596,7 @@
         </div>
     </footer>
 
+    <!-- FACTURA PDF CONTAINER -->
     <div id="invoice-print-container" class="hidden fixed top-0 left-0 w-[800px] bg-white text-slate-800 p-10 z-[100] font-sans">
         <div class="flex justify-between items-start border-b-4 border-green-600 pb-6 mb-8">
             <div>
@@ -625,6 +652,7 @@
         </div>
     </div>
 
+    <!-- MODALES ÚNICOS -->
     <div id="modal-edit-goal" class="hidden fixed inset-0 bg-slate-900/80 flex items-center justify-center z-50 backdrop-blur-sm p-4 leading-none font-black font-black font-black font-black">
         <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center border border-blue-100 transform transition-all leading-none font-black font-black font-black font-black font-black">
             <div class="mx-auto bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mb-5 leading-none font-black font-black font-black font-black font-black font-black"><i data-lucide="target" class="text-blue-600 w-8 h-8 leading-none font-black font-black font-black font-black"></i></div>
@@ -659,8 +687,7 @@
                 </div>
                 <button onclick="window.closeCostHistoryModal()" class="p-2 bg-gray-100 rounded-full text-gray-500 shrink-0 leading-none font-black"><i data-lucide="x" class="w-4 h-4 leading-none font-black"></i></button>
             </div>
-            <div class="overflow-y-auto flex-1 pr-2 space-y-3" id="cost-history-list">
-            </div>
+            <div class="overflow-y-auto flex-1 pr-2 space-y-3" id="cost-history-list"></div>
         </div>
     </div>
 
@@ -799,6 +826,7 @@
         </div>
     </div>
 
+    <!-- SCRIPT PRINCIPAL UNIFICADO -->
     <script>
         // --- ESTADO Y CONSTANTES GLOBALES ---
         window.state = {
@@ -912,16 +940,15 @@
         window.switchTab = function(t) { 
             window.state.activeTab = t; 
             document.querySelectorAll('main').forEach(m => m.classList.add('hidden')); 
-            document.getElementById(`main-content-${t}`)?.classList.remove('hidden'); 
+            const activeMain = document.getElementById(`main-content-${t}`);
+            if (activeMain) activeMain.classList.remove('hidden'); 
             
             document.querySelectorAll('nav button').forEach(b => {
-                b.classList.remove('active-nav-tab', 'text-green-700', 'border-green-600', 'bg-green-50');
+                b.classList.remove('active-nav-tab');
             }); 
             
             const activeBtn = document.getElementById(`btn-nav-${t}`);
-            if (activeBtn) {
-                activeBtn.classList.add('active-nav-tab'); 
-            }
+            if (activeBtn) activeBtn.classList.add('active-nav-tab'); 
             
             window.renderFinance(); 
             if(t === 'etiquetas') window.renderLabels(); 
@@ -933,11 +960,15 @@
         window.switchSubTab = function(s) { 
             window.state.activeFinanceTab = s; 
             ['lotes', 'nevera', 'clientes', 'bodega', 'historial'].forEach(t => { 
-                document.getElementById(`subtab-content-${t}`)?.classList.add('hidden'); 
-                document.getElementById(`subnav-${t}`)?.classList.remove('active-sub-tab'); 
+                const el = document.getElementById(`subtab-content-${t}`);
+                if(el) el.classList.add('hidden'); 
+                const btn = document.getElementById(`subnav-${t}`);
+                if(btn) btn.classList.remove('active-sub-tab'); 
             }); 
-            document.getElementById(`subtab-content-${s}`)?.classList.remove('hidden'); 
-            document.getElementById(`subnav-${s}`)?.classList.add('active-sub-tab'); 
+            const subContent = document.getElementById(`subtab-content-${s}`);
+            if(subContent) subContent.classList.remove('hidden'); 
+            const subBtn = document.getElementById(`subnav-${s}`);
+            if(subBtn) subBtn.classList.add('active-sub-tab'); 
             window.renderFinance(); 
             window.saveToLocalStorage(); 
         }
@@ -947,11 +978,11 @@
             const bF = document.getElementById('hview-finanzas');
             const bL = document.getElementById('hview-lotes');
             if(v === 'finanzas') {
-                bF.className = "px-5 py-3 rounded-xl font-bold active-sub-tab transition-all leading-none font-black";
-                bL.className = "px-5 py-3 rounded-xl font-bold bg-white text-gray-500 border border-gray-200 leading-none transition-all font-black uppercase";
+                if(bF) bF.className = "px-5 py-3 rounded-xl font-bold active-sub-tab transition-all leading-none font-black";
+                if(bL) bL.className = "px-5 py-3 rounded-xl font-bold bg-white text-gray-500 border border-gray-200 leading-none transition-all font-black uppercase";
             } else {
-                bF.className = "px-5 py-3 rounded-xl font-bold bg-white text-gray-500 border border-gray-200 leading-none transition-all font-black";
-                bL.className = "px-5 py-3 rounded-xl font-bold active-sub-tab transition-all leading-none font-black uppercase";
+                if(bF) bF.className = "px-5 py-3 rounded-xl font-bold bg-white text-gray-500 border border-gray-200 leading-none transition-all font-black";
+                if(bL) bL.className = "px-5 py-3 rounded-xl font-bold active-sub-tab transition-all leading-none font-black uppercase";
             }
             window.renderHistory(); 
         }
@@ -986,7 +1017,12 @@
             if(document.getElementById('prev-leche-restante')) { document.getElementById('prev-leche-restante').innerText = `Quedarán: ${resL.toFixed(1)}`; document.getElementById('prev-leche-restante').className = resL < 0 ? 'text-red-600 font-black' : 'text-blue-600 font-black'; }
             if(document.getElementById('prev-leche-bodega')) document.getElementById('prev-leche-bodega').innerText = `Bodega: ${milkSt.toFixed(1)}`;
             
-            const costO = (boxes * window.state.inventory.leche.avgCost) + (getVal('bi-fresas') * window.state.inventory.fresas.avgCost) + (toK(getVal('bi-azucar'), uA) * window.state.inventory.azucar.avgCost) + getVal('bi-polvo'); 
+            const costO = (boxes * window.state.inventory.leche.avgCost) + 
+                          (getVal('bi-fresas') * window.state.inventory.fresas.avgCost) + 
+                          (toK(getVal('bi-azucar'), uA) * window.state.inventory.azucar.avgCost) + 
+                          ((getVal('bi-polvo') / 1000) * window.state.inventory.polvo.avgCost) + 
+                          (getVal('bi-kumis') * window.state.inventory.kumis.avgCost); 
+            
             if(document.getElementById('label-costo-base')) document.getElementById('label-costo-base').innerText = `$${Math.floor(costO).toLocaleString()}`;
             
             let cons = 0, cP = 0;
@@ -1075,21 +1111,42 @@
             const dateStr = document.getElementById('batch-date-input').value || window.state.packDate;
             
             if(window.state.currentBatchProducts.length === 0 || leche <= 0) return alert("Datos incompletos."); 
-            let consumed = 0; window.state.currentBatchProducts.forEach(p => consumed += p.me); 
+            let consumed = 0; window.state.currentBatchProducts.forEach(p => {
+                const isG = p.type.toLowerCase().includes('griego'); 
+                p.me = isG ? (p.qty * window.sizeCapacities[p.size.replace(/\s+/g,'').toLowerCase()]) / 250 : (p.qty * window.sizeCapacities[p.size.replace(/\s+/g,'').toLowerCase()]) / 1000; 
+                consumed += p.me;
+            }); 
             if(leche < consumed - 0.01) return alert("Sobregiro en olla."); 
             
+            const uA = document.getElementById('bu-azucar')?.value || 'g';
+            const toK = (v, u) => u === 'kg' ? v : (u === 'cucharada' ? (v*15)/1000 : v/1000);
+            const totalBaseCost = (leche * window.state.inventory.leche.avgCost) + 
+                                  (getVal('bi-fresas') * window.state.inventory.fresas.avgCost) + 
+                                  (toK(getVal('bi-azucar'), uA) * window.state.inventory.azucar.avgCost) + 
+                                  ((getVal('bi-polvo') / 1000) * window.state.inventory.polvo.avgCost) + 
+                                  (getVal('bi-kumis') * window.state.inventory.kumis.avgCost);
+
+            const costPerME = consumed > 0 ? (totalBaseCost / consumed) : 0;
+            let totalPkgCost = 0;
+
             window.state.currentBatchProducts.forEach(p => { 
+                totalPkgCost += p.pkgCost;
                 const sizeKey = p.size.replace(/\s+/g,'').toLowerCase();
                 const k = `${p.type}_${sizeKey}`; 
+                
+                const itemBaseCost = p.me * costPerME;
+                const itemTotalCost = itemBaseCost + p.pkgCost;
+                const itemUnitCost = itemTotalCost / p.qty;
+
                 if(window.state.fridge[k]) { 
-                    window.state.fridge[k].unitCost = ((window.state.fridge[k].qty * window.state.fridge[k].unitCost) + (p.qty * (p.pkgCost / p.qty))) / (window.state.fridge[k].qty + p.qty); 
+                    window.state.fridge[k].unitCost = ((window.state.fridge[k].qty * window.state.fridge[k].unitCost) + itemTotalCost) / (window.state.fridge[k].qty + p.qty); 
                     window.state.fridge[k].qty += p.qty; 
                 } else { 
                     window.state.fridge[k] = { 
                         type: p.type, 
                         size: sizeKey, 
                         qty: p.qty, 
-                        unitCost: (p.pkgCost / p.qty), 
+                        unitCost: itemUnitCost, 
                         defaultPrice: p.price,
                         dateAdded: dateStr 
                     }; 
@@ -1102,7 +1159,8 @@
                 id: Date.now(), 
                 lote: dateStr.split('-').reverse().join('').slice(0,4), 
                 date: dateStr, 
-                baseCost: (leche * window.state.inventory.leche.avgCost), 
+                baseCost: totalBaseCost,
+                pkgCost: totalPkgCost, 
                 products: [...window.state.currentBatchProducts],
                 notes: notes
             }); 
@@ -1148,7 +1206,9 @@
         }
 
         window.addToInvoice = function() {
-            const k = document.getElementById('sale-product-key').value;
+            const keyEl = document.getElementById('sale-product-key');
+            if(!keyEl) return;
+            const k = keyEl.value;
             const q = parseInt(document.getElementById('input-sale-qty').value);
             let p = parseFloat(document.getElementById('input-sale-price').value);
             
@@ -1202,6 +1262,7 @@
             window.closeConfirmInvoiceModal();
             
             const invoiceStatus = document.getElementById('invoice-status') ? document.getElementById('invoice-status').value : 'pagada'; 
+            const paymentMethod = document.getElementById('invoice-payment-method') ? document.getElementById('invoice-payment-method').value : 'efectivo';
             const client = document.getElementById('invoice-client').value.trim() || 'Cliente General';
             const notes = document.getElementById('invoice-notes').value.trim();
             const date = window.state.packDate || new Date().toISOString().split('T')[0];
@@ -1211,7 +1272,7 @@
             const invoiceId = `BL-${Math.floor(Date.now()/1000).toString().slice(-5)}`;
             
             const hasVenta = window.state.currentInvoice.some(item => item.type === 'venta');
-
+            
             if(hasVenta || invoiceTotal > 0) {
                 if(!window.state.clients) window.state.clients = {};
                 if(!window.state.clients[client]) {
@@ -1228,6 +1289,7 @@
                 date: date,
                 client: client,
                 status: (hasVenta || invoiceTotal > 0) ? invoiceStatus : 'pagada', 
+                paymentMethod: paymentMethod,
                 items: [...window.state.currentInvoice],
                 total: invoiceTotal,
                 notes: notes
@@ -1266,7 +1328,6 @@
             document.getElementById('invoice-client').value = '';
             document.getElementById('invoice-notes').value = '';
             
-            // Reset types
             document.getElementById('select-sale-type').value = 'venta';
             window.updateSaleFormUI();
             
@@ -1298,11 +1359,17 @@
             
             const invLog = window.state.invoiceLogs ? window.state.invoiceLogs.find(i => i.id === finalId) : null;
             const statusEl = document.getElementById('inv-pdf-status');
+            
+            let methodText = '';
+            if (invLog && invLog.paymentMethod) {
+                methodText = invLog.paymentMethod === 'transferencia' ? ' - TRANSFERENCIA' : ' - EFECTIVO';
+            }
+
             if(invLog && invLog.status === 'pendiente') {
                 statusEl.innerText = "ESTADO: PENDIENTE DE PAGO";
                 statusEl.className = "text-sm font-black mt-2 text-red-600 block";
             } else {
-                statusEl.innerText = "ESTADO: PAGADA";
+                statusEl.innerText = "ESTADO: PAGADA" + methodText;
                 statusEl.className = "text-sm font-black mt-2 text-green-600 block";
             }
             
@@ -1485,33 +1552,56 @@
             const grid = document.getElementById('fridge-items-grid'); if(!grid) return; grid.innerHTML = '';
             const today = new Date();
             
-            Object.entries(window.state.fridge).forEach(([k, item]) => {
+            // ORDENAR: Alfabéticamente y luego por capacidad
+            const sortedItems = Object.entries(window.state.fridge).sort((a, b) => {
+                if (a[1].type < b[1].type) return -1;
+                if (a[1].type > b[1].type) return 1;
+                const capA = window.sizeCapacities[a[1].size] || 0;
+                const capB = window.sizeCapacities[b[1].size] || 0;
+                return capA - capB;
+            });
+
+            sortedItems.forEach(([k, item]) => {
                 const added = new Date(item.dateAdded || window.state.packDate || new Date().toISOString().split('T')[0]);
                 const diffDays = Math.floor((today - added) / (1000 * 60 * 60 * 24));
                 
-                let borderClass = 'border-blue-200';
+                let borderClass = 'border-slate-200';
                 let alertBadge = '';
                 
                 if (diffDays >= 12) {
                     borderClass = 'border-red-400 bg-red-50';
-                    alertBadge = `<span class="absolute top-3 left-3 bg-red-600 text-white text-[9px] font-black px-2 py-1 rounded-full flex items-center gap-1 shadow-md animate-pulse"><i data-lucide="alert-circle" class="w-3 h-3"></i> ¡Próximo a vencer!</span>`;
+                    alertBadge = `<span class="absolute top-3 left-3 bg-red-600 text-white text-[9px] font-black px-2 py-1 rounded-full flex items-center gap-1 shadow-md animate-pulse z-20"><i data-lucide="alert-circle" class="w-3 h-3"></i> ¡Próximo a vencer!</span>`;
                 } else if (diffDays >= 8) {
                     borderClass = 'border-orange-300 bg-orange-50';
-                    alertBadge = `<span class="absolute top-3 left-3 bg-orange-500 text-white text-[9px] font-black px-2 py-1 rounded-full flex items-center gap-1 shadow-md"><i data-lucide="clock" class="w-3 h-3"></i> ${diffDays} días en nevera</span>`;
+                    alertBadge = `<span class="absolute top-3 left-3 bg-orange-500 text-white text-[9px] font-black px-2 py-1 rounded-full flex items-center gap-1 shadow-md z-20"><i data-lucide="clock" class="w-3 h-3"></i> ${diffDays} días en nevera</span>`;
                 }
 
-                grid.innerHTML += `<div class="p-5 rounded-3xl shadow-sm border ${borderClass} relative cursor-pointer group leading-none font-black" onclick="window.selectFridgeItem('${k}')">
+                // IDENTIFICACIÓN VISUAL
+                let isFresa = item.type.toLowerCase().includes('fresa');
+                let isLiquido = item.type.toLowerCase().includes('líquido') || item.type.toLowerCase().includes('liquido');
+                let bgBadge = isFresa ? 'bg-pink-100' : 'bg-blue-100';
+                let textBadge = isFresa ? 'text-pink-800' : 'text-blue-800';
+                let textQty = isFresa ? 'text-pink-600' : 'text-blue-600';
+                let emoji = isFresa ? '🍓' : '🥛';
+                let iconBg = isLiquido ? '<i data-lucide="droplets" class="w-16 h-16 text-slate-100 absolute -bottom-3 -right-3 transform -rotate-12 pointer-events-none z-0"></i>' : '<i data-lucide="box" class="w-16 h-16 text-slate-100 absolute -bottom-3 -right-3 transform -rotate-12 pointer-events-none z-0"></i>';
+
+                grid.innerHTML += `<div class="p-5 rounded-3xl shadow-sm border ${borderClass} bg-white relative cursor-pointer group leading-none font-black overflow-hidden transition-transform hover:scale-[1.02] hover:shadow-md" onclick="window.selectFridgeItem('${k}')">
+                    ${iconBg}
                     ${alertBadge}
-                    <button onclick="event.stopPropagation(); window.openFridgeAdjustModal('${k}')" class="absolute top-3 right-3 text-gray-300 hover:text-orange-600 transition-colors p-1 rounded hover:bg-orange-50 leading-none z-10"><i data-lucide="rotate-ccw" class="w-4 h-4"></i></button>
-                    <h3 class="font-black text-sm text-slate-800 leading-none mt-5">${item.type}</h3>
-                    <span class="text-[10px] bg-orange-100 text-orange-800 px-2 rounded-full uppercase font-black tracking-widest mt-2 inline-block leading-none">${window.formatSize(item.size)}</span>
-                    <p class="text-3xl font-black text-blue-600 mt-2 leading-none font-black">${item.qty}</p>
-                    <div class="mt-3 pt-3 border-t text-[10px] uppercase flex justify-between font-bold text-gray-400 font-black leading-none">
-                        <span>Costo: $${Math.floor(item.unitCost)}</span><span>PVP: $${item.defaultPrice}</span>
+                    <button onclick="event.stopPropagation(); window.openFridgeAdjustModal('${k}')" class="absolute top-3 right-3 text-gray-300 hover:text-orange-600 transition-colors p-1 rounded hover:bg-orange-50 leading-none z-20"><i data-lucide="rotate-ccw" class="w-4 h-4"></i></button>
+                    
+                    <div class="relative z-10">
+                        <div class="text-xl mb-1">${emoji}</div>
+                        <h3 class="font-black text-sm text-slate-800 leading-tight w-[90%]">${item.type}</h3>
+                        <span class="text-[10px] ${bgBadge} ${textBadge} px-2 py-0.5 rounded-full uppercase font-black tracking-widest mt-2 inline-block leading-none shadow-sm">${window.formatSize(item.size)}</span>
+                        <p class="text-4xl font-black ${textQty} mt-3 leading-none">${item.qty}</p>
+                        <div class="mt-4 pt-3 border-t border-slate-100 text-[10px] uppercase flex justify-between font-bold text-gray-400 font-black leading-none">
+                            <span>Cost: $${Math.floor(item.unitCost)}</span><span class="text-slate-600">PVP: $${item.defaultPrice}</span>
+                        </div>
                     </div>
                 </div>`;
             });
-            const sel = document.getElementById('sale-product-key'); if(sel) { sel.innerHTML = '<option value="">Producto...</option>'; Object.entries(window.state.fridge).forEach(([k,i]) => sel.innerHTML += `<option value="${k}">${i.type} ${window.formatSize(i.size)}</option>`); }
+            const sel = document.getElementById('sale-product-key'); if(sel) { sel.innerHTML = '<option value="">Selecciona un producto...</option>'; sortedItems.forEach(([k,i]) => sel.innerHTML += `<option value="${k}">${i.type} ${window.formatSize(i.size)}</option>`); }
             window.renderInvoiceList();
             if(typeof lucide !== 'undefined') lucide.createIcons();
         }
@@ -1522,12 +1612,15 @@
             if(cF) cF.classList.remove('hidden'); if(cL) cL.classList.add('hidden');
             
             const rT = window.state.salesLogs.filter(s => s.type.includes('venta')).reduce((a,b) => a + b.revenue, 0);
-            const cS = window.state.salesLogs.reduce((a,b) => a + b.cost, 0);
-            const eT = window.state.expenses ? window.state.expenses.reduce((a,b) => a + b.amount, 0) : 0;
-            const cProd = window.state.productionLogs.reduce((a,b)=>a+b.baseCost, 0);
+            const cS_ventas = window.state.salesLogs.filter(s => s.type.includes('venta')).reduce((a,b) => a + b.cost, 0);
+            const cS_mermas = window.state.salesLogs.filter(s => !s.type.includes('venta')).reduce((a,b) => a + b.cost, 0);
+            const cS = cS_ventas + cS_mermas;
             
-            const utilidadBruta = rT - cProd;
-            const gananciaNeta = utilidadBruta - eT;
+            const eT = window.state.expenses ? window.state.expenses.reduce((a,b) => a + b.amount, 0) : 0;
+            const cProd = window.state.productionLogs.reduce((a,b) => a + (b.baseCost || 0) + (b.pkgCost || 0), 0);
+            
+            const utilidadBruta = rT - cS_ventas;
+            const gananciaNeta = utilidadBruta - eT - cS_mermas;
             const rentabilidad = rT > 0 ? ((gananciaNeta / rT) * 100).toFixed(1) : 0;
 
             const currentMonthPrefix = new Date().toISOString().substring(0, 7);
@@ -1571,12 +1664,12 @@
                         <p class="text-xl font-black text-blue-600 leading-none mt-2">$${Math.floor(rT).toLocaleString()}</p>
                     </div>
                     <div class="bg-white p-4 rounded-xl border shadow-sm transition-all hover:scale-[1.02] flex flex-col justify-center">
-                        <p class="text-[10px] font-bold text-gray-400 uppercase leading-none">Costo Total Producido</p>
-                        <p class="text-xl font-black text-orange-500 leading-none mt-2">-$${Math.floor(cProd).toLocaleString()}</p>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase leading-none">Costo Prod. Vendidos</p>
+                        <p class="text-xl font-black text-orange-500 leading-none mt-2">-$${Math.floor(cS_ventas).toLocaleString()}</p>
                     </div>
                     <div class="bg-white p-4 rounded-xl border shadow-sm transition-all hover:scale-[1.02] flex flex-col justify-center">
-                        <p class="text-[10px] font-bold text-gray-400 uppercase leading-none">Gastos Operativos</p>
-                        <p class="text-xl font-black text-red-500 leading-none mt-2">-$${Math.floor(eT).toLocaleString()}</p>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase leading-none">Gastos y Mermas</p>
+                        <p class="text-xl font-black text-red-500 leading-none mt-2">-$${Math.floor(eT + cS_mermas).toLocaleString()}</p>
                     </div>
                     <div class="bg-green-50 p-4 rounded-xl border border-green-200 shadow-sm transition-all hover:scale-[1.02] flex flex-col justify-center">
                         <p class="text-[10px] font-bold text-green-700 uppercase leading-none">Balance / Ganancia</p>
@@ -1692,6 +1785,7 @@
             const list = document.getElementById('list-batch-traceability'); if(!list) return;
             list.innerHTML = window.state.productionLogs.length === 0 ? '<div class="py-10 text-center opacity-40 font-black">Sin lotes.</div>' : '';
             window.state.productionLogs.forEach(log => {
+                const totalCostLote = (log.baseCost || 0) + (log.pkgCost || 0);
                 list.innerHTML += `
                 <div class="bg-white border rounded-2xl p-5 flex flex-col shadow-sm leading-none font-black gap-4">
                     <div class="flex justify-between items-start">
@@ -1702,8 +1796,8 @@
                             </div>
                         </div>
                         <div class="bg-gray-50 p-4 border rounded-xl text-center min-w-[100px] flex flex-col justify-center leading-none font-black">
-                            <p class="text-[9px] uppercase font-black text-gray-400 mb-1 leading-none">Costo Prod.</p>
-                            <p class="font-black text-gray-800 leading-none">$${Math.floor(log.baseCost).toLocaleString()}</p>
+                            <p class="text-[9px] uppercase font-black text-gray-400 mb-1 leading-none">Costo Total</p>
+                            <p class="font-black text-gray-800 leading-none">$${Math.floor(totalCostLote).toLocaleString()}</p>
                         </div>
                     </div>
                     ${log.notes ? `<div class="bg-yellow-50 p-3 rounded-xl border border-yellow-100 text-xs text-yellow-800 italic"><span class="font-bold uppercase tracking-wider text-[9px] text-yellow-600 block not-italic mb-1">Nota:</span>${log.notes}</div>` : ''}
@@ -1885,11 +1979,27 @@
             window.saveToLocalStorage(); 
         }
         
-        window.selectFridgeItem = function(k) { const el = document.getElementById('sale-product-key'); if(el) el.value = k; window.updateSalePricePlaceholder(); }
-        window.updateSalePricePlaceholder = function() { const k = document.getElementById('sale-product-key').value; if(window.state.fridge[k]) document.getElementById('input-sale-price').value = window.state.fridge[k].defaultPrice; window.updateSaleFormUI(); }
+        window.selectFridgeItem = function(k) { 
+            const el = document.getElementById('sale-product-key'); 
+            if(el) el.value = k; 
+            window.updateSalePricePlaceholder(); 
+        }
+        
+        window.updateSalePricePlaceholder = function() { 
+            const keyEl = document.getElementById('sale-product-key');
+            if(!keyEl) return;
+            const k = keyEl.value; 
+            const pInput = document.getElementById('input-sale-price');
+            if(window.state.fridge[k] && pInput) {
+                pInput.value = window.state.fridge[k].defaultPrice; 
+            }
+            window.updateSaleFormUI(); 
+        }
         
         window.updateSaleFormUI = function() { 
-            const t = document.getElementById('select-sale-type').value; 
+            const typeEl = document.getElementById('select-sale-type');
+            if (!typeEl) return;
+            const t = typeEl.value; 
             const mR = document.getElementById('select-merma-reason');
             const pInput = document.getElementById('input-sale-price');
             
@@ -1908,8 +2018,11 @@
                 } else {
                     pInput.disabled = false;
                     pInput.classList.remove('opacity-50', 'bg-gray-100');
-                    const k = document.getElementById('sale-product-key').value;
-                    if(window.state.fridge[k] && pInput.value == 0) pInput.value = window.state.fridge[k].defaultPrice;
+                    const keyEl = document.getElementById('sale-product-key');
+                    if (keyEl) {
+                        const k = keyEl.value;
+                        if(window.state.fridge[k] && pInput.value == 0) pInput.value = window.state.fridge[k].defaultPrice;
+                    }
                 }
             }
         }
@@ -2015,7 +2128,7 @@
             }
             window.syncOllaInputs(); 
             window.handleProductTypeChange();
-            window.updateClientsDatalist(); // Actualizar Datalist al inicio
+            window.updateClientsDatalist(); 
             window.switchTab('registro');
         };
     </script>
