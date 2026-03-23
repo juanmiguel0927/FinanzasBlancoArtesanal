@@ -177,138 +177,78 @@
             </button>
         </div>
 
-        <!-- SUBTAB: HACER LOTE -->
-        <div id="subtab-content-lotes" class="grid grid-cols-1 lg:grid-cols-12 gap-8 leading-none">
-            <div class="lg:col-span-5 space-y-5 sm:space-y-6 leading-none">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-orange-100 leading-none text-slate-800">
-                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6 leading-none">
-                        <div class="flex items-center gap-3 leading-none">
-                            <h2 class="text-base sm:text-lg font-black text-orange-900 flex items-center gap-2 leading-none font-black uppercase"><i data-lucide="beaker"></i> 1. Insumos en Olla</h2>
-                            <button onclick="window.openPlannerModal()" class="text-xs bg-orange-100 hover:bg-orange-200 text-orange-800 px-3 py-1.5 rounded-lg font-bold flex items-center gap-1 transition-colors shadow-sm leading-none font-black"><i data-lucide="calculator" class="w-4 h-4"></i> Planificador</button>
-                        </div>
-                        <input type="date" id="batch-date-input" class="p-2 border rounded-lg text-sm font-bold text-gray-500 leading-none shadow-inner">
-                    </div>
-                    <div class="space-y-4 leading-none font-black">
-                        <div class="border border-gray-200 rounded-xl p-3 focus-within:border-orange-500 transition-colors leading-none shadow-sm">
-                            <label class="text-[10px] font-black text-gray-400 uppercase block mb-1 leading-none font-black tracking-widest">Cajas Leche (900ml)</label>
-                            <input type="number" id="bi-leche" step="0.1" oninput="window.autoFillOlla(); window.updateBatchProjections();" class="w-full h-10 bg-transparent outline-none font-black text-2xl text-gray-800 leading-none" placeholder="0">
-                            <div class="mt-2 text-[10px] font-bold bg-gray-50 p-2 rounded-lg text-gray-500 flex justify-between leading-none font-black uppercase">
-                                <span id="prev-leche-bodega">Bodega: 0</span>
-                                <span id="prev-leche-restante" class="text-blue-600 font-black tracking-tighter">Quedarán: 0</span>
-                            </div>
-                        </div>
-                        <div class="border border-gray-200 rounded-xl p-3 focus-within:border-orange-500 transition-colors leading-none font-black shadow-sm">
-                            <label class="text-[10px] font-black text-gray-500 uppercase block mb-1 leading-none font-black tracking-widest">Fresas / Fruta (Empaques 300g)</label>
-                            <input type="number" id="bi-fresas" step="any" oninput="window.updateBatchProjections()" class="w-full h-10 bg-transparent outline-none font-black text-xl text-gray-800 leading-none font-black" placeholder="0">
-                        </div>
-                        <div class="border border-gray-200 rounded-xl p-3 focus-within:border-orange-500 transition-colors leading-none font-black shadow-sm">
-                            <label class="text-[10px] font-black text-gray-400 uppercase block mb-1 leading-none font-black tracking-widest">Azúcar Total (Gramos)</label>
-                            <div class="flex gap-2 leading-none font-black">
-                                <input type="number" id="bi-azucar" step="any" oninput="window.updateBatchProjections()" class="w-2/3 h-10 bg-transparent outline-none font-black text-xl text-gray-800" placeholder="0">
-                                <select id="bu-azucar" onchange="window.updateBatchProjections()" class="w-1/3 h-10 bg-gray-50 border rounded-lg px-2 text-xs font-bold outline-none text-slate-800 leading-none font-black uppercase pointer-events-none appearance-none">
-                                    <option value="g">Gramos</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3 text-[10px] leading-none font-black">
-                            <div class="border border-gray-200 rounded-xl p-3 bg-gray-50 leading-none shadow-inner">
-                                <label class="font-black uppercase mb-1 block text-gray-400 font-black leading-none">Leche Polvo (g)</label>
-                                <input type="number" id="bi-polvo" step="any" oninput="window.updateBatchProjections()" class="w-full bg-transparent font-bold">
-                            </div>
-                            <div class="border border-gray-200 rounded-xl p-3 bg-gray-50 leading-none shadow-inner">
-                                <label class="font-black uppercase mb-1 block text-gray-400 font-black leading-none">Limón (Uds)</label>
-                                <input type="number" id="bi-limon" step="any" oninput="window.updateBatchProjections()" class="w-full bg-transparent font-bold leading-none">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-orange-50 p-4 rounded-xl border border-orange-100 mt-5 text-center leading-none font-black">
-                        <p class="text-[10px] font-black text-orange-600 uppercase mb-1 leading-none font-black tracking-widest">Costo Insumos Olla:</p>
-                        <p id="label-costo-base" class="text-2xl font-black text-orange-900 leading-none font-black">$0</p>
-                    </div>
+        <!-- SUBTAB: HACER LOTE (AHORA 100% AUTOMATIZADO E INTERNO) -->
+        <div id="subtab-content-lotes" class="space-y-6 leading-none max-w-5xl mx-auto">
+            <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-gray-100 leading-none text-slate-800 font-black">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-100 pb-5 mb-6">
+                    <h2 class="text-xl font-black flex items-center gap-2 uppercase tracking-tighter text-indigo-900"><i data-lucide="package-plus" class="w-6 h-6"></i> Producción de Productos</h2>
+                    <input type="date" id="batch-date-input" class="p-3 border border-gray-200 rounded-xl text-sm font-bold text-gray-600 bg-gray-50 outline-none focus:border-indigo-500">
                 </div>
-            </div>
-
-            <div class="lg:col-span-7 space-y-5 sm:space-y-6 leading-none">
-                <div id="panel-proyeccion" class="bg-blue-600 rounded-3xl shadow-xl p-6 text-white relative overflow-hidden leading-none font-black">
-                    <div class="absolute right-0 top-0 opacity-10 leading-none"><i data-lucide="scale" class="w-32 h-32 -mr-4 -mt-4 font-black"></i></div>
-                    <div class="relative z-10 leading-none font-black">
-                        <h2 class="text-xs font-black text-blue-200 uppercase tracking-widest mb-4 flex items-center gap-2 leading-none font-black font-black"><i data-lucide="activity" class="w-4 h-4 leading-none"></i> Rendimiento Actual</h2>
-                        <div class="flex items-end justify-between mb-4 leading-none">
-                            <div>
-                                <p class="text-4xl font-black leading-none font-black font-black" id="proj-me-left">0.00</p>
-                                <p class="text-[10px] font-bold text-blue-200 uppercase tracking-widest mt-2 leading-none font-black font-black">Cajas libres</p>
-                            </div>
-                            <div class="text-right leading-none font-black font-black">
-                                <p class="text-xs text-blue-200 font-bold mb-1 leading-none font-black font-black uppercase tracking-tighter">Equivale a:</p>
-                                <p class="text-lg font-black bg-blue-700 px-3 py-1 rounded-lg shadow-inner inline-block leading-none font-black font-black font-black"><span id="proj-g-left">0</span> g <span class="text-[10px] uppercase font-normal text-blue-100 font-black font-black">Griego</span></p>
-                            </div>
-                        </div>
-                        <div class="w-full bg-blue-900 rounded-full h-3 overflow-hidden mt-4 leading-none shadow-inner">
-                            <div id="proj-bar" class="bg-green-400 h-3 rounded-full transition-all leading-none" style="width: 0%"></div>
-                        </div>
-                    </div>
+                
+                <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100 mb-8 text-indigo-800 text-xs font-bold flex gap-3 shadow-inner">
+                    <i data-lucide="cpu" class="w-5 h-5 shrink-0 mt-0.5"></i>
+                    <p class="leading-relaxed">Producción automatizada: El sistema descontará internamente la leche, frutas, azúcar, polvo, limón y empaques exactos de tu bodega según la receta de cada producto.</p>
                 </div>
 
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 leading-none text-slate-800 font-black">
-                    <h2 class="text-base sm:text-lg font-black mb-4 flex items-center gap-2 leading-none font-black font-black uppercase tracking-tighter font-black"><i data-lucide="box" class="w-4 h-4 leading-none"></i> 2. Armar Productos</h2>
-                    <div class="bg-gray-50 p-5 rounded-2xl mb-6 border border-gray-200 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 leading-none font-black font-black shadow-inner">
-                        <select id="input-prod-type" onchange="window.handleProductTypeChange()" class="p-3 border rounded-xl font-bold text-sm h-12 leading-none text-slate-800 font-black lg:col-span-2">
-                            <option value="Griego Natural Sin Azúcar">Griego Natural (Sin Azúcar)</option>
-                            <option value="Griego Natural Con Azúcar">Griego Natural (Con Azúcar)</option>
-                            <option value="Griego Fresa Sin Azúcar">Griego Fresa (Sin Azúcar)</option>
-                            <option value="Griego Fresa Con Azúcar" selected>Griego Fresa (Con Azúcar)</option>
-                            <option value="Líquido Natural Sin Azúcar">Líquido Natural (Sin Azúcar)</option>
-                            <option value="Líquido Natural Con Azúcar">Líquido Natural (Con Azúcar)</option>
-                            <option value="Líquido Fresa Sin Azúcar">Líquido Fresa (Sin Azúcar)</option>
-                            <option value="Líquido Fresa Con Azúcar">Líquido Fresa (Con Azúcar)</option>
-                        </select>
-                        <select id="input-prod-size" onchange="window.suggestBatchPrice()" class="p-3 border rounded-xl font-bold text-sm h-12 leading-none text-slate-800 font-black">
-                            <option value="5oz">5 OZ</option>
-                            <option value="10oz">10 OZ</option>
-                            <option value="16oz" selected>16 OZ</option>
-                            <option value="32oz">32 OZ</option>
-                            <option value="1lt">1 LT</option>
-                            <option value="2lt">2 LT</option>
-                        </select>
-                        <input type="number" id="input-prod-qty" placeholder="Cant. Unidades" class="w-full p-3 border rounded-xl font-bold h-12 leading-none font-black text-slate-800">
-                        <input type="text" id="input-prod-client" placeholder="Cliente / Destino (Opcional)" class="w-full p-3 border rounded-xl font-bold h-12 leading-none font-black text-slate-800">
-                        <input type="number" id="input-prod-price" placeholder="PVP Unitario ($)" class="p-3 border rounded-xl font-bold text-green-700 h-12 leading-none font-black">
-                        
-                        <button onclick="window.addCurrentProduct()" class="sm:col-span-2 lg:col-span-3 h-12 mt-2 bg-orange-600 text-white rounded-xl font-black uppercase shadow-md flex items-center justify-center gap-2 active:scale-95 transition-all text-sm leading-none font-black font-black">
-                            <i data-lucide="plus-circle" class="w-4 h-4 leading-none font-black"></i> Añadir al Lote
-                        </button>
-                    </div>
-
-                    <div class="overflow-x-auto border rounded-xl leading-none font-black shadow-sm mb-6">
-                        <table class="w-full text-left text-xs sm:text-sm whitespace-nowrap leading-none font-black">
-                            <thead class="bg-gray-100 font-black border-b text-[10px] uppercase text-gray-500 leading-none font-black font-black">
-                                <tr><th class="p-3 text-left">Producto</th><th class="p-3 text-center">Cant.</th><th class="p-3 text-left">Asignado a</th><th class="p-3 text-left">Cost. Exacto</th><th class="p-3"></th></tr>
-                            </thead>
-                            <tbody id="batch-table-body" class="divide-y leading-none text-slate-700 font-black"></tbody>
-                            <tfoot id="batch-table-foot" class="bg-gray-50 font-black border-t text-gray-700 hidden leading-none font-black">
-                                <tr>
-                                    <td class="p-3 text-right uppercase text-[10px] leading-none font-black">Totales:</td>
-                                    <td class="p-3 text-center text-blue-600 font-black leading-none font-black" id="batch-total-qty">0</td>
-                                    <td colspan="3"></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-
-                    <div class="bg-gray-50 rounded-2xl p-4 border border-gray-200">
-                        <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">Notas del Lote (Opcional)</label>
-                        <textarea id="batch-notes" class="w-full p-3 border rounded-xl font-bold text-sm h-20 outline-none focus:border-orange-500 text-slate-800" placeholder="Escribe aquí cualquier observación sobre esta preparación..."></textarea>
-                    </div>
-
+                <div class="bg-gray-50 p-5 rounded-2xl mb-8 border border-gray-200 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 leading-none font-black shadow-inner">
+                    <select id="input-prod-type" onchange="window.handleProductTypeChange()" class="p-3 border rounded-xl font-bold text-sm h-12 leading-none text-slate-800 font-black lg:col-span-2 outline-none focus:border-indigo-500">
+                        <option value="Griego Natural Sin Azúcar">Griego Natural (Sin Azúcar)</option>
+                        <option value="Griego Natural Con Azúcar">Griego Natural (Con Azúcar)</option>
+                        <option value="Griego Fresa Sin Azúcar">Griego Fresa (Sin Azúcar)</option>
+                        <option value="Griego Fresa Con Azúcar" selected>Griego Fresa (Con Azúcar)</option>
+                        <option value="Líquido Natural Sin Azúcar">Líquido Natural (Sin Azúcar)</option>
+                        <option value="Líquido Natural Con Azúcar">Líquido Natural (Con Azúcar)</option>
+                        <option value="Líquido Fresa Sin Azúcar">Líquido Fresa (Sin Azúcar)</option>
+                        <option value="Líquido Fresa Con Azúcar">Líquido Fresa (Con Azúcar)</option>
+                    </select>
+                    <select id="input-prod-size" onchange="window.suggestBatchPrice()" class="p-3 border rounded-xl font-bold text-sm h-12 leading-none text-slate-800 font-black outline-none focus:border-indigo-500">
+                        <option value="5oz">5 OZ</option>
+                        <option value="10oz">10 OZ</option>
+                        <option value="16oz" selected>16 OZ</option>
+                        <option value="32oz">32 OZ</option>
+                        <option value="1lt">1 LT</option>
+                        <option value="2lt">2 LT</option>
+                    </select>
+                    <input type="number" id="input-prod-qty" placeholder="Cant. Unidades" class="w-full p-3 border rounded-xl font-bold h-12 leading-none font-black text-slate-800 outline-none focus:border-indigo-500">
+                    <input type="text" id="input-prod-client" placeholder="Cliente / Destino (Opcional)" class="w-full p-3 border rounded-xl font-bold h-12 leading-none font-black text-slate-800 outline-none focus:border-indigo-500">
+                    <input type="number" id="input-prod-price" placeholder="PVP Unitario ($)" class="p-3 border rounded-xl font-black text-green-700 h-12 leading-none font-black outline-none focus:border-green-500">
+                    
+                    <button onclick="window.addCurrentProduct()" class="sm:col-span-2 lg:col-span-3 h-12 mt-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-black uppercase shadow-md flex items-center justify-center gap-2 active:scale-95 transition-all text-sm leading-none font-black">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i> Añadir a Producción
+                    </button>
+                    <button onclick="window.openPlannerModal()" class="sm:col-span-2 lg:col-span-3 h-12 bg-white border border-indigo-200 text-indigo-700 rounded-xl font-black uppercase shadow-sm flex items-center justify-center gap-2 active:scale-95 transition-all text-sm leading-none font-black hover:bg-indigo-50">
+                        <i data-lucide="calculator" class="w-4 h-4"></i> Auto-Planificador
+                    </button>
                 </div>
 
-                <div class="bg-orange-100 rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 border border-orange-200 leading-none font-black shadow-md">
-                  <div class="leading-none font-black">
-                    <p class="text-[10px] font-bold uppercase tracking-widest text-orange-900 mb-1 leading-none font-black">Costo Total Productos</p>
-                    <p id="label-inversion-total" class="text-3xl font-black text-orange-900 leading-tight font-black">$0</p>
+                <div class="overflow-x-auto border border-gray-200 rounded-xl leading-none font-black shadow-sm mb-6">
+                    <table class="w-full text-left text-xs sm:text-sm whitespace-nowrap leading-none font-black">
+                        <thead class="bg-gray-100 font-black border-b text-[10px] uppercase text-gray-500 leading-none">
+                            <tr><th class="p-4 text-left">Producto</th><th class="p-4 text-center">Cant.</th><th class="p-4 text-left">Asignado a</th><th class="p-4 text-right">Cost. Exacto (Total)</th><th class="p-4"></th></tr>
+                        </thead>
+                        <tbody id="batch-table-body" class="divide-y leading-none text-slate-700 font-black"></tbody>
+                        <tfoot id="batch-table-foot" class="bg-indigo-50 font-black border-t border-indigo-100 text-indigo-900 hidden leading-none">
+                            <tr>
+                                <td class="p-4 text-right uppercase text-[10px] tracking-widest">Total Unidades:</td>
+                                <td class="p-4 text-center text-lg" id="batch-total-qty">0</td>
+                                <td colspan="3"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="bg-gray-50 rounded-2xl p-5 border border-gray-200 mb-8">
+                    <label class="text-[10px] font-black text-gray-400 uppercase mb-3 block tracking-widest">Notas del Lote (Opcional)</label>
+                    <textarea id="batch-notes" class="w-full p-4 border border-gray-200 rounded-xl font-bold text-sm h-20 outline-none focus:border-indigo-500 text-slate-800" placeholder="Escribe aquí cualquier observación sobre esta producción..."></textarea>
+                </div>
+
+                <div class="bg-indigo-600 rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-lg">
+                  <div class="text-white text-center md:text-left">
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-indigo-200 mb-1">Costo Total Calculado</p>
+                    <p id="label-inversion-total" class="text-3xl sm:text-4xl font-black leading-tight">$0</p>
                   </div>
-                  <button id="btn-save-batch" onclick="window.confirmProduction()" class="w-full md:w-auto h-16 px-8 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-black uppercase shadow-xl flex items-center justify-center gap-2 transition-all active:scale-95 leading-none font-black font-black">
-                    <i data-lucide="save" class="w-4 h-4 leading-none"></i> Enviar a Nevera
+                  <button id="btn-save-batch" onclick="window.confirmProduction()" class="w-full md:w-auto h-16 px-10 bg-white hover:bg-gray-50 text-indigo-700 rounded-xl font-black uppercase shadow-xl flex items-center justify-center gap-2 transition-all active:scale-95 leading-none">
+                    <i data-lucide="check-square" class="w-5 h-5"></i> Procesar y Enviar a Nevera
                   </button>
                 </div>
             </div>
@@ -761,7 +701,7 @@
                 </div>
                 <div class="bg-black/30 p-3 rounded-lg mb-5 border border-white/10 text-[11px] font-bold text-gray-300 flex items-center gap-2 leading-none font-black font-black font-black font-black">
                     <i data-lucide="lightbulb" class="w-4 h-4 text-yellow-400 shrink-0 leading-none font-black font-black font-black"></i> 
-                    <span id="plan-sugg-text" class="leading-none font-black font-black font-black">Ingresa valores para calcular.</span>
+                    <span id="plan-sugg-text" class="leading-none font-black font-black font-black">Calcula requerimientos según receta.</span>
                 </div>
                 <button id="btn-apply-plan" onclick="window.applyPlanner()" class="w-full h-14 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-black uppercase shadow-lg transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 leading-none font-black font-black font-black font-black">
                     <i data-lucide="check-circle" class="w-4 h-4 leading-none font-black font-black font-black"></i> Aplicar al Lote Principal
@@ -842,7 +782,6 @@
             invoiceLogs: [], 
             monthlyGoal: 2000000, 
             clients: {}, 
-            olla: {},
             inventory: {
                 leche: { name: 'Leche Entera', unit: 'Cajas (900ml)', stock: 0, avgCost: 0, minStock: 2 },
                 azucar: { name: 'Azúcar Libre', unit: 'kg', stock: 0, avgCost: 0, minStock: 5 }, 
@@ -917,28 +856,6 @@
                     window.recalculateTotalInvestment(); 
                 } catch (e) {} 
             } 
-        }
-
-        window.syncOllaInputs = function() { 
-            if (!window.state.olla) return; 
-            const s = (id, v) => { const el = document.getElementById(id); if(el) el.value = (v !== undefined && v !== null) ? v : ''; }; 
-            s('bi-leche', window.state.olla.leche); s('bi-fresas', window.state.olla.fresas); s('bi-azucar', window.state.olla.azucar); s('bu-azucar', window.state.olla.azucarUnidad || 'g'); s('bi-polvo', window.state.olla.polvo); s('bi-limon', window.state.olla.limon); s('bi-others', window.state.olla.others); 
-        }
-        
-        window.autoFillOlla = function() {
-            const leche = parseFloat(document.getElementById('bi-leche').value) || 0;
-            if(leche > 0) {
-                document.getElementById('bi-fresas').value = (leche / 4).toFixed(2);
-                document.getElementById('bi-azucar').value = ((leche / 4) * 500).toFixed(0);
-                document.getElementById('bu-azucar').value = 'g';
-                document.getElementById('bi-polvo').value = ((leche / 4) * 105).toFixed(0);
-                document.getElementById('bi-limon').value = (leche / 4).toFixed(1);
-            } else {
-                document.getElementById('bi-fresas').value = '';
-                document.getElementById('bi-azucar').value = '';
-                document.getElementById('bi-polvo').value = '';
-                document.getElementById('bi-limon').value = '';
-            }
         }
 
         window.updateClientsDatalist = function() {
@@ -1021,62 +938,32 @@
             }
         };
 
-        // --- GESTIÓN DE LOTES (OLLA) Y COSTOS EXACTOS ---
-        window.updateBatchProjections = function() {
-            const getVal = id => { const el = document.getElementById(id); return el ? parseFloat(el.value) || 0 : 0; };
-            const uA = document.getElementById('bu-azucar')?.value || 'g';
-            const toK = (v, u) => u === 'kg' ? v : (u === 'cucharada' ? (v*15)/1000 : v/1000);
-            const boxes = getVal('bi-leche'), milkSt = window.state.inventory.leche.stock;
-            const resL = milkSt - boxes;
-            
-            if(document.getElementById('prev-leche-restante')) { document.getElementById('prev-leche-restante').innerText = `Quedarán: ${resL.toFixed(1)}`; document.getElementById('prev-leche-restante').className = resL < 0 ? 'text-red-600 font-black' : 'text-blue-600 font-black'; }
-            if(document.getElementById('prev-leche-bodega')) document.getElementById('prev-leche-bodega').innerText = `Bodega: ${milkSt.toFixed(1)}`;
-            
-            const costO = (boxes * window.state.inventory.leche.avgCost) + 
-                          (getVal('bi-fresas') * window.state.inventory.fresas.avgCost) + 
-                          (toK(getVal('bi-azucar'), uA) * window.state.inventory.azucar.avgCost) + 
-                          ((getVal('bi-polvo') / 1000) * window.state.inventory.polvo.avgCost) + 
-                          (getVal('bi-limon') * window.state.inventory.limon.avgCost); 
-            
-            if(document.getElementById('label-costo-base')) document.getElementById('label-costo-base').innerText = `$${Math.floor(costO).toLocaleString()}`;
-            
-            let cons = 0;
-            window.state.currentBatchProducts.forEach(p => { const isG = p.type.toLowerCase().includes('griego'); p.me = isG ? (p.qty * window.sizeCapacities[p.size.replace(/\s+/g,'').toLowerCase()]) / 250 : (p.qty * window.sizeCapacities[p.size.replace(/\s+/g,'').toLowerCase()]) / 1000; cons += p.me; });
-            
-            const left = boxes - cons;
-            if(document.getElementById('proj-me-left')) document.getElementById('proj-me-left').innerText = Math.max(0, left).toFixed(2);
-            if(document.getElementById('proj-g-left')) document.getElementById('proj-g-left').innerText = Math.max(0, left * 250).toFixed(0);
-            
-            const bar = document.getElementById('proj-bar'); if(bar) bar.style.width = `${boxes > 0 ? Math.min(100, (cons/boxes)*100) : 0}%`;
-            window.state.olla = { leche: boxes, fresas: getVal('bi-fresas'), azucar: getVal('bi-azucar'), azucarUnidad: uA, polvo: getVal('bi-polvo'), polvoUnidad: document.getElementById('bu-polvo')?.value || 'g', limon: getVal('bi-limon') };
-            window.saveToLocalStorage();
-        }
-
+        // --- GESTIÓN DE LOTES Y COSTOS EXACTOS ---
         window.updateBatchTable = function() {
             const tb = document.getElementById('batch-table-body'), tf = document.getElementById('batch-table-foot'); if(!tb) return;
             tb.innerHTML = ''; let tQ = 0, tCost = 0;
             window.state.currentBatchProducts.forEach(p => {
                 tQ += p.qty; 
-                const trueItemCost = (p.exactContentCost * p.qty) + p.pkgCost;
-                tCost += trueItemCost;
-                tb.innerHTML += `<tr class="text-xs text-slate-700 font-black">
-                    <td class="p-3"><b>${p.type}</b> <br> <span class="bg-orange-100 text-orange-800 px-2 rounded-full text-[9px] font-black uppercase inline-block mt-1">${window.formatSize(p.size)}</span></td>
-                    <td class="text-center font-black p-3 text-sm">${p.qty}</td>
-                    <td class="p-3 text-gray-500">${p.client || '-'}</td>
-                    <td class="text-blue-600 p-3 leading-none">$${Math.floor(trueItemCost).toLocaleString()}</td>
-                    <td class="text-right p-3"><button onclick="window.removeFromBatch(${p.id})" class="text-red-400 hover:text-red-600 bg-red-50 p-2 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
+                tCost += p.exactTotalCost;
+                tb.innerHTML += `<tr class="text-xs text-slate-700 font-black hover:bg-slate-50">
+                    <td class="p-4"><b>${p.type}</b> <br> <span class="bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full text-[9px] font-black uppercase inline-block mt-2">${window.formatSize(p.size)}</span></td>
+                    <td class="text-center font-black p-4 text-sm">${p.qty}</td>
+                    <td class="p-4 text-gray-500">${p.client || '-'}</td>
+                    <td class="text-indigo-600 p-4 text-right leading-none">$${Math.floor(p.exactTotalCost).toLocaleString()}</td>
+                    <td class="text-right p-4"><button onclick="window.removeFromBatch(${p.id})" class="text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
                 </tr>`;
             });
             if(tf) { 
                 tf.classList.toggle('hidden', !tQ); 
-                document.getElementById('batch-total-qty').innerText = tQ;
+                const qtyEl = document.getElementById('batch-total-qty');
+                if(qtyEl) qtyEl.innerText = tQ;
             }
-            document.getElementById('label-inversion-total').innerText = `$${Math.floor(tCost).toLocaleString()}`;
-            window.updateBatchProjections();
+            const invEl = document.getElementById('label-inversion-total');
+            if(invEl) invEl.innerText = `$${Math.floor(tCost).toLocaleString()}`;
             if(typeof lucide !== 'undefined') lucide.createIcons();
         }
 
-        window.renderLotes = function() { window.updateBatchTable(); window.updateBatchProjections(); }
+        window.renderLotes = function() { window.updateBatchTable(); }
         
         window.suggestBatchPrice = function() { const s = document.getElementById('input-prod-size').value; if(window.defaultSalePrices[s.replace(/\s+/g,'').toLowerCase()]) document.getElementById('input-prod-price').value = window.defaultSalePrices[s.replace(/\s+/g,'').toLowerCase()]; }
         
@@ -1098,6 +985,76 @@
             window.suggestBatchPrice();
         }
 
+        window.createProductEntry = function(type, size, qty, price, client) {
+            const sizeKey = size.replace(/\s+/g,'').toLowerCase();
+            const cap = window.sizeCapacities[sizeKey] || 0; 
+            const isG = type.toLowerCase().includes('griego');
+            const isFresa = type.toLowerCase().includes('fresa');
+            const isDulce = type.toLowerCase().includes('con azúcar') || type.toLowerCase().includes('saborizado');
+
+            let req_leche = 0, req_mermelada_g = 0, req_azucar_extra_g = 0;
+
+            if (isG) { 
+                req_leche = cap / 262.5; 
+                if (isFresa) {
+                    if (sizeKey === '5oz') req_mermelada_g = 30;
+                    else if (sizeKey === '10oz') req_mermelada_g = 60;
+                    else if (sizeKey === '16oz') req_mermelada_g = 100;
+                    else if (sizeKey === '32oz') req_mermelada_g = 200;
+                } else if (isDulce) {
+                    req_azucar_extra_g = cap * (50 / 500); 
+                }
+            } else { 
+                req_leche = cap / 900; 
+                if (isFresa) {
+                    req_mermelada_g = cap * (400 / 3600); 
+                    req_azucar_extra_g = cap * (200 / 3600); 
+                } else if (isDulce) {
+                    req_azucar_extra_g = cap * (200 / 3600);
+                }
+            }
+
+            req_leche *= qty;
+            req_mermelada_g *= qty;
+            req_azucar_extra_g *= qty;
+
+            const req_polvo_g = req_leche * 26.25;
+            const req_fresa_emp = req_mermelada_g * (1 / 400);
+            const req_azucar_merm_g = req_mermelada_g * (300 / 400);
+            const req_limon_u = req_mermelada_g * (1 / 400);
+            const req_azucar_total_g = req_azucar_extra_g + req_azucar_merm_g;
+
+            const inv = window.state.inventory;
+            const costo_leche = req_leche * inv.leche.avgCost;
+            const costo_fresa = req_fresa_emp * inv.fresas.avgCost;
+            const costo_azucar = (req_azucar_total_g / 1000) * inv.azucar.avgCost;
+            const costo_polvo = (req_polvo_g / 1000) * inv.polvo.avgCost;
+            const costo_limon = req_limon_u * inv.limon.avgCost;
+
+            const contentCost = costo_leche + costo_fresa + costo_azucar + costo_polvo + costo_limon;
+            const envaseCost = (inv[`envase_${sizeKey}`]?.avgCost || 0) * qty;
+            const totalCost = contentCost + envaseCost;
+
+            return { 
+                id: Date.now() + Math.random(), 
+                type: type, 
+                size: size, 
+                qty: qty, 
+                price: price, 
+                client: client, 
+                exactTotalCost: totalCost, 
+                reqs: {
+                    leche: req_leche,
+                    fresas: req_fresa_emp,
+                    azucar: req_azucar_total_g / 1000, 
+                    polvo: req_polvo_g / 1000, 
+                    limon: req_limon_u,
+                    envaseKey: `envase_${sizeKey}`,
+                    envaseQty: qty
+                }
+            }; 
+        }
+
         window.addCurrentProduct = function() { 
             const t = document.getElementById('input-prod-type').value;
             const s = document.getElementById('input-prod-size').value;
@@ -1105,64 +1062,10 @@
             const p = parseFloat(document.getElementById('input-prod-price').value);
             const c = document.getElementById('input-prod-client').value.trim();
             
-            if(!q || isNaN(p)) return; 
+            if(!q || isNaN(p) || q <= 0) return alert("Ingresa una cantidad válida y precio."); 
             
-            // --- CÁLCULO EXACTO BASADO EN RECETA MATEMÁTICA ---
-            const sizeKey = s.replace(/\s+/g,'').toLowerCase();
-            const cap = window.sizeCapacities[sizeKey] || 0; 
-            const isG = t.toLowerCase().includes('griego');
-            const isFresa = t.toLowerCase().includes('fresa');
-            const isDulce = t.toLowerCase().includes('con azúcar') || t.toLowerCase().includes('saborizado');
-
-            const inv = window.state.inventory;
-            const costo_leche = inv.leche.avgCost;
-            const costo_azucar_g = inv.azucar.avgCost / 1000;
-            const costo_polvo_g = inv.polvo.avgCost / 1000;
-            const costo_fresa_empaque = inv.fresas.avgCost; 
-            const costo_limon_u = inv.limon.avgCost;
-
-            // Costo Mermelada x gramo (300g fresa(1 emp) + 300g azucar + 1 limon = 400g mermelada por 4 cajas)
-            const costo_receta_mermelada = costo_fresa_empaque + (300 * costo_azucar_g) + costo_limon_u;
-            const costo_mermelada_g = costo_receta_mermelada / 400;
-
-            // Costo Leche Base x caja (1 caja + 26.25g polvo que equivale a 1.75 cuch de 15g)
-            const costo_base_caja = costo_leche + (26.25 * costo_polvo_g);
-
-            let contentCost = 0;
-            if (isG) { // GRIEGO
-                contentCost += (cap / 262.5) * costo_base_caja; // 2 cajas = 525g -> 1 caja = 262.5g
-                if (isFresa) {
-                    let jamQty = 0;
-                    if (sizeKey === '5oz') jamQty = 30;
-                    else if (sizeKey === '10oz') jamQty = 60;
-                    else if (sizeKey === '16oz') jamQty = 100;
-                    else if (sizeKey === '32oz') jamQty = 200;
-                    contentCost += jamQty * costo_mermelada_g;
-                } else if (isDulce) {
-                    contentCost += (cap * (50 / 500)) * costo_azucar_g; // Asumido 50g azucar x 500g griego
-                }
-            } else { // LIQUIDO
-                contentCost += (cap / 900) * costo_base_caja; // 1 caja = 900ml
-                if (isFresa) {
-                    contentCost += (cap * (400 / 3600)) * costo_mermelada_g; // 400g mermelada x 4 cajas(3600ml)
-                    contentCost += (cap * (200 / 3600)) * costo_azucar_g; // 200g azucar extra x 4 cajas(3600ml)
-                } else if (isDulce) {
-                    contentCost += (cap * (200 / 3600)) * costo_azucar_g;
-                }
-            }
-
-            const envaseCost = (inv[`envase_${sizeKey}`]?.avgCost || 0);
-
-            window.state.currentBatchProducts.push({ 
-                id: Date.now(), 
-                type: t, 
-                size: s, 
-                qty: q, 
-                price: p, 
-                client: c, 
-                pkgCost: envaseCost * q,
-                exactContentCost: contentCost 
-            }); 
+            const product = window.createProductEntry(t, s, q, p, c);
+            window.state.currentBatchProducts.push(product); 
             
             document.getElementById('input-prod-qty').value = ''; 
             document.getElementById('input-prod-client').value = ''; 
@@ -1172,72 +1075,65 @@
         window.removeFromBatch = function(id) { window.state.currentBatchProducts = window.state.currentBatchProducts.filter(x => x.id !== id); window.renderLotes(); }
         
         window.confirmProduction = function() { 
-            const getVal = id => { const el = document.getElementById(id); return el ? parseFloat(el.value) || 0 : 0; }; 
-            const leche = getVal('bi-leche'); 
-            const fresas = getVal('bi-fresas');
-            const azucar = getVal('bi-azucar');
-            const polvo = getVal('bi-polvo');
-            const limon = getVal('bi-limon');
+            const notes = document.getElementById('batch-notes') ? document.getElementById('batch-notes').value.trim() : '';
+            const dateStr = document.getElementById('batch-date-input') ? document.getElementById('batch-date-input').value || window.state.packDate : window.state.packDate;
             
-            const notes = document.getElementById('batch-notes').value.trim();
-            const dateStr = document.getElementById('batch-date-input').value || window.state.packDate;
+            if(window.state.currentBatchProducts.length === 0) return alert("Añade al menos un producto a la producción."); 
             
-            if(window.state.currentBatchProducts.length === 0 || leche <= 0) return alert("Datos incompletos."); 
-            
-            let totalPkgCost = 0;
-            let totalExactContentCost = 0;
+            let totalLoteCost = 0;
+            let total_leche = 0, total_fresas = 0, total_azucar = 0, total_polvo = 0, total_limon = 0;
 
             window.state.currentBatchProducts.forEach(p => { 
-                totalPkgCost += p.pkgCost;
-                totalExactContentCost += (p.exactContentCost * p.qty);
+                totalLoteCost += p.exactTotalCost;
 
-                const sizeKey = p.size.replace(/\s+/g,'').toLowerCase();
-                const k = `${p.type}_${sizeKey}`; 
-                
-                const itemTotalCost = (p.exactContentCost * p.qty) + p.pkgCost;
-                const itemUnitCost = itemTotalCost / p.qty;
+                total_leche += p.reqs.leche;
+                total_fresas += p.reqs.fresas;
+                total_azucar += p.reqs.azucar;
+                total_polvo += p.reqs.polvo;
+                total_limon += p.reqs.limon;
+
+                const k = `${p.type}_${p.reqs.envaseKey.replace('envase_', '')}`; 
+                const itemUnitCost = p.exactTotalCost / p.qty;
 
                 if(window.state.fridge[k]) { 
-                    window.state.fridge[k].unitCost = ((window.state.fridge[k].qty * window.state.fridge[k].unitCost) + itemTotalCost) / (window.state.fridge[k].qty + p.qty); 
+                    window.state.fridge[k].unitCost = ((window.state.fridge[k].qty * window.state.fridge[k].unitCost) + p.exactTotalCost) / (window.state.fridge[k].qty + p.qty); 
                     window.state.fridge[k].qty += p.qty; 
                 } else { 
                     window.state.fridge[k] = { 
                         type: p.type, 
-                        size: sizeKey, 
+                        size: p.reqs.envaseKey.replace('envase_', ''), 
                         qty: p.qty, 
                         unitCost: itemUnitCost, 
                         defaultPrice: p.price,
                         dateAdded: dateStr 
                     }; 
                 } 
-                const envKey = `envase_${sizeKey}`; if(window.state.inventory[envKey]) window.state.inventory[envKey].stock -= p.qty; 
+                if(window.state.inventory[p.reqs.envaseKey]) {
+                    window.state.inventory[p.reqs.envaseKey].stock -= p.reqs.envaseQty;
+                }
             }); 
             
-            const uA = document.getElementById('bu-azucar')?.value || 'g';
-            const toK = (v, u) => u === 'kg' ? v : (u === 'cucharada' ? (v*15)/1000 : v/1000);
-            
-            // Restar stock
-            window.state.inventory.leche.stock -= leche; 
-            window.state.inventory.fresas.stock -= fresas; 
-            window.state.inventory.azucar.stock -= toK(azucar, uA); 
-            window.state.inventory.polvo.stock -= (polvo / 1000); 
-            window.state.inventory.limon.stock -= limon; 
+            window.state.inventory.leche.stock -= total_leche; 
+            window.state.inventory.fresas.stock -= total_fresas; 
+            window.state.inventory.azucar.stock -= total_azucar; 
+            window.state.inventory.polvo.stock -= total_polvo; 
+            window.state.inventory.limon.stock -= total_limon; 
 
-            // Registrar Trazabilidad (Guardamos el costo EXACTO para que cuadre todo al 100%)
             window.state.productionLogs.unshift({ 
                 id: Date.now(), 
                 lote: dateStr.split('-').reverse().join('').slice(0,4), 
                 date: dateStr, 
-                baseCost: totalExactContentCost,
-                pkgCost: totalPkgCost, 
+                baseCost: totalLoteCost, 
                 products: [...window.state.currentBatchProducts],
                 notes: notes
             }); 
             
             window.state.currentBatchProducts = []; 
-            document.getElementById('batch-notes').value = '';
+            if (document.getElementById('batch-notes')) document.getElementById('batch-notes').value = '';
+            
             window.renderFinance(); 
             window.saveToLocalStorage(); 
+            alert("Producción registrada. Los insumos se han descontado inteligentemente de la bodega.");
         }
 
         // --- FUNCIONES DE FACTURACIÓN (CARRITO Y PDF) ---
@@ -1685,7 +1581,7 @@
             const cS_mermas = window.state.salesLogs.filter(s => !s.type.includes('venta')).reduce((a,b) => a + b.cost, 0);
             const eT = window.state.expenses ? window.state.expenses.reduce((a,b) => a + b.amount, 0) : 0;
             
-            const cProd = window.state.productionLogs.reduce((a,b) => a + (b.baseCost || 0) + (b.pkgCost || 0), 0);
+            const cProd = window.state.productionLogs.reduce((a,b) => a + (b.baseCost || 0), 0);
             
             const utilidadBruta = rT - cS_ventas;
             const gananciaNeta = utilidadBruta - eT - cS_mermas;
@@ -1855,7 +1751,7 @@
             const list = document.getElementById('list-batch-traceability'); if(!list) return;
             list.innerHTML = window.state.productionLogs.length === 0 ? '<div class="py-10 text-center opacity-40 font-black">Sin lotes.</div>' : '';
             window.state.productionLogs.forEach(log => {
-                const totalCostLote = (log.baseCost || 0) + (log.pkgCost || 0);
+                const totalCostLote = log.baseCost || 0;
                 list.innerHTML += `
                 <div class="bg-white border rounded-2xl p-5 flex flex-col shadow-sm leading-none font-black gap-4">
                     <div class="flex justify-between items-start">
@@ -2035,15 +1931,56 @@
         window.confirmFridgeReturn = function() { 
             const k = document.getElementById('fridge-adjust-key').value, q = parseInt(document.getElementById('fridge-adjust-qty').value), i = window.state.fridge[k]; 
             if(!i || q <= 0 || q > i.qty) return alert("Inválido."); 
+            
             const sizeKey = i.size.replace(/\s+/g,'').toLowerCase();
             const cap = window.sizeCapacities[sizeKey] || 0; 
-            const vol = q * cap; 
-            const isG = i.type.toLowerCase().includes('griego'); 
-            const me = isG ? vol/250 : vol/1000; 
-            window.state.inventory.leche.stock += me; 
+            const isG = i.type.toLowerCase().includes('griego');
+            const isFresa = i.type.toLowerCase().includes('fresa');
+            const isDulce = i.type.toLowerCase().includes('con azúcar') || i.type.toLowerCase().includes('saborizado');
+
+            let req_leche = 0, req_mermelada_g = 0, req_azucar_extra_g = 0;
+
+            if (isG) { 
+                req_leche = cap / 262.5; 
+                if (isFresa) {
+                    if (sizeKey === '5oz') req_mermelada_g = 30;
+                    else if (sizeKey === '10oz') req_mermelada_g = 60;
+                    else if (sizeKey === '16oz') req_mermelada_g = 100;
+                    else if (sizeKey === '32oz') req_mermelada_g = 200;
+                } else if (isDulce) {
+                    req_azucar_extra_g = cap * (50 / 500); 
+                }
+            } else { 
+                req_leche = cap / 900; 
+                if (isFresa) {
+                    req_mermelada_g = cap * (400 / 3600); 
+                    req_azucar_extra_g = cap * (200 / 3600); 
+                } else if (isDulce) {
+                    req_azucar_extra_g = cap * (200 / 3600);
+                }
+            }
+
+            req_leche *= q;
+            req_mermelada_g *= q;
+            req_azucar_extra_g *= q;
+
+            const req_polvo_g = req_leche * 26.25;
+            const req_fresa_emp = req_mermelada_g * (1 / 400);
+            const req_azucar_merm_g = req_mermelada_g * (300 / 400);
+            const req_limon_u = req_mermelada_g * (1 / 400);
+            const req_azucar_total_g = req_azucar_extra_g + req_azucar_merm_g;
+
+            window.state.inventory.leche.stock += req_leche;
+            window.state.inventory.fresas.stock += req_fresa_emp;
+            window.state.inventory.azucar.stock += (req_azucar_total_g / 1000);
+            window.state.inventory.polvo.stock += (req_polvo_g / 1000);
+            window.state.inventory.limon.stock += req_limon_u;
+
             if(sizeKey !== 'granel' && window.state.inventory[`envase_${sizeKey}`]) window.state.inventory[`envase_${sizeKey}`].stock += q; 
+            
             i.qty -= q; 
             if(i.qty <= 0) delete window.state.fridge[k]; 
+            
             window.renderFinance(); 
             window.closeFridgeAdjustModal(); 
             window.saveToLocalStorage(); 
@@ -2106,12 +2043,54 @@
         window.resetInventoryOnly = function() { Object.keys(window.state.inventory).forEach(k => { window.state.inventory[k].stock = 0; window.state.inventory[k].avgCost = 0; }); window.state.purchaseLogs = []; window.state.totalInvestment = 0; window.saveToLocalStorage(); window.renderBodega(); window.closeResetInventoryModal(); alert("Bodega vaciada exitosamente."); }
 
         window.exportData = function() { window.saveToLocalStorage(); const b = new Blob([localStorage.getItem('blanco_artesanal_v3')], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `Respaldo_TOTAL.json`; a.click(); }
-        window.importData = function(event) { const f = event.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = (e) => { try { const d = JSON.parse(e.target.result); if (d && d.inventory) { window.state = d; if(!window.state.currentInvoice) window.state.currentInvoice = []; window.recalculateTotalInvestment(); window.saveToLocalStorage(); window.syncOllaInputs(); window.renderFinance(); alert("¡Importación Correcta!"); } } catch (err) { alert("Error."); } }; r.readAsText(f); }
+        
+        window.importData = function(event) { 
+            const f = event.target.files[0]; 
+            if (!f) return; 
+            const r = new FileReader(); 
+            r.onload = (e) => { 
+                try { 
+                    const d = JSON.parse(e.target.result); 
+                    if (d && d.inventory) { 
+                        window.state = d; 
+                        if(!window.state.currentInvoice) window.state.currentInvoice = []; 
+                        window.recalculateTotalInvestment(); 
+                        window.saveToLocalStorage(); 
+                        alert("¡Importación Correcta! El sistema se recargará para aplicar los datos."); 
+                        window.location.reload(); 
+                    } 
+                } catch (err) { 
+                    alert("Error al importar el archivo."); 
+                } 
+            }; 
+            r.readAsText(f); 
+        }
 
-        window.openPlannerModal = function() { const modal = document.getElementById('modal-planner'); if(modal) { modal.classList.remove('hidden'); const curM = parseFloat(document.getElementById('bi-leche')?.value) || 0; const inp = document.getElementById('plan-leche'); if(inp) inp.value = curM > 0 ? curM : ''; window.calculatePlanner(); if(typeof lucide !== 'undefined') lucide.createIcons(); } };
+        window.openPlannerModal = function() { const modal = document.getElementById('modal-planner'); if(modal) { modal.classList.remove('hidden'); const inp = document.getElementById('plan-leche'); if(inp) inp.value = ''; window.calculatePlanner(); if(typeof lucide !== 'undefined') lucide.createIcons(); } };
         window.closePlannerModal = function() { document.getElementById('modal-planner')?.classList.add('hidden'); }
         window.calculatePlanner = function() { const getV = id => { const el = document.getElementById(id); return el ? parseFloat(el.value) || 0 : 0; }; const boxes = getV('plan-leche'); const cons = ((getV('plan-5oz')*150)+(getV('plan-10oz')*300)+(getV('plan-16oz')*500)+(getV('plan-32oz')*1000))/250 + (getV('plan-1lt')*1000)/900; const rem = boxes - cons; const elL = document.getElementById('plan-rem-leche'), elG = document.getElementById('plan-rem-griego'); if(elL) elL.innerText = rem.toFixed(2); if(elG) elG.innerText = (rem * 250).toFixed(0); const sum = document.getElementById('planner-summary'), btn = document.getElementById('btn-apply-plan'); if(sum && btn) { if (rem < -0.01) { sum.classList.replace('bg-gray-900', 'bg-red-900'); btn.disabled = true; } else { sum.classList.replace('bg-red-900', 'bg-gray-900'); btn.disabled = false; } } }
-        window.applyPlanner = function() { const getV = id => { const el = document.getElementById(id); return el ? parseFloat(el.value) || 0 : 0; }; const boxes = getV('plan-leche'), q1lt = getV('plan-1lt'), q5oz = getV('plan-5oz'), q10oz = getV('plan-10oz'), q16oz = getV('plan-16oz'), q32oz = getV('plan-32oz'); if (boxes <= 0) return; const frL = q1lt / 4, sugL = (q1lt / 4) * 400, totalG = (q5oz*150)+(q10oz*300)+(q16oz*500)+(q32oz*1000), frG = (totalG * 0.20) / 300, sugG = totalG * 0.08; document.getElementById('bi-leche').value = boxes.toFixed(1); document.getElementById('bi-fresas').value = (frG + frL).toFixed(2); document.getElementById('bi-azucar').value = (sugG + sugL).toFixed(0); document.getElementById('bu-azucar').value = 'g'; window.state.currentBatchProducts = []; const add = (size, qty, name) => { if (qty > 0) window.state.currentBatchProducts.push({ id: Date.now()+Math.random(), type: name, size, qty, price: window.defaultSalePrices[size.replace(/\s+/g,'').toLowerCase()], pkgCost: (window.state.inventory[`envase_${size.replace(/\s+/g,'').toLowerCase()}`]?.avgCost || 0) * qty }); }; add('5 OZ', q5oz, 'Griego Fresa Con Azúcar'); add('10 OZ', q10oz, 'Griego Fresa Con Azúcar'); add('16 OZ', q16oz, 'Griego Fresa Con Azúcar'); add('32 OZ', q32oz, 'Griego Fresa Con Azúcar'); add('1 LT', q1lt, 'Líquido Fresa Con Azúcar'); window.closePlannerModal(); window.renderLotes(); }
+        
+        window.applyPlanner = function() { 
+            const getV = id => { const el = document.getElementById(id); return el ? parseFloat(el.value) || 0 : 0; }; 
+            const boxes = getV('plan-leche'), q1lt = getV('plan-1lt'), q5oz = getV('plan-5oz'), q10oz = getV('plan-10oz'), q16oz = getV('plan-16oz'), q32oz = getV('plan-32oz'); 
+            if (boxes <= 0) return; 
+            
+            window.state.currentBatchProducts = []; 
+            const add = (size, qty, name) => { 
+                if (qty > 0) {
+                    const price = window.defaultSalePrices[size.replace(/\s+/g,'').toLowerCase()];
+                    window.state.currentBatchProducts.push(window.createProductEntry(name, size, qty, price, ''));
+                }
+            }; 
+            add('5 OZ', q5oz, 'Griego Fresa Con Azúcar'); 
+            add('10 OZ', q10oz, 'Griego Fresa Con Azúcar'); 
+            add('16 OZ', q16oz, 'Griego Fresa Con Azúcar'); 
+            add('32 OZ', q32oz, 'Griego Fresa Con Azúcar'); 
+            add('1 LT', q1lt, 'Líquido Fresa Con Azúcar'); 
+            
+            window.closePlannerModal(); 
+            window.renderLotes(); 
+        }
 
         // --- FUNCIONES RESTAURADAS: CALCULADORA Y ETIQUETAS ---
         window.updateVencimientos = function() {
@@ -2212,7 +2191,7 @@
                     grid.innerHTML += `<button id="btn-size-${s}" onclick="window.setStickerSize('${s}')" class="h-12 p-2 text-[11px] font-bold border rounded-xl transition-all font-black uppercase leading-none ${activeClasses}">${s}</button>`; 
                 });
             }
-            window.syncOllaInputs(); 
+            
             window.handleProductTypeChange();
             window.updateClientsDatalist(); 
             window.switchTab('registro');
